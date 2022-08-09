@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const { Colors } = require("discord.js");
+const { loggerUrl } = require("../../config.json");
 const fs = require("fs");
 
 module.exports = class Logger {
@@ -61,7 +62,7 @@ module.exports = class Logger {
 	error(data) {
 		console.error(`\x1b[00m[ERROR]\x1b[0m ${this.date} ${data.stack ?? data}`);
 		this.append(`[ERROR] ${this.date} ${data.stack ?? data}`);
-		axios.post("https://discord.com/api/webhooks/1006053295565058069/nuYLNfOMqSaGH0JwmRp1GTzZ88kY5khM6HHb1N6SR7srgKHzNbdt5xk1mly2-8MATBc7", {
+		axios.post(loggerUrl, {
 			content: "<@504717946124369937>",
 			embeds: [
 				{
