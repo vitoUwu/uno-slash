@@ -1,4 +1,4 @@
-const { ButtonBuilder, ActionRowBuilder, ButtonStyle, Colors, GuildMember, CommandInteraction, Client, Locale } = require("discord.js");
+const { ButtonBuilder, ActionRowBuilder, ButtonStyle, Colors, GuildMember, CommandInteraction, Client, Locale, MessagePayload } = require("discord.js");
 const Player = require("./Player");
 const { shuffleArray } = require("../utils/functions");
 const cards = require("../utils/cards");
@@ -178,6 +178,18 @@ module.exports = class Game {
 		return this.whoPlaysNow?.locale || this.channel?.guild.preferredLocale || "en-US";
 	}
 
+	/**
+	 * 
+	 * @param {string|MessagePayload|import("discord.js").InteractionReplyOptions} data 
+	 * @returns 
+	 */
+	async send(data) {
+		if (!this.interaction) throw Error(`Unknown Interaction`);
+		return this.interaction ?
+			await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data) :
+			await this.channel.send(data);
+	}
+
 	async start() {
 		if (this.started) return;
 		this.started = true;
@@ -195,7 +207,7 @@ module.exports = class Game {
 				variables: [ this.whoPlaysNow.member, this.whoPlaysNow.cards.length ]
 			});
 			this.whoPlaysNow.skippedRounds++;
-			if (this.whoPlaysNow.skippedRounds > 3) this.removePlayer(this.whoPlaysNow.member.id);
+			if (this.whoPlaysNow.skippedRounds > 3) this.removePlayer(this.whoPlaysNow.id);
 			else this.nextPlayer();
 		}, 60000);
 		await this.nextPlayer();
@@ -207,7 +219,7 @@ module.exports = class Game {
    */
 	async end(reason) {
 		if (reason === "inactivity") {
-			await this.interaction[this.interaction.replied || this.interaction.deferred ? "followUp" : "reply"]({
+			await this.send({
 				embeds: [{
           description: locales(this.locale, "game.endReasons.inactivity"),
           color: Colors.Blurple,
@@ -216,7 +228,7 @@ module.exports = class Game {
 		}
 
 		if (reason === "noPlayers") {
-			await this.interaction[this.interaction.replied || this.interaction.deferred ? "followUp" : "reply"]({
+			await this.send({
 				embeds: [{
           description: `${locales(this.locale, "game.endReasons.noPlayers", this.winners[0])}\n\n\`\`\`${this.winners.map((w, i) => `#${i + 1} | ${w}`).join("\n")}\`\`\``,
           color: Colors.Blurple,
@@ -233,7 +245,7 @@ module.exports = class Game {
    * @param {string} id
    */
 	pushWinner(id) {
-		const index = this.players.findIndex((p) => p.member.id === id);
+		const index = this.players.findIndex((p) => p?.id === id);
 		if (index < 0) return;
 		this.winners.push(...this.players.splice(index, 1).map(p => p.member.user.username));
 	}
@@ -257,7 +269,7 @@ module.exports = class Game {
 		if (interaction) this.interaction = interaction;
 
 		if (this.players.length === 1) {
-			this.pushWinner(this.players[0]);
+			this.pushWinner(this.players[0].id);
 			this.end("noPlayers");
 			return;
 		}
@@ -271,7 +283,7 @@ module.exports = class Game {
 
 		this.timeout.refresh();
 
-		const reply = await this.interaction[this.interaction.replied || this.interaction.deferred ? "followUp" : "reply"]({
+		const reply = await this.send({
 			content: this.whoPlaysNow?.member.toString(),
 			embeds: [
 				{
@@ -294,11 +306,11 @@ module.exports = class Game {
 			const collector = reply.createMessageComponentCollector({ time: 5000 });
 
 			collector.on("collect", async (i) => {
-				if (i.customId === "uno" && i.user.id === this.lastPlayer.member.id) {
+				if (i.customId === "uno" && i.user.id === this.lastPlayer.id) {
           collector.stop();
           await reply.edit({ components: [] });
         }
-				if (i.customId === "report_uno" && i.user.id !== this.lastPlayer.member.id) {
+				if (i.customId === "report_uno" && i.user.id !== this.lastPlayer.id) {
           collector.stop();
 					await reply.edit({ components: [] });
           this.giveCards(this.lastPlayer, 2);
@@ -343,7 +355,7 @@ module.exports = class Game {
    * @returns {Player|undefined}
    */
 	getPlayer(id) {
-		return this.players.find((p) => p.member.id === id);
+		return this.players.find((p) => p.id === id);
 	}
 
   /**
@@ -351,18 +363,33 @@ module.exports = class Game {
    * @param {string} id
    */
 	async removePlayer(id) {
-		const index = this.players.findIndex((p) => p.member.id === id);
-		if (index < 0) return;
+		const index = this.players.findIndex((p) => p?.id === id);
+		if (index < 0) throw Error(`Unknown player id ${id}`);
     this.players.splice(index, 1);
-    if (this.players.length === 1) {
-      this.pushWinner(this.players[0].id);
-      this.end("noPlayers");
-      return;
-    }
-		if (this.authorId === id) this.authorId === this.players[this.nextIndex].id;
-    if (this.started) {
-			if (this.whoPlaysNow?.member.id === id) await this.nextPlayer();
-    }
+
+		if (this.players.length === 0) {
+			this.client.games.delete(this.channelId);
+			if (this.interaction) await this.interaction.deleteReply().catch(() => {});
+			return;
+		}
+
+		if (this.started) {
+			if (this.players.length === 1) {
+				this.pushWinner(this.players[0].id);
+				this.end("noPlayers");
+				return;
+			}
+
+			if (this.whoPlaysNow?.id === id) await this.nextPlayer();	
+    } else {
+			if (this.players.length >= 1 && this.authorId === id) {
+				this.authorId = this.players[Math.floor(Math.random() * this.players.length)]?.id;
+				this.send({
+					content: locales(this.locale, "game.newAuthor", this.authorId)
+				});
+			}
+		}
+
 		return;
 	}
 
@@ -382,7 +409,7 @@ module.exports = class Game {
 				components: [row],
 			});
 			const collector = reply.createMessageComponentCollector({
-				filter: (i) => i.user.id === this.lastPlayer.member.id,
+				filter: (i) => i.user.id === this.lastPlayer.id,
 				time: 10000,
 			});
 

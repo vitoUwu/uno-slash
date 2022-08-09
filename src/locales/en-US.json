@@ -95,7 +95,8 @@
       "footer": "Use /play to play your card, or use /draw to draw a card"
     },
     "unoReport": "Player {0} forgot to say ` Uno! ` and gained +2 cards",
-    "chooseColor": "Choose the color you want to continue"
+    "chooseColor": "Choose the color you want to continue",
+    "newAuthor": "<@{0}> is the new match owner"
   },
   "player": {
     "notStarted": "The match hasn't started yet",

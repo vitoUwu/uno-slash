@@ -95,7 +95,8 @@
       "footer": "Use /play para fazer a sua jogada, ou use /draw para comprar uma carta"
     },
     "unoReport": "O jogador {0} esqueceu de dizer ` Uno! ` e ganhou +2 cartas",
-    "chooseColor": "Escolha a cor que deseja continuar"
+    "chooseColor": "Escolha a cor que deseja continuar",
+    "newAuthor": "<@{0}> é o novo dono da partida"
   },
   "player": {
     "notStarted": "A partida ainda não começou",
