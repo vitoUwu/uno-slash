@@ -251,8 +251,7 @@ module.exports = class Game {
 	}
 
 	pushPlayer() {
-		this.index += this.direction;
-		this.index = Math.abs(this.index) % this.players.length;
+		this.index = this.nextIndex();
 	}
 
 	reverse() {
