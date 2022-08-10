@@ -71,6 +71,12 @@
       "notTurn": "Your turn hasn't come yet",
       "notParticipating": "Looks like you're not playing the game.",
       "cardNotFound": "No cards found"
+    },
+    "vote": {
+      "description": "Support our bot <3",
+      "embed": {
+        "description": "Help our bot to grow more and more. Vote below by clicking on the buttons to be redirected"
+      }
     }
   },
   "game": {
@@ -86,14 +92,19 @@
       "cards": "Cards"
     },
     "inactivity": "Player {0} took too long to play and his turn was passed.\n{0} was dealt +2 cards. Now {0} has ` {1} ` cards",
-    "endReasons": {
-      "inactivity": "All players became inactive. The match has ended",
-      "noPlayers": "The match is over. Congratulations to the winner {0} !!\nRanking of winners:"
-    },
     "report": "Report",
-    "embed": {
-      "description": "Now it's {0}\nLast card played: ` {1} `",
-      "footer": "Use /play to play your card, or use /draw to draw a card"
+    "embeds": {
+      "resume": {
+        "description": "Now it's {0} turn\nLast card: ` {1} `",
+        "footer": "Use /play to play your card, or use /draw to draw a card"
+      },
+      "end": {
+        "descriptions": {
+          "inactivity": "All players became inactive. The match has ended",
+          "noPlayers": "The match is over. Congratulations to the winner {0} !!\nRanking of winners:"
+        },
+        "footer": "Help our bot using the command /vote <3"
+      }
     },
     "unoReport": "Player {0} forgot to say ` Uno! ` and gained +2 cards",
     "chooseColor": "Choose the color you want to continue",

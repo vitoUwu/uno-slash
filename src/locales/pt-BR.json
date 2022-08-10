@@ -71,6 +71,12 @@
       "notTurn": "Ainda não chegou a sua vez",
       "notParticipating": "Parece que você não está participando da partida",
       "cardNotFound": "Nenhuma carta encontrada"
+    },
+    "vote": {
+      "description": "Dê o seu suporte ao nosso bot <3",
+      "embed": {
+        "description": "Qualquer gesto já ajuda o nosso bot a crescer cada vez mais. Vote abaixo clicando nos botões para ser redirecionado"
+      }
     }
   },
   "game": {
@@ -86,14 +92,19 @@
       "cards": "Cartas"
     },
     "inactivity": "O jogador {0} demorou muito para jogar e a sua vez foi passada.\n{0} recebeu +2 cartas. Agora {0} tem ` {1} ` cartas",
-    "endReasons": {
-      "inactivity": "Todos os jogadores ficaram inativos. A partida foi encerrada",
-      "noPlayers": "A partida acabou. Parabéns ao vencedor {0} !!\nRanking de vencedores:"
-    },
     "report": "Reportar",
-    "embed": {
-      "description": "Agora é a vez de {0}\nÚltima carta jogada: ` {1} `",
-      "footer": "Use /play para fazer a sua jogada, ou use /draw para comprar uma carta"
+    "embeds": {
+      "resume": {
+        "description": "Agora é a vez de {0}\nÚltima carta jogada: ` {1} `",
+        "footer": "Use /play para fazer a sua jogada, ou use /draw para comprar uma carta"
+      },
+      "end": {
+        "descriptions": {
+          "inactivity": "Todos os jogadores ficaram inativos. A partida foi encerrada",
+          "noPlayers": "A partida acabou. Parabéns ao vencedor {0} !!\nRanking de vencedores:"
+        },
+        "footer": "Ajude o nosso bot usando o comando /vote <3"
+      }
     },
     "unoReport": "O jogador {0} esqueceu de dizer ` Uno! ` e ganhou +2 cartas",
     "chooseColor": "Escolha a cor que deseja continuar",

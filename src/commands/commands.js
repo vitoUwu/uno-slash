@@ -129,9 +129,7 @@ module.exports = {
 				const command = client.commands.find((cmd) => cmd.name === commandName);
 				if (!command) return interaction.reply({ embeds: [error("Comando não encontrado")] });
 
-				// if (!command.supportedTypes.length) return interaction.reply({ embeds: [error("O comando não oferece suporte as interações")] });
-
-				const commandType = options.getString("type");
+				const commandType = options.getNumber("type");
 
         const guildId = options.getString("guild");
         const guild = client.guilds.cache.get(guildId);

@@ -224,8 +224,9 @@ module.exports = class Game {
 		if (reason === "inactivity") {
 			await this.send({
 				embeds: [{
-          description: locales(this.locale, "game.endReasons.inactivity"),
+          description: locales(this.locale, "game.embeds.end.descriptions.inactivity"),
           color: Colors.Blurple,
+					footer: { text: locales(this.locale, "game.embeds.end.footer") }
         }],
 			});
 		}
@@ -233,8 +234,9 @@ module.exports = class Game {
 		if (reason === "noPlayers") {
 			await this.send({
 				embeds: [{
-          description: `${locales(this.locale, "game.endReasons.noPlayers", this.winners[0])}\n\n\`\`\`${this.winners.map((w, i) => `#${i + 1} | ${w}`).join("\n")}\`\`\``,
+          description: `${locales(this.locale, "game.embeds.end.descriptions.noPlayers", this.winners[0])}\n\n\`\`\`${this.winners.map((w, i) => `#${i + 1} | ${w}`).join("\n")}\`\`\``,
           color: Colors.Blurple,
+					footer: { text: locales(this.locale, "game.embeds.end.footer") }
         }],
 			});
 		}
@@ -289,9 +291,9 @@ module.exports = class Game {
 			content: this.whoPlaysNow?.member.toString(),
 			embeds: [
 				{
-					description: `${this.message.length ? `${this.message.map(msg => locales(this.locale, msg.key, ...msg.variables))}\n\n` : ""}${locales(this.locale, "game.embed.description", this.whoPlaysNow.member, this.parseCardId(this.lastCardId).toString())}\n\n**${locales(this.locale, "game.cards.cards")}**\n\`\`\`\n${this.players.slice(0).sort((a, b) => a.cards.length - b.cards.length).map((player, index) => `#${index + 1} | ${player.member.user.username}: ${player.cards.length} ${locales(this.locale, "game.cards.cards")}`).join("\n")}\`\`\``,
+					description: `${this.message.length ? `${this.message.map(msg => locales(this.locale, msg.key, ...msg.variables))}\n\n` : ""}${locales(this.locale, "game.embeds.resume.description", this.whoPlaysNow.member, this.parseCardId(this.lastCardId).toString())}\n\n**${locales(this.locale, "game.cards.cards")}**\n\`\`\`\n${this.players.slice(0).sort((a, b) => a.cards.length - b.cards.length).map((player, index) => `#${index + 1} | ${player.member.user.username}: ${player.cards.length} ${locales(this.locale, "game.cards.cards")}`).join("\n")}\`\`\``,
 					color: this.color,
-					footer: { text: locales(this.locale, "game.embed.footer") },
+					footer: { text: locales(this.locale, "game.embeds.resume.footer") },
 				},
 			],
 			...(uno ? { components: [row] } : {}),
