@@ -14,9 +14,9 @@ module.exports = {
         fields: [
           { name: "Nome", value: `\` ${guild.name} (${guild.id}) \``, inline: true },
           { name: "Dono", value: `<@${guild.ownerId}> (${guild.ownerId})`, inline: true },
-          { name: "Membros", value: `${guild.memberCount}`, inline: true },
-          { name: "Língua", value: `${guild.preferredLocale}`, inline: true },
-          { name: "Recursos Ativos", value: `${guild.features.join(" ")}`}
+          { name: "Membros", value: `${guild.memberCount || 0}`, inline: true },
+          { name: "Língua", value: `${guild.preferredLocale || "No preferred locale"}`, inline: true },
+          { name: "Recursos Ativos", value: `${guild.features.join(" ") || "No features"}`}
         ]
       }]
     }).catch(err => {
