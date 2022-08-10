@@ -19,6 +19,8 @@ module.exports = {
           { name: "Recursos Ativos", value: `${guild.features.join(" ")}`}
         ]
       }]
-    })
+    }).catch(err => {
+      guild.client.logger.error(err);
+    });
   }
 }
