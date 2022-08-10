@@ -184,10 +184,13 @@ module.exports = class Game {
 	 * @returns 
 	 */
 	async send(data) {
-		if (!this.interaction) throw Error(`Unknown Interaction`);
-		return this.interaction ?
-			await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data) :
-			await this.channel.send(data);
+		return this.interaction
+			? await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data)
+				.catch(() => {
+					this.interaction = null;
+				 	this.channel.send(data);
+				})
+			: await this.channel.send(data);
 	}
 
 	async start() {
@@ -207,7 +210,7 @@ module.exports = class Game {
 				variables: [ this.whoPlaysNow.member, this.whoPlaysNow.cards.length ]
 			});
 			this.whoPlaysNow.skippedRounds++;
-			if (this.whoPlaysNow.skippedRounds > 3) this.removePlayer(this.whoPlaysNow.id);
+			if (this.whoPlaysNow.skippedRounds >= 2) this.removePlayer(this.whoPlaysNow.id);
 			else this.nextPlayer();
 		}, 60000);
 		await this.nextPlayer();
@@ -251,7 +254,7 @@ module.exports = class Game {
 	}
 
 	pushPlayer() {
-		this.index = this.nextIndex();
+		this.index = this.nextIndex;
 	}
 
 	reverse() {
@@ -390,38 +393,5 @@ module.exports = class Game {
 		}
 
 		return;
-	}
-
-	async awaitColor() {
-		return new Promise(async (resolve, reject) => {
-			const row = new ActionRowBuilder().setComponents(
-				new ButtonBuilder().setCustomId(CardColorsEnum.Green).setEmoji({ name: "🟩" }).setLabel(locales(this.locale, "game.cards.green")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId(CardColorsEnum.Blue).setEmoji({ name: "🟦" }).setLabel(locales(this.locale, "game.cards.blue")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId(CardColorsEnum.Yellow).setEmoji({ name: "🟨" }).setLabel(locales(this.locale, "game.cards.yellow")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId(CardColorsEnum.Red).setEmoji({ name: "🟥" }).setLabel(locales(this.locale, "game.cards.red")).setStyle(ButtonStyle.Primary)
-			);
-			const reply = await this.interaction.followUp({
-				embeds: [{
-					description: locales(this.locale, "game.chooseColor"),
-					color: Colors.Blurple,
-				}],
-				components: [row],
-			});
-			const collector = reply.createMessageComponentCollector({
-				filter: (i) => i.user.id === this.lastPlayer.id,
-				time: 10000,
-			});
-
-			collector.on("collect", async (i) => {
-				collector.stop();
-				await i.deferUpdate();
-				await i.message.delete();
-				resolve(i.customId);
-			});
-
-			collector.on("end", (_, reason) => {
-				if (reason === "time") reject("inactivity");
-			});
-		});
 	}
 }

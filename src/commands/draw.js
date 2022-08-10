@@ -23,6 +23,8 @@ module.exports = {
 		const player = game.getPlayer(interaction.user.id);
 		if (!player) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.draw.notParticipating"))], ephemeral: true });
 
+    if (game.whoPlaysNow.id !== interaction.user.id) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.draw.notTurn"))], ephemeral: true });
+
 		game.giveCards(player, 1);
 		game.message.push({
       key: "commands.draw.bhoughtCard",

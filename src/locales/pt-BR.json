@@ -26,6 +26,7 @@
       "noMatchs": "Nenhuma partida encontrada no canal",
       "notStarted": "A partida ainda não começou",
       "notParticipating": "Parece que você não está participando da partida",
+      "notTurn": "Ainda não chegou a sua vez",
       "bhoughtCard": "O Jogador {0} comprou 1 carta e passou a vez"
     },
     "help": {

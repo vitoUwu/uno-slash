@@ -26,6 +26,7 @@
       "noMatchs": "No matches found on the channel",
       "notStarted": "The match hasn't started yet",
       "notParticipating": "Looks like you're not playing the game.",
+      "notTurn": "Your turn hasn't come yet",
       "bhoughtCard": "Player {0} drew 1 card and passed"
     },
     "help": {

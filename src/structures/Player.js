@@ -1,4 +1,4 @@
-const { CommandInteraction, GuildMember, Locale } = require("discord.js");
+const { CommandInteraction, GuildMember, Locale, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } = require("discord.js");
 const Game = require("./Game");
 const { error } = require("../utils/embeds");
 const locales = require("../locales");
@@ -70,10 +70,10 @@ module.exports = class Player {
    */
 	async playCard(id, interaction) {
 		const game = interaction.client.games.get(this.gameId);
-		if (!game.started) return await interaction.reply({ embeds: [error(locales(this.locale, "player.notStarted"))] });
+		if (!game.started) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.notStarted"))] });
 
 		const index = this.cards.findIndex((c) => c === id || game.parseCardId(c).toString().toLowerCase() === id.toLowerCase());
-		if (index < 0) return await interaction.reply({ embeds: [error(locales(this.locale, "player.cardNotFound"))], ephemeral: true });
+		if (index < 0) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.cardNotFound"))], ephemeral: true });
 
 		const deckCard = this.cards[index];
 
@@ -81,7 +81,7 @@ module.exports = class Player {
 		const serializedLastCard = game.parseCardId(game.lastCardId);
 
 		if (!this.compatibleColor(serializedLastCard, serializedCard) && !this.compatibleNumber(serializedLastCard, serializedCard)) {
-			await interaction.reply({ embeds: [error(locales(this.locale, "player.invalidCard"))], ephemeral: true });
+			await interaction.reply({ embeds: [error(locales(interaction.locale, "player.invalidCard"))], ephemeral: true });
 			return;
 		}
 
@@ -105,7 +105,7 @@ module.exports = class Player {
 
 		if (cardType === "special") {
 			if (!interaction.deferred && !interaction.replied) await interaction.deferReply();
-			let color = await game.awaitColor().catch(() => {});
+			let color = await this.awaitColor(interaction).catch(() => {});
 			if (!color) color = ["r", "b", "g", "y"][Math.floor(Math.random() * 4)];
 			game.lastCardId = `${color}any`;
 			if (cardNumber === "+4") {
@@ -154,5 +154,42 @@ module.exports = class Player {
 
 		await game.nextPlayer(interaction, this.cards.length === 1);
 		return;
+	}
+
+	/**
+	 * 
+	 * @param {ChatInputCommandInteraction} interaction 
+	 * @returns {Promise<string>}
+	 */
+	async awaitColor(interaction) {
+		return new Promise(async (resolve, reject) => {
+			const row = new ActionRowBuilder().setComponents(
+				new ButtonBuilder().setCustomId("g").setEmoji({ name: "🟩" }).setLabel(locales(interaction.locale, "game.cards.green")).setStyle(ButtonStyle.Primary),
+				new ButtonBuilder().setCustomId("b").setEmoji({ name: "🟦" }).setLabel(locales(interaction.locale, "game.cards.blue")).setStyle(ButtonStyle.Primary),
+				new ButtonBuilder().setCustomId("y").setEmoji({ name: "🟨" }).setLabel(locales(interaction.locale, "game.cards.yellow")).setStyle(ButtonStyle.Primary),
+				new ButtonBuilder().setCustomId("r").setEmoji({ name: "🟥" }).setLabel(locales(interaction.locale, "game.cards.red")).setStyle(ButtonStyle.Primary)
+			);
+			const reply = await interaction.followUp({
+				embeds: [{
+					description: locales(interaction.locale, "game.chooseColor"),
+					color: Colors.Blurple,
+				}],
+				components: [row],
+			});
+			const collector = reply.createMessageComponentCollector({
+				filter: (i) => i.user.id === interaction.user.id,
+				time: 10000,
+			});
+
+			collector.on("collect", async (i) => {
+				collector.stop();
+				await i.deferUpdate();
+				resolve(i.customId);
+			});
+
+			collector.on("end", (_, reason) => {
+				if (reason === "time") reject("inactivity");
+			});
+		});
 	}
 }
