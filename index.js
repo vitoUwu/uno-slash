@@ -1,4 +1,5 @@
 require("dotenv/config");
+const { default: axios } = require("axios");
 const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
 const Logger = require("./src/structures/Logger");
 const requireFiles = require("./src/utils/requireFiles");
@@ -26,6 +27,7 @@ client.login(process.env.TOKEN)
   .then(() => {
     client.logger.log(`Logado como ${client.user.tag}`);
     updateActivity();
+    postStatus();
   });
 
 const updateActivity = () => {
@@ -35,6 +37,41 @@ const updateActivity = () => {
   });
 
   setTimeout(() => updateActivity(), 60000 * 10);
+}
+
+const postStatus = () => {
+  const topggToken = process.env.TOPGG_TOKEN;
+  const dbggToken = process.env.DBGG_TOKEN;
+  const dblToken = process.env.DBL_TOKEN;
+  const guilds = client.guilds.cache.size;
+
+  try {
+    if (topggToken) {
+      await axios.post(`https://top.gg/api/bots/${client.user.id}/stats`, {
+        server_count: guilds
+      }, {
+        headers: { "Authorization": topggToken }
+      });
+    }
+    if (dbggToken) {
+      await axios.post(`https://discord.bots.gg/api/v1/bots/${client.user.id}/stats`, {
+        guildCount: guilds
+      }, {
+        headers: { "Authorization": dbggToken }
+      });
+    }
+    if (dblToken) {
+      await axios.post(`https://discordbotlist.com/api/v1/bots/${client.user.id}/stats`, {
+        guilds
+      }, {
+        headers: { "Authorization": dblToken }
+      });
+    }
+  } catch(err) {
+    client.logger.error(err);
+  }
+
+  setTimeout(() => postStatus(), 60000 * 30);
 }
 
 process.on("uncaughtException", (err) => client.logger.error(err));
