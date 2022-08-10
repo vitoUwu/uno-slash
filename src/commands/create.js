@@ -82,6 +82,7 @@ module.exports = {
 		collector.on("end", async (_, reason) => {
 			if (reason === "time") {
 				await reply.edit({ embeds: [error(locales(interaction.guildLocale, "commands.create.cancelledByInactivity"))], components: [] }).catch(() => {});
+				client.games.delete(interaction.channel.id);
 				return;
 			}
 		});
