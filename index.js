@@ -39,7 +39,7 @@ const updateActivity = () => {
   setTimeout(() => updateActivity(), 60000 * 10);
 }
 
-const postStatus = () => {
+const postStatus = async () => {
   const topggToken = process.env.TOPGG_TOKEN;
   const dbggToken = process.env.DBGG_TOKEN;
   const dblToken = process.env.DBL_TOKEN;
