@@ -16,7 +16,7 @@ module.exports = {
    */
   async slashExecute(interaction) {
 		const { client } = interaction;
-    if (!interaction.channel || interaction.channel.type !== ChannelType.GuildText) return await interaction.reply({ embeds: [error(locales(interaction.guildLocale, "commands.create.invalidChannel"))], ephemeral: true });
+    if (!interaction.channel || interaction.channel.type !== ChannelType.GuildText || interaction.channel.type !== ChannelType.GuildPublicThread || interaction.channel.type !== ChannelType.GuildPrivateThread) return await interaction.reply({ embeds: [error(locales(interaction.guildLocale, "commands.create.invalidChannel"))], ephemeral: true });
 
     let game = client.games.get(interaction.channelId);
 		if (game) return await interaction.reply({ embeds: [error(locales(interaction.guildLocale, "commands.create.alreadyStartedMatch"))], ephemeral: true });
