@@ -26,7 +26,7 @@ module.exports = {
 			cooldowns.set(`${commandName}_${interaction.user.id}`, Date.now() + command.cooldown * 1000);
 			setTimeout(() => cooldowns.delete(`${commandName}_${interaction.user.id}`), command.cooldown * 1000);
 
-			if (!interaction.channel.permissionsFor(interaction.guild.members.me).has("EmbedLinks") || !interaction.guild.members.me.permissions.has("EmbedLinks")) return interaction.reply({ content: locales(interaction.locale, "missingPermission") })
+			if (!interaction.channel.permissionsFor(interaction.guild.members.me).has("EmbedLinks")) return interaction.reply({ content: locales(interaction.locale, "missingPermission") })
 
 			try {
 				command[commandExecute](interaction);
