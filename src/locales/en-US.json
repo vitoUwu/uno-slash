@@ -122,5 +122,6 @@
       "reverse": "{0} played a reverse card, reversing the sequence of players",
       "block": "{0} played a blocking card and blocked {1} from playing"
     }
-  }
+  },
+  "missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches."
 }
