@@ -35,7 +35,7 @@ module.exports = {
 
 		if (!game.started) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.play.notStarted"))], ephemeral: true });
 
-		if (game.whoPlaysNow.member.id !== interaction.member.id) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.play.notTurn"))], ephemeral: true });
+		if (game.whoPlaysNow?.member.id !== interaction.member.id) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.play.notTurn"))], ephemeral: true });
 
 		const player = game.getPlayer(interaction.member.id);
 		if (!player) return await interaction.reply({ embeds: [error(locales(interaction.locale, "commands.play.notParticipating"))], ephemeral: true });
