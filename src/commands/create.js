@@ -50,7 +50,7 @@ module.exports = {
 
 				if (game.players.length < 2) return await i.reply({ embeds: [error(locales(i.locale, "commands.create.noPlayers"))], ephemeral: true });
 
-				await reply.edit({
+				await interaction.editReply({
 					embeds: [{
             title: locales(interaction.guildLocale, "commands.create.startedMatch"),
             description: `${locales(interaction.guildLocale, "commands.create.players")}: ${game.players.length}\n\`\`\`${game.players.map((player) => player.member.user.username).join("\n")}\`\`\``,
@@ -69,7 +69,7 @@ module.exports = {
 
 				game.addPlayer(i.member);
 				await i.reply({ embeds: [success(locales(i.locale, "commands.create.joinedMatch"))], ephemeral: true });
-				await reply.edit({
+				await interaction.editReply({
 					embeds: [{
             description: `${locales(i.locale, "commands.create.matchQueueDescription")}\n\n${locales(i.locale, "commands.create.players")}: \`\`\`${game.players.map((p) => p.member.user.username).join("\n")}\`\`\``,
             color: Colors.Blurple,
