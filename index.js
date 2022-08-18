@@ -6,7 +6,8 @@ const requireFiles = require("./src/utils/requireFiles");
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.Guilds
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages
   ]
 });
 
