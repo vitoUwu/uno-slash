@@ -6,8 +6,7 @@ const requireFiles = require("./src/utils/requireFiles");
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages
+    GatewayIntentBits.Guilds
   ]
 });
 
@@ -25,6 +24,7 @@ requireFiles("./src/events")
 client.login(process.env.TOKEN)
   .then(() => {
     client.logger.log(`Logado como ${client.user.tag}`);
+    console.log(`Canais: ${client.channels.cache.size}`)
     updateActivity();
     postStatus();
   });
