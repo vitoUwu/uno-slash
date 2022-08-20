@@ -123,5 +123,6 @@
       "block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar"
     }
   },
-  "missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida."
+  "missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida.",
+  "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos"
 }

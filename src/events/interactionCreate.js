@@ -22,7 +22,7 @@ module.exports = {
 			if (!command || (command.ownerOnly && interaction.user.id !== ownerId)) return;
 
 			const userCooldown = cooldowns.get(`${commandName}_${interaction.user.id}`);
-			if (userCooldown) return interaction.reply({ embeds: [error(`Você está usando os comandos muito de pressa! Espere mais \` ${((userCooldown - Date.now()) / 1000).toFixed(1)} \` segundos`)] });
+			if (userCooldown) return interaction.reply({ embeds: [error(locales(interaction.locale, "commandSpam", ((userCooldown - Date.now()) / 1000).toFixed(1)))] });
 			cooldowns.set(`${commandName}_${interaction.user.id}`, Date.now() + command.cooldown * 1000);
 			setTimeout(() => cooldowns.delete(`${commandName}_${interaction.user.id}`), command.cooldown * 1000);
 

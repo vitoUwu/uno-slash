@@ -123,5 +123,6 @@
       "block": "{0} played a blocking card and blocked {1} from playing"
     }
   },
-  "missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches."
+  "missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",
+  "commandSpam": "You're using the commands too quickly! Wait more ` {0} `"
 }
