@@ -17,9 +17,8 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async slashExecute(interaction) {
-    const content = interaction.options.getString("code");
+    let code = interaction.options.getString("code");
     const codeInBlock = /```(?:js)?\s(.+[^\\])```$/is;
-		let code = content.split(" ").slice(1).join(" ");
 		if (codeInBlock.test(code)) code = code.match(codeInBlock)[1];
 		code = code.includes("await") ? `async () => {${code}}` : `() => {${code}}`;
 		const silent = code.match(/--silent/gim) ? !!(code = code.replace(/--silent/gim, "")) : false;
