@@ -1,4 +1,5 @@
 require("dotenv/config");
+const { servers } = require("./config.json");
 const { default: axios } = require("axios");
 const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
 const Logger = require("./src/structures/Logger");
@@ -25,7 +26,9 @@ requireFiles("./src/events")
 client.login(process.env.TOKEN)
   .then(() => {
     client.logger.log(`Logado como ${client.user.tag}`);
-    console.log(`Canais: ${client.channels.cache.size}`)
+    client.application.commands.set(client.commands.filter(cmd => cmd.ownerOnly), servers.test)
+      .then(() => client.logger.log("Comandos registrados"))
+      .catch((err) => client.logger.error(err));
     updateActivity();
     postStatus();
   });

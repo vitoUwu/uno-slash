@@ -1,15 +1,25 @@
-const { Message, EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, ApplicationCommandOptionType, ChatInputCommandInteraction } = require("discord.js");
 
 module.exports = {
   name: "eval",
+  description: "eval command",
+  options: [
+		{
+			name: "code",
+			description: "code",
+			type: ApplicationCommandOptionType.String,
+      required: true
+		}
+  ],
   ownerOnly: true,
   /**
    * 
-   * @param {Message} message
+   * @param {ChatInputCommandInteraction} interaction
    */
-  async messageExecute(message) {
+  async slashExecute(interaction) {
+    const content = interaction.options.getString("code");
     const codeInBlock = /```(?:js)?\s(.+[^\\])```$/is;
-		let code = message.content.split(" ").slice(1).join(" ");
+		let code = content.split(" ").slice(1).join(" ");
 		if (codeInBlock.test(code)) code = code.match(codeInBlock)[1];
 		code = code.includes("await") ? `async () => {${code}}` : `() => {${code}}`;
 		const silent = code.match(/--silent/gim) ? !!(code = code.replace(/--silent/gim, "")) : false;
@@ -37,7 +47,7 @@ module.exports = {
 			{ name: "Class", value: `\`\`\`yml\n${classe}\`\`\``, inline: true },
 			{ name: "Type", value: `\`\`\`ts\n${type}\`\`\``, inline: true },
 		]);
-		message.reply({ embeds: [embed], ephemeral });
+		interaction.reply({ embeds: [embed], ephemeral });
 		return;
   }
 }
