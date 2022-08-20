@@ -16,18 +16,18 @@
       "players": "Players",
       "youCantStart": "Only the person who created the match can start it",
       "noPlayers": "Not enough players to start a match",
-      "startedMatch": "Started Match",
+      "startedMatch": "Match has been started",
       "alreadyJoinedMatch": "You already joined the game",
       "joinedMatch": "You joined the game",
       "cancelledByInactivity": "The match did not start due to inactivity"
     },
     "draw": {
-      "description": "Use to buy cards",
-      "noMatchs": "No matches found on the channel",
+      "description": "Use to draw cards",
+      "noMatchs": "No matchs found on the channel",
       "notStarted": "The match hasn't started yet",
       "notParticipating": "Looks like you're not playing the game.",
       "notTurn": "Your turn hasn't come yet",
-      "bhoughtCard": "Player {0} drew 1 card and passed"
+      "bhoughtCard": "Player {0} drew 1 card and passed his turn"
     },
     "help": {
       "description": "How to use commands",
@@ -50,7 +50,7 @@
     },
     "leave": {
       "description": "Use it to leave a game",
-      "noMatchs": "No matches found on the channel",
+      "noMatchs": "No matchs found on the channel",
       "notParticipating": "Looks like you're not playing the game.",
       "userLeft": "Player {0} has left the game"
     },
@@ -66,7 +66,7 @@
           "description": "The card that will be played"
         }
       },
-      "noMatchs": "No matches found on the channel",
+      "noMatchs": "No matchs found on the channel",
       "notStarted": "The match hasn't started yet",
       "notTurn": "Your turn hasn't come yet",
       "notParticipating": "Looks like you're not playing the game.",
@@ -95,13 +95,13 @@
     "report": "Report",
     "embeds": {
       "resume": {
-        "description": "Now it's {0} turn\nLast card: ` {1} `",
+        "description": "Now it's {0} turn\nLast played card: ` {1} `",
         "footer": "Use /play to play your card, or use /draw to draw a card"
       },
       "end": {
         "descriptions": {
           "inactivity": "All players became inactive. The match has ended",
-          "noPlayers": "The match is over. Congratulations to the winner {0} !!\nRanking of winners:"
+          "noPlayers": "The match is over. Congratulations to the winner **{0}** !!\nRanking of winners:"
         },
         "footer": "Help our bot using the command /vote <3"
       }
@@ -112,13 +112,13 @@
   },
   "player": {
     "notStarted": "The match hasn't started yet",
-    "cardNotFound": "I didn't find this card in the middle of your Deck, are you sure you spelled it correctly?",
+    "cardNotFound": "I didn't find this card in your Deck, are you sure you spelled it correctly?",
     "invalidCard": "This card cannot be played",
     "messages": {
       "win": "Player {0} ran out of cards and won the game",
       "4wild": "{0} played a special card +4 and changed the color of play\n{1} received +4 cards and now has ` {2} ` cards",
       "wild": "{0} played a special card and changed the color of the play",
-      "+2": "{0} played a card +2\n{1} received +2 cards and now has ` {2} ` cards",
+      "+2": "{0} played a +2 card\n{1} received +2 cards and now has ` {2} ` cards",
       "reverse": "{0} played a reverse card, reversing the sequence of players",
       "block": "{0} played a blocking card and blocked {1} from playing"
     }
