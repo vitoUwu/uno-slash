@@ -26,7 +26,7 @@ requireFiles("./src/events")
 client.login(process.env.TOKEN)
   .then(() => {
     client.logger.log(`Logado como ${client.user.tag}`);
-    client.application.commands.set(client.commands.filter(cmd => cmd.ownerOnly), servers.test)
+    client.application.commands.set(client.commands.filter(cmd => cmd.ownerOnly && cmd.description), servers.test) // just ignore cmd.description
       .then(() => client.logger.log("Comandos registrados"))
       .catch((err) => client.logger.error(err));
     updateActivity();
