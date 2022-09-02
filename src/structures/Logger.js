@@ -12,7 +12,9 @@ module.exports = class Logger {
 	constructor(path, prefix) {
 		if (!path) throw Error("Invalid Path Argument");
 		this.path = path;
-		this.fileName = `${new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }).replace(/\D/g, "")}_${new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" }).replace(/\D/g, "")}.txt`;
+		this.fileName = `${new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }).replace(/\D/g, "")}_${new Date()
+			.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" })
+			.replace(/\D/g, "")}.txt`;
 		this.prefix = prefix;
 	}
 
@@ -21,7 +23,9 @@ module.exports = class Logger {
 	 * @returns {string}
 	 */
 	get date() {
-		return `\x1b[33m[${new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })} ${new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo" })}]\x1b[0m`;
+		return `\x1b[33m[${new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })} ${new Date().toLocaleTimeString("pt-BR", {
+			timeZone: "America/Sao_Paulo",
+		})}]\x1b[0m`;
 	}
 
 	/**

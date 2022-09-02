@@ -3,122 +3,122 @@ const { error, success } = require("../utils/embeds");
 const { transformCommand } = require("../utils/functions");
 
 module.exports = {
-  name: "commands",
-  description: "command manager",
-  cooldown: 0,
-  ownerOnly: true,
-  options: [
-    {
-      name: "remove",
-      description: "remove a deployed command",
-      type: ApplicationCommandOptionType.SubcommandGroup,
-      options: [
-        {
-          name: "single",
-          description: "remove a deployed command",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "command",
-              description: "command name",
-              type: ApplicationCommandOptionType.String,
-              required: true,
-              autocomplete: true,
-            },
-            {
-              name: "type",
-              description: "command type",
-              type: ApplicationCommandOptionType.Number,
-              required: true,
-              choices: [
-                { name: "Slash", value: ApplicationCommandType.ChatInput },
-                { name: "User", value: ApplicationCommandType.User },
-                { name: "Message", value: ApplicationCommandType.Message }
-              ]
-            },
-            {
-              name: "guild",
-              description: "guild id if command is guild only",
-              type: ApplicationCommandOptionType.String,
-              autocomplete: true,
-            }
-          ],
-        },
-        {
-          name: "all",
-          description: "remove all deployed commands",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "guild",
-              description: "guild id if command is guild only",
-              type: ApplicationCommandOptionType.String,
-              autocomplete: true,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "deploy",
-      description: "deploy commands",
-      type: ApplicationCommandOptionType.SubcommandGroup,
-      options: [
-        {
-          name: "single",
-          description: "deploy one command",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "command",
-              description: "command",
-              type: ApplicationCommandOptionType.String,
-              required: true,
-              autocomplete: true,
-            },
-            {
-              name: "type",
-              description: "command type",
-              type: ApplicationCommandOptionType.Number,
-              required: true,
-              choices: [
-                { name: "Slash", value: ApplicationCommandType.ChatInput },
-                { name: "User", value: ApplicationCommandType.User },
-                { name: "Message", value: ApplicationCommandType.Message }
-              ]
-            },
-            {
-              name: "guild",
-              description: "guild id if command is guild only",
-              type: ApplicationCommandOptionType.String,
-              required: false,
-              autocomplete: true,
-            },
-          ],
-        },
-        {
-          name: "all",
-          description: "deploy all disponible commands",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "guild",
-              description: "guild id if command is guild only",
-              type: ApplicationCommandOptionType.String,
-              required: false,
-              autocomplete: true,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  /**
-   * 
-   * @param {ChatInputCommandInteraction} interaction 
-   */
-  async slashExecute(interaction) {
-    const { options, client } = interaction;
+	name: "commands",
+	description: "command manager",
+	cooldown: 0,
+	ownerOnly: true,
+	options: [
+		{
+			name: "remove",
+			description: "remove a deployed command",
+			type: ApplicationCommandOptionType.SubcommandGroup,
+			options: [
+				{
+					name: "single",
+					description: "remove a deployed command",
+					type: ApplicationCommandOptionType.Subcommand,
+					options: [
+						{
+							name: "command",
+							description: "command name",
+							type: ApplicationCommandOptionType.String,
+							required: true,
+							autocomplete: true,
+						},
+						{
+							name: "type",
+							description: "command type",
+							type: ApplicationCommandOptionType.Number,
+							required: true,
+							choices: [
+								{ name: "Slash", value: ApplicationCommandType.ChatInput },
+								{ name: "User", value: ApplicationCommandType.User },
+								{ name: "Message", value: ApplicationCommandType.Message },
+							],
+						},
+						{
+							name: "guild",
+							description: "guild id if command is guild only",
+							type: ApplicationCommandOptionType.String,
+							autocomplete: true,
+						},
+					],
+				},
+				{
+					name: "all",
+					description: "remove all deployed commands",
+					type: ApplicationCommandOptionType.Subcommand,
+					options: [
+						{
+							name: "guild",
+							description: "guild id if command is guild only",
+							type: ApplicationCommandOptionType.String,
+							autocomplete: true,
+						},
+					],
+				},
+			],
+		},
+		{
+			name: "deploy",
+			description: "deploy commands",
+			type: ApplicationCommandOptionType.SubcommandGroup,
+			options: [
+				{
+					name: "single",
+					description: "deploy one command",
+					type: ApplicationCommandOptionType.Subcommand,
+					options: [
+						{
+							name: "command",
+							description: "command",
+							type: ApplicationCommandOptionType.String,
+							required: true,
+							autocomplete: true,
+						},
+						{
+							name: "type",
+							description: "command type",
+							type: ApplicationCommandOptionType.Number,
+							required: true,
+							choices: [
+								{ name: "Slash", value: ApplicationCommandType.ChatInput },
+								{ name: "User", value: ApplicationCommandType.User },
+								{ name: "Message", value: ApplicationCommandType.Message },
+							],
+						},
+						{
+							name: "guild",
+							description: "guild id if command is guild only",
+							type: ApplicationCommandOptionType.String,
+							required: false,
+							autocomplete: true,
+						},
+					],
+				},
+				{
+					name: "all",
+					description: "deploy all disponible commands",
+					type: ApplicationCommandOptionType.Subcommand,
+					options: [
+						{
+							name: "guild",
+							description: "guild id if command is guild only",
+							type: ApplicationCommandOptionType.String,
+							required: false,
+							autocomplete: true,
+						},
+					],
+				},
+			],
+		},
+	],
+	/**
+	 *
+	 * @param {ChatInputCommandInteraction} interaction
+	 */
+	async slashExecute(interaction) {
+		const { options, client } = interaction;
 
 		const subCommandGroup = options.getSubcommandGroup();
 		const subCommand = options.getSubcommand();
@@ -131,29 +131,33 @@ module.exports = {
 
 				const commandType = options.getNumber("type");
 
-        const guildId = options.getString("guild");
-        const guild = client.guilds.cache.get(guildId);
-        if (guildId && !guild) return i.editReply({ embeds: [error("Servidor Inválido")] });
+				const guildId = options.getString("guild");
+				const guild = client.guilds.cache.get(guildId);
+				if (guildId && !guild) return i.editReply({ embeds: [error("Servidor Inválido")] });
 
-        await client.application.commands.create(transformCommand(command, commandType), guild?.id)
-          .then(() => interaction.editReply({ embeds: [success("Comando Implementado")] }))
-          .catch((err) => {
-            interaction.editReply({ embeds: [error(`Ocorreu um erro ao implementar comando\n\`\`\`${err.stack}\`\`\``)] });
-            client.logger.error(err);
-          });
+				await client.application.commands
+					.create(transformCommand(command, commandType), guild?.id)
+					.then(() => interaction.editReply({ embeds: [success("Comando Implementado")] }))
+					.catch((err) => {
+						interaction.editReply({ embeds: [error(`Ocorreu um erro ao implementar comando\n\`\`\`${err.stack}\`\`\``)] });
+						client.logger.error(err);
+					});
 			} else if (subCommand === "all") {
 				const commands = [];
-				client.commands.filter(cmd => !cmd.ownerOnly).forEach((cmd) => {
-          if (!!cmd.slashExecute) commands.push(transformCommand(cmd, ApplicationCommandType.ChatInput));
-          if (!!cmd.userContextExecute) commands.push(transformCommand(cmd, ApplicationCommandType.User));
-          if (!!cmd.messageContextExecute) commands.push(transformCommand(cmd, ApplicationCommandType.Message));
-        });
+				client.commands
+					.filter((cmd) => !cmd.ownerOnly)
+					.forEach((cmd) => {
+						if (!!cmd.slashExecute) commands.push(transformCommand(cmd, ApplicationCommandType.ChatInput));
+						if (!!cmd.userContextExecute) commands.push(transformCommand(cmd, ApplicationCommandType.User));
+						if (!!cmd.messageContextExecute) commands.push(transformCommand(cmd, ApplicationCommandType.Message));
+					});
 
 				const guildId = options.getString("guild");
 				const guild = client.guilds.cache.get(guildId);
 				if (guildId && !guild) return interaction.reply({ embeds: [error("Servidor Inválido")] });
 
-				await client.application.commands.set(commands, guild?.id)
+				await client.application.commands
+					.set(commands, guild?.id)
 					.then(() => interaction.reply({ embeds: [success("Comandos Implementados")] }))
 					.catch((err) => {
 						interaction.reply({ embeds: [error(`Ocorreu um erro ao implementar comando\n\`\`\`${err.stack}\`\`\``)] });
@@ -169,12 +173,12 @@ module.exports = {
 			}
 		}
 	},
-  /**
-   * 
-   * @param {AutocompleteInteraction} interaction 
-   */
+	/**
+	 *
+	 * @param {AutocompleteInteraction} interaction
+	 */
 	async autocompleteExecute(interaction) {
-    const { client, options } = interaction;
+		const { client, options } = interaction;
 		const focused = options.getFocused(true);
 
 		let data = [{ name: "Loading", value: "Loading" }];
@@ -194,5 +198,5 @@ module.exports = {
 		}
 
 		interaction.respond(data);
-  }
-}
+	},
+};

@@ -1,24 +1,24 @@
 const { EmbedBuilder, ApplicationCommandOptionType, ChatInputCommandInteraction } = require("discord.js");
 
 module.exports = {
-  name: "eval",
-  description: "eval command",
-  options: [
+	name: "eval",
+	description: "eval command",
+	options: [
 		{
 			name: "code",
 			description: "code",
 			type: ApplicationCommandOptionType.String,
-      required: true
-		}
-  ],
-  ownerOnly: true,
-  /**
-   * 
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async slashExecute(interaction) {
-    let code = interaction.options.getString("code");
-    const codeInBlock = /```(?:js)?\s(.+[^\\])```$/is;
+			required: true,
+		},
+	],
+	ownerOnly: true,
+	/**
+	 *
+	 * @param {ChatInputCommandInteraction} interaction
+	 */
+	async slashExecute(interaction) {
+		let code = interaction.options.getString("code");
+		const codeInBlock = /```(?:js)?\s(.+[^\\])```$/is;
 		if (codeInBlock.test(code)) code = code.match(codeInBlock)[1];
 		code = code.includes("await") ? `async () => {${code}}` : `() => {${code}}`;
 		const silent = code.match(/--silent/gim) ? !!(code = code.replace(/--silent/gim, "")) : false;
@@ -48,5 +48,5 @@ module.exports = {
 		]);
 		interaction.reply({ embeds: [embed], ephemeral });
 		return;
-  }
-}
+	},
+};

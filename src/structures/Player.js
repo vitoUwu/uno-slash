@@ -1,60 +1,69 @@
-const { CommandInteraction, GuildMember, Locale, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors } = require("discord.js");
+const {
+	CommandInteraction,
+	GuildMember,
+	Locale,
+	ChatInputCommandInteraction,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Colors,
+} = require("discord.js");
 const Game = require("./Game");
 const { error } = require("../utils/embeds");
 const locales = require("../locales");
 
 module.exports = class Player {
-  /**
-   * 
-   * @param {GuildMember} member
-   * @param {string} gameId 
-   * @param {Locale} locale 
-   */
-  constructor(member, gameId, locale) {
-    /**
-     * @type {string}
-     */
+	/**
+	 *
+	 * @param {GuildMember} member
+	 * @param {string} gameId
+	 * @param {Locale} locale
+	 */
+	constructor(member, gameId, locale) {
+		/**
+		 * @type {string}
+		 */
 		this.id = member.id;
-    /**
-     * @type {GuildMember}
-     */
-    this.member = member;
-    /**
-     * @type {string}
-     */
+		/**
+		 * @type {GuildMember}
+		 */
+		this.member = member;
+		/**
+		 * @type {string}
+		 */
 		this.gameId = gameId;
-    /**
-     * @type {string}
-     */
+		/**
+		 * @type {string}
+		 */
 		this.locale = locale;
-    /**
-     * @type {string[]}
-     */
+		/**
+		 * @type {string[]}
+		 */
 		this.cards = [];
-    /**
-     * @type {number}
-     */
+		/**
+		 * @type {number}
+		 */
 		this.skippedRounds = 0;
 	}
 
-  /**
-   * 
-   * @param {import("./Game").Card} lastCard 
-   * @param {import("./Game").Card} card 
-   * @returns {boolean}
-   */
+	/**
+	 *
+	 * @param {import("./Game").Card} lastCard
+	 * @param {import("./Game").Card} card
+	 * @returns {boolean}
+	 */
 	compatibleColor(lastCard, card) {
 		if (lastCard.type === "special" || card.type === "special") return true;
 		if (lastCard.color === card.color) return true;
 		return false;
 	}
 
-  /**
-   * 
-   * @param {import("./Game").Card} lastCard 
-   * @param {import("./Game").Card} card 
-   * @returns {boolean}
-   */
+	/**
+	 *
+	 * @param {import("./Game").Card} lastCard
+	 * @param {import("./Game").Card} card
+	 * @returns {boolean}
+	 */
 	compatibleNumber(lastCard, card) {
 		if (lastCard.type === "special" || card.type === "special") return true;
 		if (lastCard.number === "any" && lastCard.color === card.color) return true;
@@ -62,12 +71,12 @@ module.exports = class Player {
 		return false;
 	}
 
-  /**
-   * 
-   * @param {string} id 
-   * @param {CommandInteraction} interaction 
-   * @returns 
-   */
+	/**
+	 *
+	 * @param {string} id
+	 * @param {CommandInteraction} interaction
+	 * @returns
+	 */
 	async playCard(id, interaction) {
 		const game = interaction.client.games.get(this.gameId);
 		if (!game.started) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.notStarted"))] });
@@ -90,7 +99,7 @@ module.exports = class Player {
 			game.pushWinner(this.id);
 			game.message.push({
 				key: "player.messages.win",
-				variables: [interaction.member]
+				variables: [interaction.member],
 			});
 		}
 
@@ -112,13 +121,13 @@ module.exports = class Player {
 				game.giveCards(game.whoPlaysNext, 4);
 				game.message.push({
 					key: "player.messages.4wild",
-					variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length]
-				})
+					variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length],
+				});
 				game.pushPlayer();
 			} else {
 				game.message.push({
 					key: "player.messages.wild",
-					variables: [interaction.member]
+					variables: [interaction.member],
 				});
 			}
 		}
@@ -127,8 +136,8 @@ module.exports = class Player {
 			game.giveCards(game.whoPlaysNext, 2);
 			game.lastCardId = cardId;
 			game.message.push({
-				key: "player.messages.+2", 
-				variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length]
+				key: "player.messages.+2",
+				variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length],
 			});
 			game.pushPlayer();
 		}
@@ -136,8 +145,8 @@ module.exports = class Player {
 		if (cardNumber === "r") {
 			game.lastCardId = cardId;
 			game.message.push({
-				key: "player.messages.reverse", 
-				variables: [interaction.member]
+				key: "player.messages.reverse",
+				variables: [interaction.member],
 			});
 			game.reverse();
 			game.pushPlayer();
@@ -145,9 +154,9 @@ module.exports = class Player {
 
 		if (cardNumber === "b") {
 			game.lastCardId = cardId;
-			game.message.push({ 
+			game.message.push({
 				key: "player.messages.block",
-				variables: [interaction.member, game.whoPlaysNext.member]
+				variables: [interaction.member, game.whoPlaysNext.member],
 			});
 			game.pushPlayer();
 		}
@@ -157,23 +166,41 @@ module.exports = class Player {
 	}
 
 	/**
-	 * 
-	 * @param {ChatInputCommandInteraction} interaction 
+	 *
+	 * @param {ChatInputCommandInteraction} interaction
 	 * @returns {Promise<string>}
 	 */
 	async awaitColor(interaction) {
 		return new Promise(async (resolve, reject) => {
 			const row = new ActionRowBuilder().setComponents(
-				new ButtonBuilder().setCustomId("g").setEmoji({ name: "🟩" }).setLabel(locales(interaction.locale, "game.cards.green")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId("b").setEmoji({ name: "🟦" }).setLabel(locales(interaction.locale, "game.cards.blue")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId("y").setEmoji({ name: "🟨" }).setLabel(locales(interaction.locale, "game.cards.yellow")).setStyle(ButtonStyle.Primary),
-				new ButtonBuilder().setCustomId("r").setEmoji({ name: "🟥" }).setLabel(locales(interaction.locale, "game.cards.red")).setStyle(ButtonStyle.Primary)
+				new ButtonBuilder()
+					.setCustomId("g")
+					.setEmoji({ name: "🟩" })
+					.setLabel(locales(interaction.locale, "game.cards.green"))
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId("b")
+					.setEmoji({ name: "🟦" })
+					.setLabel(locales(interaction.locale, "game.cards.blue"))
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId("y")
+					.setEmoji({ name: "🟨" })
+					.setLabel(locales(interaction.locale, "game.cards.yellow"))
+					.setStyle(ButtonStyle.Primary),
+				new ButtonBuilder()
+					.setCustomId("r")
+					.setEmoji({ name: "🟥" })
+					.setLabel(locales(interaction.locale, "game.cards.red"))
+					.setStyle(ButtonStyle.Primary)
 			);
 			const reply = await interaction.followUp({
-				embeds: [{
-					description: locales(interaction.locale, "game.chooseColor"),
-					color: Colors.Blurple,
-				}],
+				embeds: [
+					{
+						description: locales(interaction.locale, "game.chooseColor"),
+						color: Colors.Blurple,
+					},
+				],
 				components: [row],
 			});
 			const collector = reply.createMessageComponentCollector({
@@ -192,4 +219,4 @@ module.exports = class Player {
 			});
 		});
 	}
-}
+};
