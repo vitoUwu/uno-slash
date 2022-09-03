@@ -221,7 +221,7 @@ module.exports = class Game {
 	}
 
 	get locale() {
-		return this.whoPlaysNow?.locale || this.guild.preferredLocale || "en-US";
+		return this.whoPlaysNow?.locale || this.guild?.preferredLocale || "en-US";
 	}
 
 	/**
