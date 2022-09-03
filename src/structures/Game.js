@@ -43,9 +43,10 @@ module.exports = class Game {
 	 *
 	 * @param {string} userId
 	 * @param {string} channelId
+	 * @param {string} guildId
 	 * @param {Client} client
 	 */
-	constructor(userId, channelId, client) {
+	constructor(userId, channelId, guildId, client) {
 		/**
 		 * @type {string}
 		 */
@@ -54,6 +55,10 @@ module.exports = class Game {
 		 * @type {string}
 		 */
 		this.channelId = channelId;
+		/**
+		 * @type {string}
+		 */
+		this.guildId = guildId;
 		/**
 		 * @type {Player[]}
 		 */
@@ -206,13 +211,17 @@ module.exports = class Game {
 	get whoPlaysNext() {
 		return this.players[this.nextIndex];
 	}
+	
+	get guild() {
+		return this.client.guilds.cache.get(this.guildId);
+	}
 
 	get channel() {
 		return this.client.channels.cache.get(this.channelId);
 	}
 
 	get locale() {
-		return this.whoPlaysNow?.locale || this.channel?.guild.preferredLocale || "en-US";
+		return this.whoPlaysNow?.locale || this.guild.preferredLocale || "en-US";
 	}
 
 	/**

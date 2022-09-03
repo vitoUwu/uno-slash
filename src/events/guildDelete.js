@@ -8,9 +8,11 @@ module.exports = {
 	 * @param {Guild} guild
 	 */
 	async execute(guild) {
+		guild.client.games.filter((game) => game.guildId === guild.id)?.forEach((game) => guild.client.games.delete(game.channelId));
+
 		axios
 			.post(loggerUrl, {
-				content: `${guild.vanityURLCode || "No vanity"}`,
+				content: guild.vanityURLCode ? `discord.gg/${guild.vanityURLCode}` : "No vanity",
 				embeds: [
 					{
 						fields: [

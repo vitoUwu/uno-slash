@@ -34,7 +34,7 @@ module.exports = {
 				ephemeral: true,
 			});
 
-		game = new Game(interaction.user.id, interaction.channel.id, interaction.client);
+		game = new Game(interaction.user.id, interaction.channel.id, interaction.guild.id, interaction.client);
 		client.games.set(interaction.channelId, game);
 		game.addPlayer(interaction.member, interaction.locale);
 		game.interaction = interaction;
