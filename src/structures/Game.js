@@ -124,10 +124,28 @@ module.exports = class Game {
 
 	/**
 	 *
+	 * @param {string} colorId
+	 * @returns {string}
+	 */
+	parseEmoji(colorId) {
+		colorId = this.parseColor(colorId);
+		return colorId === CardColorsEnum.Red
+			? "🟥"
+			: colorId === CardColorsEnum.Green
+			? "🟩"
+			: colorId === CardColorsEnum.Blue
+			? "🟦"
+			: colorId === CardColorsEnum.Yellow
+			? "🟨"
+			: "🔲";
+	}
+
+	/**
+	 *
 	 * @param {string} number
 	 * @returns {string}
 	 */
-	parseNumber(number) {
+	numberToString(number) {
 		return !isNaN(parseInt(number))
 			? number
 			: number === "b"
@@ -160,16 +178,19 @@ module.exports = class Game {
 	 * @returns {Card}
 	 */
 	parseCardId(cardId) {
+		const id = cardId;
+		const type = cardId.slice(0, 1) === "w" ? "special" : "normal";
+		const number = cardId.slice(1);
+		const color = this.parseColor(cardId.slice(0, 1));
+		const emoji = this.parseEmoji(color);
 		return {
-			id: cardId,
-			type: cardId.slice(0, 1) === "w" ? "special" : "normal",
-			number: cardId.slice(1),
-			color: this.parseColor(cardId.slice(0, 1)),
-			toString: () =>
-				`${
-					cardId.slice(0, 1) === "w" ? locales(this.locale, "game.cards.wild") : this.colorToString(this.parseColor(cardId.slice(0, 1)))
-				} ${this.parseNumber(cardId.slice(1))}`,
-		};
+			id,
+			type,
+			number,
+			color,
+			emoji,
+			toString: () => `${emoji} ${!color ? locales(this.locale, "game.cards.wild") : this.colorToString(color)} ${this.numberToString(number)}`,
+		};;
 	}
 
 	/**
@@ -211,7 +232,7 @@ module.exports = class Game {
 	get whoPlaysNext() {
 		return this.players[this.nextIndex];
 	}
-	
+
 	get guild() {
 		return this.client.guilds.cache.get(this.guildId);
 	}
