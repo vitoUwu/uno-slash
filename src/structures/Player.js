@@ -81,8 +81,6 @@ module.exports = class Player {
 		const game = interaction.client.games.get(this.gameId);
 		if (!game.started) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.notStarted"))] });
 
-		interaction.client.logger.log(`${interaction.user.tag} played ${id}`);
-
 		if (id === "draw") {
 			game.giveCards(this, 1);
 			game.message.push({
