@@ -79,8 +79,9 @@
 			}
 		},
 		"invite": {
+			"description": "Use esse comando para me convidar",
 			"embed": {
-				"description": "Clique no botão para me convitar para o seu servidor ou copie o link abaixo\n\n[Convite]({0})"
+				"description": "<:link:1016255696607657984> Clique no botão para me convitar para o seu servidor ou copie o link abaixo\n\n<:dot:1016255579553017986> [Convite]({0})"
 			},
 			"button": {
 				"label": "Me convide"

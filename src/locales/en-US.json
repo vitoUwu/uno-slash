@@ -79,8 +79,9 @@
 			}
 		},
 		"invite": {
+			"description": "Use this command to get the invite link",
 			"embed": {
-				"description": "Click on the button to invite me to your server or copy the link below\n\n[Invite]({0})"
+				"description": "<:link:1016255696607657984> Click on the button to invite me to your server or copy the link below\n\n<:dot:1016255579553017986> [Invite]({0})"
 			},
 			"button": {
 				"label": "Invite me"

@@ -1,4 +1,4 @@
-const { CommandInteraction, Colors, Locale, ComponentType, ButtonStyle } = require("discord.js");
+const { CommandInteraction, Locale, ComponentType, ButtonStyle } = require("discord.js");
 const locale = require("../locales");
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
 		return interaction.reply({
 			embeds: [
 				{
-					color: Colors.Blurple,
+					color: "#2f3136",
 					description: locale(interaction.locale, "commands.invite.embed.description", invite),
 				},
 			],
