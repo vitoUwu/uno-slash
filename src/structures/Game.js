@@ -190,7 +190,16 @@ module.exports = class Game {
 			color,
 			emoji,
 			toString: () => `${emoji} ${!color ? locales(this.locale, "game.cards.wild") : this.colorToString(color)} ${this.numberToString(number)}`,
-		};;
+		};
+	}
+
+	/**
+	 *
+	 * @param {number} ranking
+	 * @returns {string}
+	 */
+	getRankingPositionEmoji(ranking) {
+		return ranking === 0 ? "🥇" : ranking === 1 ? "🥈" : ranking === 2 ? "🥉" : "🎖️";
 	}
 
 	/**
@@ -212,7 +221,7 @@ module.exports = class Game {
 			? Colors.Green
 			: cardColor === CardColorsEnum.Blue
 			? Colors.Blue
-			: cardColor === "y"
+			: cardColor === CardColorsEnum.Yellow
 			? Colors.Yellow
 			: Colors.Blurple;
 	}
@@ -304,7 +313,7 @@ module.exports = class Game {
 				embeds: [
 					{
 						description: `${locales(this.locale, "game.embeds.end.descriptions.noPlayers", this.winners[0])}\n\n\`\`\`${this.winners
-							.map((w, i) => `#${i + 1} | ${w}`)
+							.map((w, i) => `[${this.getRankingPositionEmoji(i)}] #${i + 1} | ${w}`)
 							.join("\n")}\`\`\``,
 						color: Colors.Blurple,
 						footer: { text: locales(this.locale, "game.embeds.end.footer") },
