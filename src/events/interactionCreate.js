@@ -14,7 +14,7 @@ module.exports = {
 		const { client } = interaction;
 		if (!interaction.guild) return;
 
-		if (interaction.isContextMenuCommand() || interaction.isChatInputCommand()) {
+		if (interaction.isCommand()) {
 			const commandName = interaction.commandName;
 			const commandExecute = interaction.isChatInputCommand()
 				? "slashExecute"
@@ -27,7 +27,10 @@ module.exports = {
 
 			const userCooldown = cooldowns.get(`${commandName}_${interaction.user.id}`);
 			if (userCooldown)
-				return interaction.reply({ embeds: [error(locales(interaction.locale, "commandSpam", ((userCooldown - Date.now()) / 1000).toFixed(1)))] });
+				return interaction.reply({
+					embeds: [error(locales(interaction.locale, "commandSpam", ((userCooldown - Date.now()) / 1000).toFixed(1)))],
+					ephemeral: true,
+				});
 			cooldowns.set(`${commandName}_${interaction.user.id}`, Date.now() + command.cooldown * 1000);
 			setTimeout(() => cooldowns.delete(`${commandName}_${interaction.user.id}`), command.cooldown * 1000);
 
@@ -37,7 +40,7 @@ module.exports = {
 			try {
 				command[commandExecute](interaction);
 			} catch (err) {
-				interaction.reply({ embeds: [error(err.stack ?? "Erro desconhecido")] });
+				interaction.reply({ embeds: [error(err.stack || err || "Unknown Error")] });
 				client.logger.error(err);
 			}
 		} else if (interaction.type === InteractionType.ApplicationCommandAutocomplete) {
@@ -49,7 +52,7 @@ module.exports = {
 			try {
 				command.autocompleteExecute(interaction);
 			} catch (err) {
-				interaction.respond([{ name: "Erro desconhecido", value: "Erro desconhecido" }]);
+				interaction.respond([{ name: "Unknown Error", value: "Unknown Error" }]);
 				client.logger.error(err);
 			}
 		}
