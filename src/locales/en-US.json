@@ -77,6 +77,14 @@
 			"embed": {
 				"description": "Help our bot to grow more and more. Vote below by clicking on the buttons to be redirected"
 			}
+		},
+		"invite": {
+			"embed": {
+				"description": "Click on the button to invite me to your server or copy the link below\n\n[Invite]({0})"
+			},
+			"button": {
+				"label": "Invite me"
+			}
 		}
 	},
 	"game": {

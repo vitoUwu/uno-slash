@@ -18,13 +18,14 @@ requireFiles("./src/commands").forEach((command) => client.commands.set(command.
 
 requireFiles("./src/events").forEach((event) => client.on(event.name, event.execute));
 
-client.login(process.env.TOKEN).then(() => {
+client.login(process.env.TOKEN).then(async () => {
+	await client.application.fetch();
 	client.logger.log(`Logado como ${client.user.tag}`);
 	client.application.commands
 		.set(
 			client.commands.filter((cmd) => cmd.ownerOnly && cmd.description),
 			servers.test
-		) // just ignore cmd.description
+		)
 		.then(() => client.logger.log("Comandos registrados"))
 		.catch((err) => client.logger.error(err));
 	updateActivity();
