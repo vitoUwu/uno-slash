@@ -81,6 +81,18 @@ module.exports = class Player {
 		const game = interaction.client.games.get(this.gameId);
 		if (!game.started) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.notStarted"))] });
 
+		interaction.client.logger.log(`${interaction.user.tag} played ${id}`);
+
+		if (id === "draw") {
+			game.giveCards(this, 1);
+			game.message.push({
+				key: "commands.draw.bhoughtCard",
+				variables: [interaction.user],
+			});
+			await game.nextPlayer(interaction);
+			return;
+		}
+
 		const index = this.cards.findIndex((c) => c === id || game.parseCardId(c).toString().toLowerCase() === id.toLowerCase());
 		if (index < 0) return await interaction.reply({ embeds: [error(locales(interaction.locale, "player.cardNotFound"))], ephemeral: true });
 
@@ -149,7 +161,6 @@ module.exports = class Player {
 				variables: [interaction.member],
 			});
 			game.reverse();
-			game.pushPlayer();
 		}
 
 		if (cardNumber === "b") {

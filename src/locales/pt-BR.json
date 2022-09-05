@@ -70,7 +70,8 @@
 			"notStarted": "A partida ainda não começou",
 			"notTurn": "Ainda não chegou a sua vez",
 			"notParticipating": "Parece que você não está participando da partida",
-			"cardNotFound": "Nenhuma carta encontrada"
+			"cardNotFound": "Nenhuma carta encontrada",
+			"drawCardOption": "Comprar uma carta"
 		},
 		"vote": {
 			"description": "Dê o seu suporte ao nosso bot <3",

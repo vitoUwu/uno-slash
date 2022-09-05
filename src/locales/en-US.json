@@ -70,7 +70,8 @@
 			"notStarted": "The match hasn't started yet",
 			"notTurn": "Your turn hasn't come yet",
 			"notParticipating": "Looks like you're not playing the game.",
-			"cardNotFound": "No cards found"
+			"cardNotFound": "No cards found",
+			"drawCardOption": "Draw a card"
 		},
 		"vote": {
 			"description": "Support our bot <3",

@@ -72,10 +72,22 @@ module.exports = {
 
 		let data = player.cards
 			.filter((cardId) => cardId.includes(value) || game.parseCardId(cardId).toString().toLowerCase().includes(value))
-			.map((card) => ({ name: game.parseCardId(card).toString(), value: card }));
+			.map((card) => ({ name: game.parseCardId(card).toString(), value: card }))
+			.slice(0, 24);
+		
+		data.push({ name: locales(interaction.locale, "commands.play.drawCardOption"), value: "draw" });
 
 		if (!data.length)
-			data = [{ name: locales(interaction.locale, "commands.play.cardNotFound"), value: locales(interaction.locale, "commands.play.cardNotFound") }];
+			data = [
+				{
+					name: locales(interaction.locale, "commands.play.cardNotFound"),
+					value: locales(interaction.locale, "commands.play.cardNotFound")
+				},
+				{
+					name: locales(interaction.locale, "commands.play.drawCardOption"),
+					value: "draw"
+				}
+			];
 
 		await interaction.respond(data);
 		return;
