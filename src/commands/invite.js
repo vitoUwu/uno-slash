@@ -23,7 +23,7 @@ module.exports = {
 		return interaction.reply({
 			embeds: [
 				{
-					color: "#2f3136",
+					color: 3092790,
 					description: locale(interaction.locale, "commands.invite.embed.description", invite),
 				},
 			],
