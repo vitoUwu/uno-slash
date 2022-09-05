@@ -133,7 +133,9 @@ module.exports = {
 
 				const guildId = options.getString("guild");
 				const guild = client.guilds.cache.get(guildId);
-				if (guildId && !guild) return i.editReply({ embeds: [error("Servidor Inválido")] });
+				if (guildId && !guild) return interaction.reply({ embeds: [error("Servidor Inválido")] });
+
+				await interaction.deferReply();
 
 				await client.application.commands
 					.create(transformCommand(command, commandType), guild?.id)
@@ -156,11 +158,13 @@ module.exports = {
 				const guild = client.guilds.cache.get(guildId);
 				if (guildId && !guild) return interaction.reply({ embeds: [error("Servidor Inválido")] });
 
+				await interaction.deferReply();
+
 				await client.application.commands
 					.set(commands, guild?.id)
-					.then(() => interaction.reply({ embeds: [success("Comandos Implementados")] }))
+					.then(() => interaction.editReply({ embeds: [success("Comandos Implementados")] }))
 					.catch((err) => {
-						interaction.reply({ embeds: [error(`Ocorreu um erro ao implementar comando\n\`\`\`${err.stack}\`\`\``)] });
+						interaction.editReply({ embeds: [error(`Ocorreu um erro ao implementar comando\n\`\`\`${err.stack}\`\`\``)] });
 						client.logger.error(err);
 					});
 			}
