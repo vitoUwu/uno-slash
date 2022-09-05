@@ -101,7 +101,7 @@
 			"wild": "Wild",
 			"cards": "Cards"
 		},
-		"inactivity": "Player {0} took too long to play and his turn was passed.\n{0} was dealt +2 cards. Now {0} has ` {1} ` cards",
+		"inactivity": "Player {0} took too long to play and his turn was passed.\n{0} was dealt +{2} cards. Now {0} has ` {1} ` cards",
 		"report": "Report",
 		"embeds": {
 			"resume": {
@@ -130,7 +130,9 @@
 			"wild": "{0} played a special card and changed the color of the play",
 			"+2": "{0} played a +2 card\n{1} received +2 cards and now has ` {2} ` cards",
 			"reverse": "{0} played a reverse card, reversing the sequence of players",
-			"block": "{0} played a blocking card and blocked {1} from playing"
+			"block": "{0} played a blocking card and blocked {1} from playing",
+			"stacked+2": "{0} played a +2 card, the card draw combo is on {1} cards",
+			"endCombo": "{0} played a +2 card. Player {1} has no +2 cards and has drawn {3} cards, now player {1} has ` {2} ` cards"
 		}
 	},
 	"missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",

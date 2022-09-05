@@ -103,6 +103,10 @@ module.exports = class Game {
 		 * @type {Client}
 		 */
 		this.client = client;
+		/**
+		 * @type {number}
+		 */
+		this.stackedCombo = 0;
 	}
 
 	/**
@@ -279,11 +283,12 @@ module.exports = class Game {
 		this.players.forEach((player) => this.giveCards(player, 7));
 
 		this.timeout = setTimeout(() => {
-			this.giveCards(this.whoPlaysNow, 2);
+			this.giveCards(this.whoPlaysNow, this.stackedCombo || 2);
 			this.message.push({
 				key: "game.inactivity",
-				variables: [this.whoPlaysNow.member, this.whoPlaysNow.cards.length],
+				variables: [this.whoPlaysNow.member, this.whoPlaysNow.cards.length, this.stackedCombo || 2],
 			});
+			this.stackedCombo = 0;
 			this.whoPlaysNow.skippedRounds++;
 			if (this.whoPlaysNow.skippedRounds >= 2) this.removePlayer(this.whoPlaysNow.id);
 			else this.nextPlayer();

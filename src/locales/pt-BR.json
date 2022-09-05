@@ -101,7 +101,7 @@
 			"wild": "Coringa",
 			"cards": "Cartas"
 		},
-		"inactivity": "O jogador {0} demorou muito para jogar e a sua vez foi passada.\n{0} recebeu +2 cartas. Agora {0} tem ` {1} ` cartas",
+		"inactivity": "O jogador {0} demorou muito para jogar e a sua vez foi passada.\n{0} recebeu +{2} cartas. Agora {0} tem ` {1} ` cartas",
 		"report": "Reportar",
 		"embeds": {
 			"resume": {
@@ -130,7 +130,9 @@
 			"wild": "{0} jogou uma carta especial e alterou a cor da jogada",
 			"+2": "{0} jogou uma carta +2\n{1} recebeu +2 cartas e agora tem ` {2} ` cartas",
 			"reverse": "{0} jogou uma carta reverso, invertendo a sequência de jogadores",
-			"block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar"
+			"block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar",
+			"stacked+2": "{0} jogou uma carta +2, o acúmulo de compras de cartas está em {1} cartas",
+			"endCombo": "{0} jogou uma carta +2. O jogador {1} não tem cartas +2 e comprou {3} cartas, agora o jogador {1} tem ` {2} ` cartas"
 		}
 	},
 	"missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida.",

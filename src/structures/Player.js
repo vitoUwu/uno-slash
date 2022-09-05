@@ -143,13 +143,32 @@ module.exports = class Player {
 		}
 
 		if (cardNumber === "+2") {
-			game.giveCards(game.whoPlaysNext, 2);
-			game.lastCardId = cardId;
-			game.message.push({
-				key: "player.messages.+2",
-				variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length],
-			});
-			game.pushPlayer();
+			if (game.whoPlaysNext.cards.some((id) => id.includes("+2"))) {
+				game.lastCardId = cardId;
+				game.stackedCombo += 2;
+				game.message.push({
+					key: "player.messages.stacked+2",
+					variables: [interaction.member, game.stackedCombo],
+				});
+			} else if (game.stackedCombo) {
+				game.lastCardId = cardId;
+				game.stackedCombo += 2;
+				game.giveCards(game.whoPlaysNext, game.stackedCombo);
+				game.message.push({
+					key: "player.messages.endCombo",
+					variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length, game.stackedCombo],
+				});
+				game.stackedCombo = 0;
+				game.pushPlayer();
+			} else {
+				game.giveCards(game.whoPlaysNext, 2);
+				game.lastCardId = cardId;
+				game.message.push({
+					key: "player.messages.+2",
+					variables: [interaction.member, game.whoPlaysNext.member, game.whoPlaysNext.cards.length],
+				});
+				game.pushPlayer();
+			}
 		}
 
 		if (cardNumber === "r") {
