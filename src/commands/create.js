@@ -23,14 +23,14 @@ module.exports = {
 				interaction.channel.type !== ChannelType.GuildPrivateThread)
 		)
 			return await interaction.reply({
-				embeds: [error(locales(interaction.guildLocale, "commands.create.invalidChannel"))],
+				embeds: [error(locales(interaction.locale, "commands.create.invalidChannel"))],
 				ephemeral: true,
 			});
 
 		let game = client.games.get(interaction.channelId);
 		if (game)
 			return await interaction.reply({
-				embeds: [error(locales(interaction.guildLocale, "commands.create.alreadyStartedMatch"))],
+				embeds: [error(locales(interaction.locale, "commands.create.alreadyStartedMatch"))],
 				ephemeral: true,
 			});
 
@@ -40,21 +40,15 @@ module.exports = {
 		game.interaction = interaction;
 
 		const row = new ActionRowBuilder().addComponents(
-			new ButtonBuilder()
-				.setCustomId("join")
-				.setLabel(locales(interaction.guildLocale, "commands.create.joinMatch"))
-				.setStyle(ButtonStyle.Primary),
-			new ButtonBuilder()
-				.setCustomId("start")
-				.setLabel(locales(interaction.guildLocale, "commands.create.startMatch"))
-				.setStyle(ButtonStyle.Success)
+			new ButtonBuilder().setCustomId("join").setLabel(locales(interaction.locale, "commands.create.joinMatch")).setStyle(ButtonStyle.Primary),
+			new ButtonBuilder().setCustomId("start").setLabel(locales(interaction.locale, "commands.create.startMatch")).setStyle(ButtonStyle.Success)
 		);
 
 		const reply = await interaction.reply({
 			embeds: [
 				{
-					description: `${locales(interaction.guildLocale, "commands.create.matchQueueDescription")}\n\n${locales(
-						interaction.guildLocale,
+					description: `${locales(interaction.locale, "commands.create.matchQueueDescription")}\n\n${locales(
+						interaction.locale,
 						"commands.create.players"
 					)}:\`\`\`${game.players.map((p) => p.member.user.username).join("\n")}\`\`\``,
 					color: Colors.Blurple,
@@ -85,8 +79,8 @@ module.exports = {
 				await interaction.editReply({
 					embeds: [
 						{
-							title: locales(interaction.guildLocale, "commands.create.startedMatch"),
-							description: `${locales(interaction.guildLocale, "commands.create.players")}: ${game.players.length}\n\`\`\`${game.players
+							title: locales(interaction.locale, "commands.create.startedMatch"),
+							description: `${locales(interaction.locale, "commands.create.players")}: ${game.players.length}\n\`\`\`${game.players
 								.map((player) => player.member.user.username)
 								.join("\n")}\`\`\``,
 							color: Colors.Green,
@@ -131,7 +125,7 @@ module.exports = {
 			if (reason === "time") {
 				await reply
 					.edit({
-						embeds: [error(locales(interaction.guildLocale, "commands.create.cancelledByInactivity"))],
+						embeds: [error(locales(interaction.locale, "commands.create.cancelledByInactivity"))],
 						components: [],
 					})
 					.catch(() => {});
