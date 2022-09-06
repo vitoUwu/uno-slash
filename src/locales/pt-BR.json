@@ -136,7 +136,8 @@
 			"block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar",
 			"stacked+2": "{0} jogou uma carta +2, o acúmulo de compras de cartas está em {1} cartas",
 			"endCombo": "{0} jogou uma carta +2. O jogador {1} não tem cartas +2 e comprou {3} cartas, agora o jogador {1} tem ` {2} ` cartas"
-		}
+		},
+		"only+2": "Apenas cartas +2 são válidas para essa jogada"
 	},
 	"missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida.",
 	"commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos"

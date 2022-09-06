@@ -136,7 +136,8 @@
 			"block": "{0} played a blocking card and blocked {1} from playing",
 			"stacked+2": "{0} played a +2 card, the card draw combo is on {1} cards",
 			"endCombo": "{0} played a +2 card. Player {1} has no +2 cards and has drawn {3} cards, now player {1} has ` {2} ` cards"
-		}
+		},
+		"only+2": "Only +2 cards are valid to play"
 	},
 	"missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",
 	"commandSpam": "You're using the commands too quickly! Wait more ` {0} `"

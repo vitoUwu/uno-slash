@@ -99,6 +99,11 @@ module.exports = class Player {
 		const serializedCard = game.parseCardId(deckCard);
 		const serializedLastCard = game.parseCardId(game.lastCardId);
 
+		if (game.stackedCombo && serializedCard.number !== "+2") {
+			await interaction.reply({ embeds: [error(locales(interaction.locale, "player.only+2"))], ephemeral: true });
+			return;
+		}
+
 		if (!this.compatibleColor(serializedLastCard, serializedCard) && !this.compatibleNumber(serializedLastCard, serializedCard)) {
 			await interaction.reply({ embeds: [error(locales(interaction.locale, "player.invalidCard"))], ephemeral: true });
 			return;
