@@ -19,7 +19,10 @@
 			"startedMatch": "Match has been started",
 			"alreadyJoinedMatch": "You already joined the game",
 			"joinedMatch": "You joined the game",
-			"cancelledByInactivity": "The match did not start due to inactivity"
+			"cancelledByInactivity": "The match did not start due to inactivity",
+			"cancelMatch": "Cancel Match",
+			"youCantCancel": "Only the player who created the match can cancel it",
+			"cancelledMatch": "The match has been canceled by the creator"
 		},
 		"draw": {
 			"description": "Use to draw cards",

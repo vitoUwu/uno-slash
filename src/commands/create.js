@@ -41,7 +41,8 @@ module.exports = {
 
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder().setCustomId("join").setLabel(locales(interaction.locale, "commands.create.joinMatch")).setStyle(ButtonStyle.Primary),
-			new ButtonBuilder().setCustomId("start").setLabel(locales(interaction.locale, "commands.create.startMatch")).setStyle(ButtonStyle.Success)
+			new ButtonBuilder().setCustomId("start").setLabel(locales(interaction.locale, "commands.create.startMatch")).setStyle(ButtonStyle.Success),
+			new ButtonBuilder().setCustomId("cancel").setLabel(locales(interaction.locale, "commands.create.cancelMatch")).setStyle(ButtonStyle.Danger)
 		);
 
 		const reply = await interaction.reply({
@@ -118,6 +119,27 @@ module.exports = {
 					],
 				});
 				return;
+			}
+
+			if (i.customId === "cancel") {
+				if (i.user.id !== game.authorId)
+					return await i.reply({
+						embeds: [error(locales(i.locale, "commands.create.youCantCancel"))],
+						ephemeral: true,
+					});
+
+				collector.stop();
+				interaction.client.games.delete(interaction.channel.id);
+				
+				await interaction.editReply({
+					embeds: [
+						{
+							description: locales(interaction.locale, "commands.create.cancelledMatch"),
+							color: Colors.Red,
+						},
+					],
+					components: [],
+				});
 			}
 		});
 

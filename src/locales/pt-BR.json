@@ -19,7 +19,10 @@
 			"startedMatch": "Partida Iniciada",
 			"alreadyJoinedMatch": "Você já entrou na partida",
 			"joinedMatch": "Você entrou na partida",
-			"cancelledByInactivity": "A partida não foi iniciada por inatividade"
+			"cancelledByInactivity": "A partida não foi iniciada por inatividade",
+			"cancelMatch": "Cancelar Partida",
+			"youCantCancel": "Somente quem criou a partida pode cancelá-la",
+			"cancelledMatch": "A partida foi cancelada pelo criador"
 		},
 		"draw": {
 			"description": "Use para comprar cartas",
