@@ -89,7 +89,7 @@ module.exports = {
 				}
 			];
 
-		await interaction.respond(data);
+		await interaction.respond(data).catch(() => {});
 		return;
 	},
 };
