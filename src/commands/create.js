@@ -1,4 +1,4 @@
-const { ButtonStyle, ChannelType, ChatInputCommandInteraction, Colors, ActionRowBuilder, ButtonBuilder, Locale } = require("discord.js");
+const { ButtonStyle, ChatInputCommandInteraction, Colors, ActionRowBuilder, ButtonBuilder, Locale } = require("discord.js");
 const locales = require("../locales");
 const Game = require("../structures/Game");
 const { error, success } = require("../utils/embeds");
@@ -15,26 +15,22 @@ module.exports = {
 	 * @param {ChatInputCommandInteraction} interaction
 	 */
 	async slashExecute(interaction) {
+		await interaction.deferReply();
+
 		const { client } = interaction;
-		if (
-			!interaction.channel ||
-			(interaction.channel.type !== ChannelType.GuildText &&
-				interaction.channel.type !== ChannelType.GuildPublicThread &&
-				interaction.channel.type !== ChannelType.GuildPrivateThread)
-		)
-			return await interaction.reply({
+		if (!interaction.channel || !interaction.channel.isTextBased() || !interaction.inGuild())
+			return await interaction.editReply({
 				embeds: [error(locales(interaction.locale, "commands.create.invalidChannel"))],
 				ephemeral: true,
 			});
 
-		let game = client.games.get(interaction.channelId);
-		if (game)
-			return await interaction.reply({
+		if (client.games.get(interaction.channelId))
+			return await interaction.editReply({
 				embeds: [error(locales(interaction.locale, "commands.create.alreadyStartedMatch"))],
 				ephemeral: true,
 			});
 
-		game = new Game(interaction.user.id, interaction.channel.id, interaction.guild.id, interaction.client);
+		const game = new Game(interaction.user.id, interaction.channel.id, interaction.guild.id, interaction.client);
 		client.games.set(interaction.channelId, game);
 		game.addPlayer(interaction.member, interaction.locale);
 		game.interaction = interaction;
@@ -45,7 +41,7 @@ module.exports = {
 			new ButtonBuilder().setCustomId("cancel").setLabel(locales(interaction.locale, "commands.create.cancelMatch")).setStyle(ButtonStyle.Danger)
 		);
 
-		const reply = await interaction.reply({
+		const reply = await interaction.editReply({
 			embeds: [
 				{
 					description: `${locales(interaction.locale, "commands.create.matchQueueDescription")}\n\n${locales(
@@ -130,7 +126,7 @@ module.exports = {
 
 				collector.stop();
 				interaction.client.games.delete(interaction.channel.id);
-				
+
 				await interaction.editReply({
 					embeds: [
 						{

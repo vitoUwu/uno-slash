@@ -140,5 +140,6 @@
 		"only+2": "Only +2 cards are valid to play"
 	},
 	"missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",
-	"commandSpam": "You're using the commands too quickly! Wait more ` {0} `"
+	"commandSpam": "You're using the commands too quickly! Wait more ` {0} `",
+	"noDm": "My commands were not made to run in DM"
 }
