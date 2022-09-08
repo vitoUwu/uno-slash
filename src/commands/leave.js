@@ -24,7 +24,7 @@ module.exports = {
 		await interaction.reply({
 			embeds: [
 				{
-					description: locales(interaction.guildLocale, "commands.leave.userLeft", interaction.user),
+					description: locales(interaction.locale, "commands.leave.userLeft", interaction.user),
 					color: Colors.Blurple,
 				},
 			],

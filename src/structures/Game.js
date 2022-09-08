@@ -255,7 +255,7 @@ module.exports = class Game {
 	}
 
 	get locale() {
-		return this.whoPlaysNow?.locale || this.guild?.preferredLocale || "en-US";
+		return this.whoPlaysNow?.locale || this.interaction?.locale || this.guild?.preferredLocale || "en-US";
 	}
 
 	/**
@@ -267,9 +267,9 @@ module.exports = class Game {
 		return this.interaction
 			? await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data).catch(() => {
 					this.interaction = null;
-					this.channel.send(data);
+					return this.send(data);
 			  })
-			: await this.channel.send(data);
+			: await this.channel?.send(data);
 	}
 
 	async start() {
