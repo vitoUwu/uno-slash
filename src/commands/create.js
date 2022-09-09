@@ -87,7 +87,6 @@ module.exports = {
 				});
 				game.start();
 				collector.stop();
-				game = null;
 				return;
 			}
 
