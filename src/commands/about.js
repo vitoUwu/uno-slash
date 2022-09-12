@@ -14,6 +14,8 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	 */
 	async slashExecute(interaction) {
+		const owner = interaction.client.application.owner;
+
 		return interaction.reply({
 			embeds: [
 				{
@@ -22,15 +24,23 @@ module.exports = {
 						{
 							name: locale(interaction.locale, "commands.about.versions"),
 							value: `Discord.js: \`${package.dependencies["discord.js"]}\`\nNode.js: \`${process.version}\`\nBot: \`${package.version}\``,
+							inline: true
 						},
 						{
 							name: locale(interaction.locale, "commands.about.servers"),
-							value: `${interaction.client.guilds.cache.size}`
+							value: `${interaction.client.guilds.cache.size}`,
+							inline: true
 						},
 						{
 							name: locale(interaction.locale, "commands.about.matchs"),
-							value: `${interaction.client.games.size}`
+							value: `${interaction.client.games.size}`,
+							inline: true
 						},
+						{
+							name: locale(interaction.locale, "commands.about.creator"), 
+							value: `${owner.toString()} \`${owner.tag} (${owner.id})\``,
+							inline: true
+						}
 					],
 				},
 			],

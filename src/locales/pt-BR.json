@@ -4,7 +4,8 @@
 			"description": "Mostra informações sobre o bot",
 			"versions": "Versões",
 			"servers": "Servidores",
-			"matchs": "Partidas"
+			"matchs": "Partidas",
+			"creator": "Criador"
 		},
 		"create": {
 			"description": "Cria uma nova partida",

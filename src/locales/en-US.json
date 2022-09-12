@@ -4,7 +4,8 @@
 			"description": "Show information about the bot",
 			"versions": "Versions",
 			"servers": "Servers",
-			"matchs": "Matchs"
+			"matchs": "Matchs",
+			"creator": "Creator"
 		},
 		"create": {
 			"description": "Create a new game",
