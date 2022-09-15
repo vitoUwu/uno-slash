@@ -13,6 +13,7 @@ module.exports = {
 	async execute(interaction) {
 		const { client } = interaction;
 		if (!interaction.inGuild()) return interaction.reply({ embeds: [error(locales(interaction.locale, "noDm"))] });
+                if (interaction.channel.partial) await interaction.channel.fetch();
 
 		if (interaction.isCommand()) {
 			const commandName = interaction.commandName;
