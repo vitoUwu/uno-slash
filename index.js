@@ -1,12 +1,13 @@
 require("dotenv/config");
 const { servers } = require("./config.json");
 const { default: axios } = require("axios");
-const { Client, GatewayIntentBits, Collection, ActivityType } = require("discord.js");
+const { Client, GatewayIntentBits, Collection, ActivityType, Partials } = require("discord.js");
 const Logger = require("./src/structures/Logger");
 const requireFiles = require("./src/utils/requireFiles");
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
+        partials: [Partials.Channel]
 });
 
 client.commands = new Collection();
