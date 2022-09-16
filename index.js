@@ -7,7 +7,7 @@ const requireFiles = require("./src/utils/requireFiles");
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds],
-        partials: [Partials.Channel]
+	partials: [Partials.Channel]
 });
 
 client.commands = new Collection();
