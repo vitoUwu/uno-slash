@@ -5,7 +5,10 @@
 			"versions": "Versões",
 			"servers": "Servidores",
 			"matchs": "Partidas",
-			"creator": "Criador"
+			"creator": "Criador",
+			"links": "Links",
+			"tos": "Termos de Serviço",
+			"pp": "Políticas de Privacidade"
 		},
 		"create": {
 			"description": "Cria uma nova partida",

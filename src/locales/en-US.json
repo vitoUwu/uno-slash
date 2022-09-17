@@ -5,7 +5,10 @@
 			"versions": "Versions",
 			"servers": "Servers",
 			"matchs": "Matchs",
-			"creator": "Creator"
+			"creator": "Creator",
+			"links": "Links",
+			"tos": "Terms of Service",
+			"pp": "Privacity Policy"
 		},
 		"create": {
 			"description": "Create a new game",

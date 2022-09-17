@@ -1,6 +1,7 @@
 const { CommandInteraction, Colors, Locale } = require("discord.js");
 const package = require("../../package.json");
 const locale = require("../locales");
+const { supportUrl, tosUrl, ppUrl } = require("../../config.json");
 
 module.exports = {
 	name: "about",
@@ -39,6 +40,11 @@ module.exports = {
 						{
 							name: locale(interaction.locale, "commands.about.creator"), 
 							value: `${owner.toString()} \`${owner.tag} (${owner.id})\``,
+							inline: true
+						},
+						{
+							name: locale(interaction.locale, "commands.about.links"),
+							value: `[Uno Slash - Support](${supportUrl})\n[${locale(interaction.locale, "commands.about.tos")}](${tosUrl})\n[${locale(interaction.locale, "commands.about.pp")}](${ppUrl})`,
 							inline: true
 						}
 					],
