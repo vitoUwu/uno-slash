@@ -10,6 +10,7 @@ const {
 	MessagePayload,
 } = require("discord.js");
 const Player = require("./Player");
+const { supportUrl } = require('../../config.json');
 const { shuffleArray } = require("../utils/functions");
 const cards = require("../utils/cards");
 const locales = require("../locales");
@@ -264,13 +265,28 @@ module.exports = class Game {
 	 * @returns
 	 */
 	async send(data) {
-		return this.interaction
-			? await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data).catch(() => {
-					this.interaction = null;
-					return this.send(data);
-			  })
-			: await this.channel?.send(data);
+		try {
+			return this.interaction
+				? await this.interaction[this.interaction.deferred || this.interaction.replied ? "followUp" : "reply"](data).catch(() => {
+						this.interaction = null;
+						return this.send(data);
+				})
+				: await this.channel?.send(data);
+		} catch(err) {
+			this.announceError(err);
+		}
 	}
+
+	async announceError(err) {
+        let content = "An error has occurred."
+        if (err.message?.toLowerCase() === "missing access") {
+            if (!this.channel?.viewable) content += "\nIt looks like the bot can't \"see\" the channel. Make sure the bot has the right permission.";
+            else content += "\nIt looks like the bot doesn't have permissions to run.";
+        }
+        content += `\`\`\`${err}\`\`\`\nIf support is needed, join to my support server: ${supportUrl}`;
+        this.send({ content, flags: "SuppressEmbeds" }).catch((err) => this.client.logger.error(err));
+		this.client.logger.error(err);
+    }
 
 	async start() {
 		if (this.started) return;
@@ -409,11 +425,15 @@ module.exports = class Game {
 			collector.on("collect", async (i) => {
 				if (i.customId === "uno" && i.user.id === this.lastPlayer.id) {
 					collector.stop();
-					await reply.edit({ components: [] });
+					await reply.edit({ components: [] })
+						.catch((err) => {
+							this.client.logger.error(err);
+							this.announceError(err);
+						});
 				}
 				if (i.customId === "report_uno" && i.user.id !== this.lastPlayer.id) {
 					collector.stop();
-					await reply.edit({ components: [] });
+					await reply.edit({ components: [] }).catch(err => this.announceError(err));
 					this.giveCards(this.lastPlayer, 2);
 					this.channel.send({
 						embeds: [
@@ -422,7 +442,7 @@ module.exports = class Game {
 								color: Colors.Blurple,
 							},
 						],
-					});
+					}).catch(err => this.announceError(err));
 				}
 			});
 
