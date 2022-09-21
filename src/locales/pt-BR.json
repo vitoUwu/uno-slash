@@ -144,6 +144,7 @@
 		"only+2": "Apenas cartas +2 são válidas para essa jogada"
 	},
 	"missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida.",
+	"cantSeeTheChannel": "Não consigo acessar o canal, configure o canal de uma forma em que eu consiga interagir nele.",
 	"commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",
 	"noDm": "Meus comandos não foram feitos para serem executados na DM"
 }

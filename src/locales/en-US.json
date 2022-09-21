@@ -144,6 +144,7 @@
 		"only+2": "Only +2 cards are valid to play"
 	},
 	"missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",
+	"cantSeeTheChannel": "I can't access the channel, please configure the channel in a way that you can interact with it.",
 	"commandSpam": "You're using the commands too quickly! Wait more ` {0} `",
 	"noDm": "My commands were not made to run in DM"
 }

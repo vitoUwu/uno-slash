@@ -38,6 +38,8 @@ module.exports = {
 			if (!interaction.channel.permissionsFor(interaction.guild.members.me).has("EmbedLinks"))
 				return interaction.reply({ content: locales(interaction.locale, "missingPermission") });
 
+			if (!interaction.channel.viewable) return interaction.reply({ content: locales(interaction.locale, "cantSeeTheChannel") });
+
 			try {
 				command[commandExecute](interaction);
 			} catch (err) {
