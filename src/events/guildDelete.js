@@ -3,31 +3,54 @@ const { Guild, Colors } = require("discord.js");
 const { loggerUrl } = require("../../config.json");
 
 module.exports = {
-	name: "guildDelete",
-	/**
-	 * @param {Guild} guild
-	 */
-	async execute(guild) {
-		guild.client.games.filter((game) => game.guildId === guild.id)?.forEach((game) => guild.client.games.delete(game.channelId));
+  name: "guildDelete",
+  /**
+   * @param {Guild} guild
+   */
+  async execute(guild) {
+    guild.client.games
+      .filter((game) => game.guildId === guild.id)
+      ?.forEach((game) => guild.client.games.delete(game.channelId));
 
-		axios
-			.post(loggerUrl, {
-				content: guild.vanityURLCode ? `discord.gg/${guild.vanityURLCode}` : "No vanity",
-				embeds: [
-					{
-						fields: [
-							{ name: "Nome", value: `\` ${guild.name} (${guild.id}) \``, inline: true },
-							{ name: "Dono", value: `<@${guild.ownerId}> (${guild.ownerId})`, inline: true },
-							{ name: "Membros", value: `${guild.memberCount || 0}`, inline: true },
-							{ name: "Língua", value: `${guild.preferredLocale || "No preferred locale"}`, inline: true },
-							{ name: "Recursos Ativos", value: `${guild.features?.join(" ") || "No features"}` },
-						],
-						color: Colors.Red,
-					},
-				],
-			})
-			.catch((err) => {
-				guild.client.logger.error(err);
-			});
-	},
+    axios
+      .post(loggerUrl, {
+        content: guild.vanityURLCode
+          ? `discord.gg/${guild.vanityURLCode}`
+          : "No vanity",
+        embeds: [
+          {
+            fields: [
+              {
+                name: "Nome",
+                value: `\` ${guild.name} (${guild.id}) \``,
+                inline: true,
+              },
+              {
+                name: "Dono",
+                value: `<@${guild.ownerId}> (${guild.ownerId})`,
+                inline: true,
+              },
+              {
+                name: "Membros",
+                value: `${guild.memberCount || 0}`,
+                inline: true,
+              },
+              {
+                name: "Língua",
+                value: `${guild.preferredLocale || "No preferred locale"}`,
+                inline: true,
+              },
+              {
+                name: "Recursos Ativos",
+                value: `${guild.features?.join(" ") || "No features"}`,
+              },
+            ],
+            color: Colors.Red,
+          },
+        ],
+      })
+      .catch((err) => {
+        guild.client.logger.error(err);
+      });
+  },
 };
