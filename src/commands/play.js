@@ -318,7 +318,7 @@ export default {
     game.addIndex();
     const payload = game.makePayload();
 
-    if (player.cards.length > 1 || interaction.options.getBoolean("uno")) {
+    if (player.cards.length !== 1 || interaction.options.getBoolean("uno")) {
       return interaction[interaction.replied ? "followUp" : "reply"](payload);
     }
 
