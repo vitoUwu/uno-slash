@@ -239,7 +239,7 @@ export default {
         })
         .catch(() => null);
 
-      await response.deferUpdate();
+      await response?.deferUpdate();
 
       const color =
         response?.customId ||
