@@ -434,9 +434,15 @@ export default {
       .filter(
         (cardId) =>
           cardId.includes(value) ||
-          parseCardId(cardId).toString().toLowerCase().includes(value)
+          parseCardId(cardId, interaction.locale)
+            .toString()
+            .toLowerCase()
+            .includes(value)
       )
-      .map((card) => ({ name: parseCardId(card).toString(), value: card }))
+      .map((card) => ({
+        name: parseCardId(card, interaction.locale).toString(),
+        value: card,
+      }))
       .slice(0, 24)
       .concat({
         name: translate(interaction.locale, "commands.play.drawCardOption"),
