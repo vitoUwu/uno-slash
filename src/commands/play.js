@@ -169,7 +169,7 @@ export default {
 
     player.cards.splice(cardIndex, 1);
     if (player.cards.length <= 0) {
-      game.winners.push(player.id);
+      game.winners.push(player);
       game.removePlayer(player.id);
       game.messages.push({
         key: "commands.play.messages.win",
