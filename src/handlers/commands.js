@@ -102,9 +102,8 @@ export async function handleChatInputCommand(interaction) {
     new Date(Date.now() + 5000).getTime()
   );
   setTimeout(
-    cooldowns.delete,
-    5000,
-    `${interaction.commandName}-${interaction.user.id}`
+    () => cooldowns.delete(`${interaction.commandName}-${interaction.user.id}`),
+    5000
   );
 
   try {
