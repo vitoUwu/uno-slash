@@ -1,19 +1,20 @@
-const { default: axios } = require("axios");
-const { Guild, Colors } = require("discord.js");
-const { loggerUrl } = require("../../config.json");
+import axios from "axios";
+import { Colors, Guild } from "discord.js";
+import config from "../config.js";
+import { games } from "../handlers/games.js";
 
-module.exports = {
+export default {
   name: "guildDelete",
   /**
    * @param {Guild} guild
    */
   async execute(guild) {
-    guild.client.games
+    games
       .filter((game) => game.guildId === guild.id)
-      ?.forEach((game) => guild.client.games.delete(game.channelId));
+      ?.forEach((game) => games.delete(game.channelId));
 
-    axios
-      .post(loggerUrl, {
+    await axios
+      .post(config.loggerUrl, {
         content: guild.vanityURLCode
           ? `discord.gg/${guild.vanityURLCode}`
           : "No vanity",

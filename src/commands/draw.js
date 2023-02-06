@@ -1,54 +1,68 @@
-const { ChatInputCommandInteraction, Locale } = require("discord.js");
-const { error } = require("../utils/embeds");
-const locales = require("../locales");
+import { ChatInputCommandInteraction, Locale } from "discord.js";
+import { findGameByMemberId } from "../handlers/games.js";
+import { translate } from "../locales/index.js";
+import embeds from "../utils/embeds.js";
+import { getCards } from "../utils/functions.js";
 
-module.exports = {
+export default {
   name: "draw",
-  description: locales(Locale.EnglishUS, "commands.draw.description"),
+  description: translate(Locale.EnglishUS, "commands.draw.description"),
   description_localizations: {
-    "pt-BR": locales(Locale.PortugueseBR, "commands.draw.description"),
+    "pt-BR": translate(Locale.PortugueseBR, "commands.draw.description"),
   },
   cooldown: 5,
   /**
    *
    * @param {ChatInputCommandInteraction} interaction
    */
-  async slashExecute(interaction) {
-    const { client } = interaction;
-    const game = client.games.get(interaction.channelId);
-    if (!game)
-      return await interaction.reply({
-        embeds: [error(locales(interaction.locale, "commands.draw.noMatchs"))],
-      });
-
-    if (!game.started)
+  execute: async (interaction) => {
+    const game = findGameByMemberId(interaction.user.id, interaction.guildId);
+    if (!game) {
       return await interaction.reply({
         embeds: [
-          error(locales(interaction.locale, "commands.draw.notStarted")),
+          embeds.error(translate(interaction.locale, "commands.draw.noMatchs")),
+        ],
+      });
+    }
+
+    if (game.status !== "started") {
+      return await interaction.reply({
+        embeds: [
+          embeds.error(
+            translate(interaction.locale, "commands.draw.notStarted")
+          ),
         ],
         ephemeral: true,
       });
+    }
 
-    const player = game.getPlayer(interaction.user.id);
-    if (!player)
+    const player = game.players.get(interaction.user.id);
+    if (!player) {
       return await interaction.reply({
         embeds: [
-          error(locales(interaction.locale, "commands.draw.notParticipating")),
+          embeds.error(
+            translate(interaction.locale, "commands.draw.notParticipating")
+          ),
         ],
         ephemeral: true,
       });
+    }
 
-    if (game.whoPlaysNow.id !== interaction.user.id)
+    if (game.actualPlayer().id !== interaction.user.id) {
       return await interaction.reply({
-        embeds: [error(locales(interaction.locale, "commands.draw.notTurn"))],
+        embeds: [
+          embeds.error(translate(interaction.locale, "commands.draw.notTurn")),
+        ],
         ephemeral: true,
       });
+    }
 
-    game.giveCards(player, 1);
-    game.message.push({
+    player.cards.push(...getCards(1));
+    game.messages.push({
       key: "commands.draw.bhoughtCard",
       variables: [interaction.user],
     });
-    await game.nextPlayer(interaction);
+    game.addIndex();
+    await interaction.reply(game.makePayload());
   },
 };
