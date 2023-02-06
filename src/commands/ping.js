@@ -1,19 +1,18 @@
-const { ChatInputCommandInteraction, Colors, Locale } = require("discord.js");
-const locales = require("../locales");
+import { ChatInputCommandInteraction, Colors, Locale } from "discord.js";
+import { translate } from "../locales/index.js";
 
-module.exports = {
+export default {
   name: "ping",
-  description: locales(Locale.EnglishUS, "commands.ping.description"),
+  description: translate(Locale.EnglishUS, "commands.ping.description"),
   description_localizations: {
-    "pt-BR": locales(Locale.PortugueseBR, "commands.ping.description"),
+    "pt-BR": translate(Locale.PortugueseBR, "commands.ping.description"),
   },
   cooldown: 5,
   /**
    *
    * @param {ChatInputCommandInteraction} interaction
    */
-  async slashExecute(interaction) {
-    const { client } = interaction;
+  execute: async (interaction) => {
     const reply = await interaction.reply({
       embeds: [{ description: "Pinging..." }],
       fetchReply: true,
@@ -22,10 +21,10 @@ module.exports = {
       embeds: [
         {
           description: `
-[\`🏓\`] ${locales(interaction.locale, "commands.ping.latency")}: \`${
+[\`🏓\`] ${translate(interaction.locale, "commands.ping.latency")}: \`${
             reply.createdTimestamp - interaction.createdTimestamp
           }ms\`
-[\`📡\`] Websocket: \`${client.ws.ping}ms\``,
+[\`📡\`] Websocket: \`${interaction.client.ws.ping}ms\``,
           color: Colors.Blurple,
         },
       ],

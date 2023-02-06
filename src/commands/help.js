@@ -1,55 +1,55 @@
-const { Locale, ChatInputCommandInteraction } = require("discord.js");
-const { color } = require("../../config.json");
-const locales = require("../locales");
+import { ChatInputCommandInteraction, Locale } from "discord.js";
+import config from "../config.js";
+import { translate } from "../locales/index.js";
 
-module.exports = {
+export default {
   name: "help",
-  description: locales(Locale.EnglishUS, "commands.help.description"),
+  description: translate(Locale.EnglishUS, "commands.help.description"),
   description_localizations: {
-    "pt-BR": locales(Locale.PortugueseBR, "commands.help.description"),
+    "pt-BR": translate(Locale.PortugueseBR, "commands.help.description"),
   },
   cooldown: 5,
   /**
    *
    * @param {ChatInputCommandInteraction} interaction
    */
-  async slashExecute(interaction) {
-    return interaction.reply({
+  execute: async (interaction) => {
+    return await interaction.reply({
       embeds: [
         {
           title: "Tutorial",
           thumbnail: {
             url: interaction.client.user.displayAvatarURL(),
           },
-          color,
+          color: config.color,
           fields: [
             {
-              name: locales(interaction.locale, "commands.help.create.title"),
-              value: locales(
+              name: translate(interaction.locale, "commands.help.create.title"),
+              value: translate(
                 interaction.locale,
                 "commands.help.create.description"
               ),
               inline: true,
             },
             {
-              name: locales(interaction.locale, "commands.help.play.title"),
-              value: locales(
+              name: translate(interaction.locale, "commands.help.play.title"),
+              value: translate(
                 interaction.locale,
                 "commands.help.play.description"
               ),
               inline: true,
             },
             {
-              name: locales(interaction.locale, "commands.help.draw.title"),
-              value: locales(
+              name: translate(interaction.locale, "commands.help.draw.title"),
+              value: translate(
                 interaction.locale,
                 "commands.help.draw.description"
               ),
               inline: true,
             },
             {
-              name: locales(interaction.locale, "commands.help.leave.title"),
-              value: locales(
+              name: translate(interaction.locale, "commands.help.leave.title"),
+              value: translate(
                 interaction.locale,
                 "commands.help.leave.description"
               ),
