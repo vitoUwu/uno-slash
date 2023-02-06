@@ -1,56 +1,57 @@
-const { CommandInteraction, Colors, Locale } = require("discord.js");
-const package = require("../../package.json");
-const locale = require("../locales");
-const { supportUrl, tosUrl, ppUrl } = require("../../config.json");
+import { Colors, CommandInteraction, Locale } from "discord.js";
+import { createRequire } from "node:module";
+import config from "../config.js";
+import { games } from "../handlers/games.js";
+import { translate } from "../locales/index.js";
+const _require = createRequire(import.meta.url);
+const packageJson = _require("../../package.json");
 
-module.exports = {
+export default {
   name: "about",
-  description: locale(Locale.EnglishUS, "commands.about.description"),
+  description: translate(Locale.EnglishUS, "commands.about.description"),
   description_localizations: {
-    "pt-BR": locale(Locale.PortugueseBR, "commands.about.description"),
+    "pt-BR": translate(Locale.PortugueseBR, "commands.about.description"),
   },
   cooldown: 5,
   /**
    *
    * @param {CommandInteraction} interaction
    */
-  async slashExecute(interaction) {
-    const owner = interaction.client.application.owner;
-
-    return interaction.reply({
+  execute: async (interaction) => {
+    return await interaction.reply({
       embeds: [
         {
           color: Colors.Blurple,
           fields: [
             {
-              name: locale(interaction.locale, "commands.about.versions"),
-              value: `Discord.js: \`${package.dependencies["discord.js"]}\`\nNode.js: \`${process.version}\`\nBot: \`${package.version}\``,
+              name: translate(interaction.locale, "commands.about.versions"),
+              value: `Discord.js: \`${packageJson.dependencies["discord.js"]}\`\nNode.js: \`${process.version}\`\nBot: \`${packageJson.version}\``,
               inline: true,
             },
             {
-              name: locale(interaction.locale, "commands.about.servers"),
+              name: translate(interaction.locale, "commands.about.servers"),
               value: `${interaction.client.guilds.cache.size}`,
               inline: true,
             },
             {
-              name: locale(interaction.locale, "commands.about.matchs"),
-              value: `${interaction.client.games.size}`,
+              name: translate(interaction.locale, "commands.about.matchs"),
+              value: `${games.size}`,
               inline: true,
             },
             {
-              name: locale(interaction.locale, "commands.about.creator"),
-              value: `${owner.toString()} \`${owner.tag} (${owner.id})\``,
+              name: translate(interaction.locale, "commands.about.creator"),
+              value: `<@504717946124369937> \`vitoo#7341 (504717946124369937)\``,
               inline: true,
             },
             {
-              name: locale(interaction.locale, "commands.about.links"),
-              value: `[Uno Slash - Support](${supportUrl})\n[${locale(
+              name: translate(interaction.locale, "commands.about.links"),
+              value: `[Uno Slash - Support](${config.supportUrl})\n[${translate(
                 interaction.locale,
                 "commands.about.tos"
-              )}](${tosUrl})\n[${locale(
+              )}](${config.tosUrl})\n[${translate(
                 interaction.locale,
                 "commands.about.pp"
-              )}](${ppUrl})`,
+              )}](${config.ppUrl})`,
               inline: true,
             },
           ],

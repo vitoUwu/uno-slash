@@ -14,7 +14,7 @@
       "description": "Create a new game",
       "invalidChannel": "Invalid Channel",
       "alreadyStartedMatch": "There is already a match in progress on the channel",
-      "joinMatch": "Enter the match",
+      "joinMatch": "Join",
       "startMatch": "Start",
       "matchQueueDescription": "You've just created a match, invite your friends to play along with you!",
       "players": "Players",
@@ -24,7 +24,7 @@
       "alreadyJoinedMatch": "You already joined the game",
       "joinedMatch": "You joined the game",
       "cancelledByInactivity": "The match did not start due to inactivity",
-      "cancelMatch": "Cancel Match",
+      "cancelMatch": "Cancel",
       "youCantCancel": "Only the player who created the match can cancel it",
       "cancelledMatch": "The match has been canceled by the creator"
     },
@@ -63,22 +63,38 @@
     },
     "ping": {
       "description": "Check bot latency",
-      "latency": "Latency",
-      "websocket": "Web Socket"
+      "latency": "Latency"
     },
     "play": {
       "description": "Use to play a card",
       "options": {
         "cards": {
           "description": "The card that will be played"
+        },
+        "uno": {
+          "description": "Say UNO! To play your penultimate card!"
         }
       },
       "noMatchs": "No matchs found on the channel",
       "notStarted": "The match hasn't started yet",
       "notTurn": "Your turn hasn't come yet",
       "notParticipating": "Looks like you're not playing the game.",
-      "cardNotFound": "No cards found",
-      "drawCardOption": "Draw a card"
+      "drawCardOption": "Draw a card",
+      "cardNotFound": "I didn't find this card in your Deck, are you sure you spelled it correctly?",
+      "invalidCard": "This card cannot be played",
+      "messages": {
+        "win": "Player {0} ran out of cards and won the game",
+        "4wild": "{0} played a special card +4 and changed the color of play\n{1} received +4 cards and now has ` {2} ` cards",
+        "wild": "{0} played a special card and changed the color of the play",
+        "+2": "{0} played a +2 card\n{1} received +2 cards and now has ` {2} ` cards",
+        "reverse": "{0} played a reverse card, reversing the sequence of players",
+        "block": "{0} played a blocking card and blocked {1} from playing",
+        "stacked+2": "{0} played a +2 card, the card draw combo is on {1} cards",
+        "endCombo": "{0} played a +2 card. Player {1} has no +2 cards and has drawn {3} cards, now player {1} has ` {2} ` cards",
+        "uno": "<:uno:1002561065399373944> {0} is only with ` 1 ` remaining card!",
+        "report": "The player forgot to say `Uno!`, Run and report to punish him!"
+      },
+      "only+2": "Only +2 cards are valid to play"
     },
     "vote": {
       "description": "Support our bot <3",
@@ -127,24 +143,8 @@
     "chooseColor": "Choose the color you want to continue",
     "newAuthor": "<@{0}> is the new match owner"
   },
-  "player": {
-    "notStarted": "The match hasn't started yet",
-    "cardNotFound": "I didn't find this card in your Deck, are you sure you spelled it correctly?",
-    "invalidCard": "This card cannot be played",
-    "messages": {
-      "win": "Player {0} ran out of cards and won the game",
-      "4wild": "{0} played a special card +4 and changed the color of play\n{1} received +4 cards and now has ` {2} ` cards",
-      "wild": "{0} played a special card and changed the color of the play",
-      "+2": "{0} played a +2 card\n{1} received +2 cards and now has ` {2} ` cards",
-      "reverse": "{0} played a reverse card, reversing the sequence of players",
-      "block": "{0} played a blocking card and blocked {1} from playing",
-      "stacked+2": "{0} played a +2 card, the card draw combo is on {1} cards",
-      "endCombo": "{0} played a +2 card. Player {1} has no +2 cards and has drawn {3} cards, now player {1} has ` {2} ` cards"
-    },
-    "only+2": "Only +2 cards are valid to play"
-  },
-  "missingPermission": "I don't have the ` Embed Links ` permission so I can't interact with any matches.",
-  "cantSeeTheChannel": "I can't access the channel, please configure the channel in a way that you can interact with it.",
+  "missingPermission": "I need permissions: `Embed links, See Channel and Send Messages` to work properly.",
   "commandSpam": "You're using the commands too quickly! Wait more ` {0} `",
-  "noDm": "My commands were not made to run in DM"
+  "noDm": "My commands were not made to run in DM",
+  "unknownCommand": "An error occurred when trying to execute the command."
 }

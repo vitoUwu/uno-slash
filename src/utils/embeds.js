@@ -1,6 +1,6 @@
-const { Colors } = require("discord.js");
+import { Colors } from "discord.js";
 
-module.exports = {
+export default {
   /**
    *
    * @param {string} message

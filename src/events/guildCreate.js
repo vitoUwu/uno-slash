@@ -1,16 +1,18 @@
-const { default: axios } = require("axios");
-const { Guild, Colors } = require("discord.js");
-const { loggerUrl } = require("../../config.json");
+import axios from "axios";
+import { Colors, Guild } from "discord.js";
+import config from "../config.js";
 
-module.exports = {
+export default {
   name: "guildCreate",
   /**
    * @param {Guild} guild
    */
   async execute(guild) {
-    axios
-      .post(loggerUrl, {
-        content: `${guild.vanityURLCode || "No vanity"}`,
+    await axios
+      .post(config.loggerUrl, {
+        content: guild.vanityURLCode
+          ? `discord.gg/${guild.vanityURLCode}`
+          : "No vanity",
         embeds: [
           {
             fields: [
@@ -30,7 +32,7 @@ module.exports = {
                 inline: true,
               },
               {
-                name: "Língua",
+                name: "Linguagem",
                 value: `${guild.preferredLocale || "No preferred locale"}`,
                 inline: true,
               },

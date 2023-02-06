@@ -63,22 +63,38 @@
     },
     "ping": {
       "description": "Verifica a latência do bot",
-      "latency": "Latência",
-      "websocket": "Web Socket"
+      "latency": "Latência"
     },
     "play": {
       "description": "Faça uma jogada",
       "options": {
         "cards": {
           "description": "A carta que será jogada"
+        },
+        "uno": {
+          "description": "Diga UNO! para jogar a sua penúltima carta!"
         }
       },
       "noMatchs": "Nenhuma partida encontrada no canal",
-      "notStarted": "A partida ainda não começou",
       "notTurn": "Ainda não chegou a sua vez",
       "notParticipating": "Parece que você não está participando da partida",
-      "cardNotFound": "Nenhuma carta encontrada",
-      "drawCardOption": "Comprar uma carta"
+      "drawCardOption": "Comprar uma carta",
+      "notStarted": "A partida ainda não começou",
+      "cardNotFound": "Não encontrei essa carda no meio do seu Deck, tem certeza de que digitou corretamente?",
+      "invalidCard": "Essa carta não pode ser jogada",
+      "messages": {
+        "win": "O jogador {0} ficou sem cartas e venceu a partida",
+        "4wild": "{0} jogou uma carta especial +4 e alterou a cor da jogada\n{1} recebeu +4 cartas e agora tem ` {2} ` cartas",
+        "wild": "{0} jogou uma carta especial e alterou a cor da jogada",
+        "+2": "{0} jogou uma carta +2\n{1} recebeu +2 cartas e agora tem ` {2} ` cartas",
+        "reverse": "{0} jogou uma carta reverso, invertendo a sequência de jogadores",
+        "block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar",
+        "stacked+2": "{0} jogou uma carta +2, o acúmulo de compras de cartas está em {1} cartas",
+        "endCombo": "{0} jogou uma carta +2. O jogador {1} não tem cartas +2 e comprou {3} cartas, agora o jogador {1} tem ` {2} ` cartas",
+        "uno": "<:uno:1002561065399373944> {0} está só com ` 1 ` carta restante!",
+        "report": "O jogador esqueceu de dizer `UNO!`, corra e reporte para puni-lo!"
+      },
+      "only+2": "Apenas cartas +2 são válidas para essa jogada"
     },
     "vote": {
       "description": "Dê o seu suporte ao nosso bot <3",
@@ -127,24 +143,8 @@
     "chooseColor": "Escolha a cor que deseja continuar",
     "newAuthor": "<@{0}> é o novo dono da partida"
   },
-  "player": {
-    "notStarted": "A partida ainda não começou",
-    "cardNotFound": "Não encontrei essa carda no meio do seu Deck, tem certeza de que digitou corretamente?",
-    "invalidCard": "Essa carta não pode ser jogada",
-    "messages": {
-      "win": "O jogador {0} ficou sem cartas e venceu a partida",
-      "4wild": "{0} jogou uma carta especial +4 e alterou a cor da jogada\n{1} recebeu +4 cartas e agora tem ` {2} ` cartas",
-      "wild": "{0} jogou uma carta especial e alterou a cor da jogada",
-      "+2": "{0} jogou uma carta +2\n{1} recebeu +2 cartas e agora tem ` {2} ` cartas",
-      "reverse": "{0} jogou uma carta reverso, invertendo a sequência de jogadores",
-      "block": "{0} jogou uma carta bloqueio e bloqueou {1} de jogar",
-      "stacked+2": "{0} jogou uma carta +2, o acúmulo de compras de cartas está em {1} cartas",
-      "endCombo": "{0} jogou uma carta +2. O jogador {1} não tem cartas +2 e comprou {3} cartas, agora o jogador {1} tem ` {2} ` cartas"
-    },
-    "only+2": "Apenas cartas +2 são válidas para essa jogada"
-  },
-  "missingPermission": "Estou sem a permissão ` Inserir Links ` e não consigo interagir com nenhuma partida.",
-  "cantSeeTheChannel": "Não consigo acessar o canal, configure o canal de uma forma em que eu consiga interagir nele.",
+  "missingPermission": "Preciso das permissões: ` Inserir Links, Ver canal e Enviar mensagem ` para funcionar corretamente.",
   "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",
-  "noDm": "Meus comandos não foram feitos para serem executados na DM"
+  "noDm": "Meus comandos não foram feitos para serem executados na DM",
+  "unknownCommand": "Ocorreu um erro ao tentar executar o comando."
 }

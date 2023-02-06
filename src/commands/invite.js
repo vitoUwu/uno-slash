@@ -1,36 +1,40 @@
-const {
-  CommandInteraction,
-  Locale,
-  ComponentType,
+import {
   ButtonStyle,
-} = require("discord.js");
-const locale = require("../locales");
+  CommandInteraction,
+  ComponentType,
+  Locale,
+  OAuth2Scopes,
+  PermissionsBitField,
+} from "discord.js";
+import { translate } from "../locales/index.js";
 
-module.exports = {
+export default {
   name: "invite",
-  description: locale(Locale.EnglishUS, "commands.invite.description"),
+  description: translate(Locale.EnglishUS, "commands.invite.description"),
   description_localizations: {
-    "pt-BR": locale(Locale.PortugueseBR, "commands.invite.description"),
+    "pt-BR": translate(Locale.PortugueseBR, "commands.invite.description"),
   },
   cooldown: 5,
   /**
    *
    * @param {CommandInteraction} interaction
    */
-  async slashExecute(interaction) {
-    const { permissions, scopes } =
-      interaction.client.application.installParams;
-
+  execute: async (interaction) => {
     const invite = interaction.client.generateInvite({
-      permissions,
-      scopes,
+      permissions: [
+        PermissionsBitField.Flags.EmbedLinks,
+        PermissionsBitField.Flags.SendMessages,
+        PermissionsBitField.Flags.SendMessagesInThreads,
+        PermissionsBitField.Flags.ViewChannel,
+      ],
+      scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
     });
 
-    return interaction.reply({
+    return await interaction.reply({
       embeds: [
         {
           color: 3092790,
-          description: locale(
+          description: translate(
             interaction.locale,
             "commands.invite.embed.description",
             invite
@@ -44,7 +48,10 @@ module.exports = {
             {
               type: ComponentType.Button,
               style: ButtonStyle.Link,
-              label: locale(interaction.locale, "commands.invite.button.label"),
+              label: translate(
+                interaction.locale,
+                "commands.invite.button.label"
+              ),
               url: invite,
             },
           ],

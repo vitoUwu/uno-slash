@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   "g0",
   "g0",
   "g1",
