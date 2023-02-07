@@ -35,6 +35,14 @@ export function findGameByMemberId(memberId, guildId) {
 
 /**
  *
+ * @param {string} channelId
+ */
+export function findGameByChannelId(channelId) {
+  return games.find((game) => game.channelId === channelId);
+}
+
+/**
+ *
  * @param {string} gameId
  * @returns {NodeJS.Timeout}
  */
@@ -113,6 +121,12 @@ export function createGame(hostId, guildId, channelId) {
         });
       },
       removePlayer(playerId) {
+        if (this.players.size === 1 && this.status !== "started") {
+          clearTimeout(this.timeout);
+          games.delete(this.id);
+          return;
+        }
+
         if (this.players.size === 2 && this.status === "started") {
           clearTimeout(this.timeout);
           this.players.delete(playerId);
@@ -152,6 +166,17 @@ export function createGame(hostId, guildId, channelId) {
           return;
         }
 
+        if (this.actualPlayer().id === playerId) {
+          this.addIndex();
+          rest.post(Routes.channelMessages(this.channelId), {
+            body: {
+              ...this.makePayload(),
+            },
+          });
+        }
+
+        this.players.delete(playerId);
+
         if (this.hostId === playerId) {
           this.hostId = this.players.randomKey();
           rest
@@ -166,16 +191,6 @@ export function createGame(hostId, guildId, channelId) {
             })
             .catch((err) => logger.error(err));
         }
-
-        if (this.actualPlayer().id === playerId) {
-          this.addIndex();
-          rest.post(Routes.channelMessages(this.channelId), {
-            body: {
-              ...makePayload(),
-            },
-          });
-        }
-        this.players.delete(playerId);
       },
       addIndex() {
         this.index = (this.index + 1) % this.players.size;

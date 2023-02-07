@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Colors, Locale } from "discord.js";
-import { findGameByMemberId } from "../handlers/games.js";
+import { findGameByChannelId } from "../handlers/games.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
 
@@ -15,10 +15,7 @@ export default {
    * @param {ChatInputCommandInteraction} interaction
    */
   execute: async (interaction) => {
-    const game = findGameByMemberId(
-      interaction.member.id,
-      interaction.guild.id
-    );
+    const game = findGameByChannelId(interaction.channelId);
     if (!game) {
       return await interaction.reply({
         embeds: [

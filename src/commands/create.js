@@ -6,10 +6,16 @@ import {
   Colors,
   Locale,
 } from "discord.js";
-import { createGame, createTimeout, games } from "../handlers/games.js";
+import {
+  createGame,
+  createTimeout,
+  findGameByChannelId,
+  games,
+} from "../handlers/games.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
 import { getCards } from "../utils/functions.js";
+import { logger } from "../utils/logger.js";
 
 export default {
   name: "create",
@@ -38,8 +44,8 @@ export default {
       });
     }
 
-    if (games.find((game) => game.channelId === interaction.channelId)) {
-      return await interaction.editReply({
+    if (findGameByChannelId(interaction.channelId)) {
+      return await interaction.reply({
         embeds: [
           embeds.error(
             translate(interaction.locale, "commands.create.alreadyStartedMatch")
@@ -102,137 +108,152 @@ export default {
     });
 
     collector.on("collect", async (i) => {
-      const [_, buttonId] = i.customId.split(";");
-      switch (buttonId) {
-        case "start": {
-          if (i.user.id !== game.hostId) {
-            return await i.reply({
-              embeds: [
-                embeds.error(
-                  translate(i.locale, "commands.create.youCantStart")
-                ),
-              ],
-              ephemeral: true,
-            });
-          }
-
-          if (game.players.size < 2) {
-            return await i.reply({
-              embeds: [
-                embeds.error(translate(i.locale, "commands.create.noPlayers")),
-              ],
-              ephemeral: true,
-            });
-          }
-
-          await interaction.editReply({
-            embeds: [
-              {
-                title: translate(
-                  interaction.locale,
-                  "commands.create.startedMatch"
-                ),
-                description: `${translate(
-                  interaction.locale,
-                  "commands.create.players"
-                )}: \`\`\`${game.players
-                  .map(
-                    (player) =>
-                      interaction.guild.members.cache.get(player.id)?.user
-                        ?.username || player.id
-                  )
-                  .join("\n")}\`\`\``,
-                color: Colors.Green,
-              },
-            ],
-            components: [],
-          });
-
+      try {
+        if (!games.get(game.id)) {
+          await i.message.delete();
           collector.stop();
-          game.status = "started";
-          game.index = Math.floor(Math.random() * game.players.size);
-          game.lastCardId = getCards(1)[0];
-          game.timeout = createTimeout(game.id);
-
-          await i.reply(game.makePayload());
-          break;
-        }
-        case "join": {
-          if (game.players.some((player) => player.id === i.user.id)) {
-            return await i.reply({
-              embeds: [
-                embeds.error(
-                  translate(i.locale, "commands.create.alreadyJoinedMatch")
-                ),
-              ],
-              ephemeral: true,
-            });
-          }
-
-          game.addPlayer(i.member, i.locale);
-
-          await i.reply({
-            embeds: [
-              embeds.success(
-                translate(i.locale, "commands.create.joinedMatch")
-              ),
-            ],
+          return await i.reply({
+            content: translate(i.locale, "abandonedMatch"),
             ephemeral: true,
           });
-
-          const playersUsernames = game.players
-            .map(
-              (player) =>
-                interaction.guild.members.cache.get(player.id)?.user
-                  ?.username || player.id
-            )
-            .join("\n");
-
-          await interaction.editReply({
-            embeds: [
-              {
-                description: `${translate(
-                  interaction.locale,
-                  "commands.create.matchQueueDescription"
-                )}\n\n${translate(
-                  interaction.locale,
-                  "commands.create.players"
-                )}: \`\`\`${playersUsernames}\`\`\``,
-                color: Colors.Blurple,
-              },
-            ],
-          });
-          break;
         }
-        case "cancel": {
-          if (i.user.id !== game.hostId) {
-            return await i.reply({
+
+        const [_, buttonId] = i.customId.split(";");
+        switch (buttonId) {
+          case "start": {
+            if (i.user.id !== game.hostId) {
+              return await i.reply({
+                embeds: [
+                  embeds.error(
+                    translate(i.locale, "commands.create.youCantStart")
+                  ),
+                ],
+                ephemeral: true,
+              });
+            }
+
+            if (game.players.size < 2) {
+              return await i.reply({
+                embeds: [
+                  embeds.error(
+                    translate(i.locale, "commands.create.noPlayers")
+                  ),
+                ],
+                ephemeral: true,
+              });
+            }
+
+            await interaction.editReply({
               embeds: [
-                embeds.error(
-                  translate(i.locale, "commands.create.youCantCancel")
+                {
+                  title: translate(
+                    interaction.locale,
+                    "commands.create.startedMatch"
+                  ),
+                  description: `${translate(
+                    interaction.locale,
+                    "commands.create.players"
+                  )}: \`\`\`${game.players
+                    .map(
+                      (player) =>
+                        interaction.guild.members.cache.get(player.id)?.user
+                          ?.username || player.id
+                    )
+                    .join("\n")}\`\`\``,
+                  color: Colors.Green,
+                },
+              ],
+              components: [],
+            });
+
+            collector.stop();
+            game.status = "started";
+            game.index = Math.floor(Math.random() * game.players.size);
+            game.lastCardId = getCards(1)[0];
+            game.timeout = createTimeout(game.id);
+
+            await i.reply(game.makePayload());
+            break;
+          }
+          case "join": {
+            if (game.players.some((player) => player.id === i.user.id)) {
+              return await i.reply({
+                embeds: [
+                  embeds.error(
+                    translate(i.locale, "commands.create.alreadyJoinedMatch")
+                  ),
+                ],
+                ephemeral: true,
+              });
+            }
+
+            game.addPlayer(i.member, i.locale);
+
+            await i.reply({
+              embeds: [
+                embeds.success(
+                  translate(i.locale, "commands.create.joinedMatch")
                 ),
               ],
               ephemeral: true,
             });
+
+            const playersUsernames = game.players
+              .map(
+                (player) =>
+                  interaction.guild.members.cache.get(player.id)?.user
+                    ?.username || player.id
+              )
+              .join("\n");
+
+            await interaction.editReply({
+              embeds: [
+                {
+                  description: `${translate(
+                    interaction.locale,
+                    "commands.create.matchQueueDescription"
+                  )}\n\n${translate(
+                    interaction.locale,
+                    "commands.create.players"
+                  )}: \`\`\`${playersUsernames}\`\`\``,
+                  color: Colors.Blurple,
+                },
+              ],
+            });
+            break;
           }
+          case "cancel": {
+            if (i.user.id !== game.hostId) {
+              return await i.reply({
+                embeds: [
+                  embeds.error(
+                    translate(i.locale, "commands.create.youCantCancel")
+                  ),
+                ],
+                ephemeral: true,
+              });
+            }
 
-          collector.stop();
-          games.delete(game.id);
+            collector.stop();
+            games.delete(game.id);
 
-          await interaction.editReply({
-            embeds: [
-              {
-                description: translate(
-                  interaction.locale,
-                  "commands.create.cancelledMatch"
-                ),
-                color: Colors.Red,
-              },
-            ],
-            components: [],
-          });
-          break;
+            await interaction.editReply({
+              embeds: [
+                {
+                  description: translate(
+                    interaction.locale,
+                    "commands.create.cancelledMatch"
+                  ),
+                  color: Colors.Red,
+                },
+              ],
+              components: [],
+            });
+            break;
+          }
         }
+      } catch (err) {
+        logger.error(err);
       }
     });
 

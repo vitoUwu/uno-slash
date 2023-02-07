@@ -9,7 +9,7 @@ import {
   ComponentType,
   Locale,
 } from "discord.js";
-import { findGameByMemberId, games } from "../handlers/games.js";
+import { findGameByChannelId, findGameByMemberId } from "../handlers/games.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
 import {
@@ -65,9 +65,7 @@ export default {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    const game = games.find((game) =>
-      game.players.some((player) => player.id === interaction.user.id)
-    );
+    const game = findGameByChannelId(interaction.channelId);
     if (!game) {
       return await interaction.reply({
         embeds: [

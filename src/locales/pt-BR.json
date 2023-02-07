@@ -146,5 +146,6 @@
   "missingPermission": "Preciso das permissões: ` Inserir Links, Ver canal e Enviar mensagem ` para funcionar corretamente.",
   "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",
   "noDm": "Meus comandos não foram feitos para serem executados na DM",
-  "unknownCommand": "Ocorreu um erro ao tentar executar o comando."
+  "unknownCommand": "Ocorreu um erro ao tentar executar o comando.",
+  "abandonedMatch": "A partida criada foi abandonada pelo criador"
 }

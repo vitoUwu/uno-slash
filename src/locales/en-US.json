@@ -146,5 +146,6 @@
   "missingPermission": "I need permissions: `Embed links, See Channel and Send Messages` to work properly.",
   "commandSpam": "You're using the commands too quickly! Wait more ` {0} `",
   "noDm": "My commands were not made to run in DM",
-  "unknownCommand": "An error occurred when trying to execute the command."
+  "unknownCommand": "An error occurred when trying to execute the command.",
+  "abandonedMatch": "This match was abandoned by the host"
 }
