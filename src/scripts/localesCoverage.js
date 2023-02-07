@@ -13,7 +13,7 @@ const lines = [
       ...readFileSync(`${dir}/${file}`, { encoding: "utf-8" })
         .replace(/\(\)/g, "")
         .matchAll(
-          /(translate\([\w\.\s\n]+,\n?\s+(?:")(?<translatepath>[^"]+))|(game\.messages\.push\(\{\n?\s+?\w+?:?\s?"(?<gamepath>[^"]+))/gim
+          /(translate\([\w\.\s\n\(\)\[\]]+,\n?\s+(?:")(?<translatepath>[^"]+))|(game\.messages\.push\(\{\n?\s+?\w+?:?\s?"(?<gamepath>[^"]+))/gim
         ),
     ]
       .flatMap((entry) =>
