@@ -6,6 +6,7 @@ import {
   PermissionsBitField,
 } from "discord.js";
 import { readdirSync } from "fs";
+import config from "../config.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
 import { logger } from "../utils/logger.js";
@@ -22,9 +23,20 @@ export async function loadCommands() {
   }
 }
 
+/**
+ *
+ * @param {import("discord.js").Client} client
+ */
 export async function deployCommands(client) {
-  return await client.application.commands
-    .set([...commands.values()])
+  const commandsArray = [...commands.values()];
+  await client.application.commands
+    .set(commandsArray.filter((command) => !command.devOnly))
+    .catch((err) => logger.error(err));
+  await client.application.commands
+    .set(
+      commandsArray.filter((command) => command.devOnly),
+      config.servers.test
+    )
     .catch((err) => logger.error(err));
 }
 
@@ -91,6 +103,10 @@ export async function handleChatInputCommand(interaction) {
       content: embeds.error(translate(interaction.locale, "unknownCommand")),
       ephemeral: true,
     });
+  }
+
+  if (command.devOnly && interaction.user.id !== "504717946124369937") {
+    return;
   }
 
   if (cooldowns.has(`${interaction.commandName}-${interaction.user.id}`)) {
