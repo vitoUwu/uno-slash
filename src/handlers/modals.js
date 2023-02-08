@@ -1,5 +1,6 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { inspect } from "node:util";
+import executeEval from "../utils/executeEval.cjs";
 
 /**
  *
@@ -16,7 +17,7 @@ export async function handleModalSubmit(interaction) {
       const code = `(async () => { try { ${interaction.fields.getTextInputValue(
         "code"
       )} } catch(err) { return err; } })();`;
-      const result = inspect(await eval(code), {
+      const result = inspect(await executeEval(code), {
         colors: true,
         numericSeparator: true,
       }).replace(new RegExp(process.env.TOKEN, "g"), "[token]");
