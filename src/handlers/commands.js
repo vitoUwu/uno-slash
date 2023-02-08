@@ -1,5 +1,6 @@
 import {
   AutocompleteInteraction,
+  ChannelType,
   ChatInputCommandInteraction,
   Collection,
   PermissionsBitField,
@@ -32,42 +33,55 @@ export async function deployCommands(client) {
  * @param {ChatInputCommandInteraction} interaction
  */
 export async function handleChatInputCommand(interaction) {
-  if (interaction.channel.isDMBased() || !interaction.inGuild()) {
+  if (!interaction.inGuild()) {
     return await interaction.reply({
       embeds: [embeds.error(translate(interaction.locale, "noDm"))],
     });
   }
 
-  if (interaction.channel?.partial) {
-    interaction.channel = await interaction.channel?.fetch()?.catch(() => null);
-  }
-
-  if (!interaction.channel) {
-    return;
-  }
-
-  if (interaction.member?.partial) {
-    interaction.member = await interaction.member?.fetch()?.catch(() => null);
-  }
-
-  if (!interaction.member) {
-    return;
+  if (!interaction.channel || interaction.channel.partial) {
+    interaction.channel = await interaction.guild.channels
+      .fetch(interaction.channelId)
+      .catch(() => null);
+    if (interaction.channel === null) {
+      return;
+    }
   }
 
   if (
-    !interaction.channel
-      .permissionsFor(interaction.guild.members.me)
-      .has(
-        PermissionsBitField.Flags.ViewChannel &
-          PermissionsBitField.Flags.EmbedLinks &
-          PermissionsBitField.Flags.SendMessages
-      )
+    !interaction.channel.viewable ||
+    (interaction.channel.type !== ChannelType.GuildText &&
+      interaction.channel.type !== ChannelType.GuildVoice &&
+      interaction.channel.type !== ChannelType.GuildPublicThread)
+  ) {
+    return await interaction.reply({
+      embeds: [embeds.error(translate(interaction.locale, "cantInteract"))],
+    });
+  }
+
+  const botPermissions = interaction.channel.permissionsFor(
+    interaction.guild.members.me
+  );
+
+  if (
+    !botPermissions.has(PermissionsBitField.Flags.ViewChannel) ||
+    !botPermissions.has(PermissionsBitField.Flags.EmbedLinks) ||
+    !botPermissions.has(PermissionsBitField.Flags.SendMessages)
   ) {
     return await interaction.reply({
       embeds: [
         embeds.error(translate(interaction.locale, "missingPermission")),
       ],
     });
+  }
+
+  if (!interaction.member || interaction.member.partial) {
+    interaction.member = await interaction.guild.members
+      .fetch(interaction.user.id)
+      .catch(() => null);
+    if (interaction.member === null) {
+      return;
+    }
   }
 
   const command = commands.get(interaction.commandName);
@@ -87,10 +101,12 @@ export async function handleChatInputCommand(interaction) {
             interaction.locale,
             "commandSpam",
             Math.floor(
-              cooldowns.get(
+              (cooldowns.get(
                 `${interaction.commandName}-${interaction.user.id}`
-              ) / 1000
-            )
+              ) -
+                Date.now()) /
+                1000
+            ).toFixed(1)
           )
         ),
       ],

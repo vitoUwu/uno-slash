@@ -147,5 +147,6 @@
   "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",
   "noDm": "Meus comandos não foram feitos para serem executados na DM",
   "unknownCommand": "Ocorreu um erro ao tentar executar o comando.",
-  "abandonedMatch": "A partida criada foi abandonada pelo criador"
+  "abandonedMatch": "A partida criada foi abandonada pelo criador",
+  "cantInteract": "Não consigo interagir com o canal"
 }

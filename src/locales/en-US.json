@@ -144,8 +144,9 @@
     "newAuthor": "<@{0}> is the new match owner"
   },
   "missingPermission": "I need permissions: `Embed links, See Channel and Send Messages` to work properly.",
-  "commandSpam": "You're using the commands too quickly! Wait more ` {0} `",
+  "commandSpam": "You're using the commands too quickly! Wait more ` {0} ` seconds",
   "noDm": "My commands were not made to run in DM",
   "unknownCommand": "An error occurred when trying to execute the command.",
-  "abandonedMatch": "This match was abandoned by the host"
+  "abandonedMatch": "This match was abandoned by the host",
+  "cantInteract": "I can't interact with the channel"
 }
