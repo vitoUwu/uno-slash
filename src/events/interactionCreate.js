@@ -2,6 +2,7 @@ import {
   handleAutocomplete,
   handleChatInputCommand,
 } from "../handlers/commands.js";
+import { handleModalSubmit } from "../handlers/modals.js";
 import { getInteractionType } from "../utils/functions.js";
 
 export default {
@@ -24,8 +25,12 @@ export default {
       case "button": {
         break;
       }
+      case "modal": {
+        await handleModalSubmit(interaction);
+        break;
+      }
       default: {
-        throw new Error("Unhandled interaction type: ", interactionType);
+        throw new Error(`Unhandled interaction type: ${interactionType}`);
       }
     }
   },
