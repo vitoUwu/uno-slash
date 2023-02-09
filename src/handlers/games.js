@@ -1,10 +1,4 @@
-import {
-  Collection,
-  Colors,
-  EmbedBuilder,
-  Routes,
-  SnowflakeUtil,
-} from "discord.js";
+import { Collection, Colors, EmbedBuilder, SnowflakeUtil } from "discord.js";
 import { translate } from "../locales/index.js";
 import cardColors from "../utils/cardColors.js";
 import {
@@ -13,7 +7,7 @@ import {
   parseCardId,
 } from "../utils/functions.js";
 import { logger } from "../utils/logger.js";
-import { rest } from "../utils/rest.js";
+import { createMessage } from "../utils/rest.js";
 
 /**
  * @type {Collection<string, import('../types').GameObject}
@@ -68,35 +62,23 @@ export function createTimeout(gameId) {
       });
 
       if (game.actualPlayer().inactiveRounds >= 2) {
-        rest
-          .post(Routes.channelMessages(game.channelId), {
-            body: {
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(
-                    translate(
-                      player.locale,
-                      "game.removedByInactivity",
-                      `<@${player.id}>`
-                    )
-                  )
-                  .setColor(Colors.Blurple),
-              ],
+        createMessage(game.channelId, {
+          embeds: [
+            {
+              description: translate(
+                player.locale,
+                "game.removedByInactivity",
+                `<@${player.id}>`
+              ),
+              color: Colors.Blurple,
             },
-          })
-          .catch((err) => logger.error(err));
-        game.removePlayer(player.id);
-
-        if (game.players.size <= 1) {
-          return;
-        }
+          ],
+        }).catch((err) => logger.error(err));
       }
       game.addIndex();
-      rest
-        .post(Routes.channelMessages(game.channelId), {
-          body: game.makePayload(),
-        })
-        .catch((err) => logger.error(err));
+      createMessage(game.channelId, game.makePayload()).catch((err) =>
+        logger.error(err)
+      );
     },
     60000,
     gameId
@@ -152,65 +134,55 @@ export function createGame(hostId, guildId, channelId) {
           clearTimeout(this.timeout);
           this.players.delete(playerId);
           this.winners.push(this.players.first());
-          rest
-            .post(Routes.channelMessages(this.channelId), {
-              body: {
-                embeds: [
-                  new EmbedBuilder()
-                    .setDescription(
-                      `${translate(
-                        this.winners[0].locale,
-                        "game.embeds.end.descriptions.noPlayers",
-                        `<@${this.winners[0].id}>`
-                      )}\n\n\`\`\`${this.winners
-                        .map(
-                          (winner, index) =>
-                            `[${getRankingPositionEmoji(index)}] #${
-                              index + 1
-                            } | ${winner.username}`
-                        )
-                        .join("\n")}\`\`\``
+          createMessage(this.channelId, {
+            embeds: [
+              new EmbedBuilder()
+                .setDescription(
+                  `${translate(
+                    this.winners[0].locale,
+                    "game.embeds.end.descriptions.noPlayers",
+                    `<@${this.winners[0].id}>`
+                  )}\n\n\`\`\`${this.winners
+                    .map(
+                      (winner, index) =>
+                        `[${getRankingPositionEmoji(index)}] #${index + 1} | ${
+                          winner.username
+                        }`
                     )
-                    .setColor(Colors.Blurple)
-                    .setFooter({
-                      text: translate(
-                        this.winners[0].locale,
-                        "game.embeds.end.footer"
-                      ),
-                    })
-                    .toJSON(),
-                ],
-              },
-            })
-            .catch((err) => logger.error(err));
+                    .join("\n")}\`\`\``
+                )
+                .setColor(Colors.Blurple)
+                .setFooter({
+                  text: translate(
+                    this.winners[0].locale,
+                    "game.embeds.end.footer"
+                  ),
+                })
+                .toJSON(),
+            ],
+          }).catch((err) => logger.error(err));
           games.delete(this.id);
           return;
         }
 
         if (this.actualPlayer().id === playerId) {
           this.addIndex();
-          rest.post(Routes.channelMessages(this.channelId), {
-            body: {
-              ...this.makePayload(),
-            },
-          });
+          createMessage(this.channelId, this.makePayload()).catch((err) =>
+            logger.error(err)
+          );
         }
 
         this.players.delete(playerId);
 
         if (this.hostId === playerId) {
           this.hostId = this.players.randomKey();
-          rest
-            .post(Routes.channelMessages(this.channelId), {
-              body: {
-                content: translate(
-                  this.actualPlayer().locale,
-                  "game.newAuthor",
-                  this.hostId
-                ),
-              },
-            })
-            .catch((err) => logger.error(err));
+          createMessage(this.channelId, {
+            content: translate(
+              this.actualPlayer().locale,
+              "game.newAuthor",
+              this.hostId
+            ),
+          }).catch((err) => logger.error(err));
         }
       },
       addIndex() {
