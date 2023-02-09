@@ -59,7 +59,7 @@
       "description": "Use para sair de alguma partida",
       "noMatchs": "Nenhuma partida encontrada no canal",
       "notParticipating": "Parece que você não está participando da partida",
-      "userLeft": "O Jogador {0} saiu da partida"
+      "userLeft": "{0} saiu da partida"
     },
     "ping": {
       "description": "Verifica a latência do bot",
@@ -141,7 +141,8 @@
     },
     "unoReport": "O jogador {0} esqueceu de dizer ` Uno! ` e ganhou +2 cartas",
     "chooseColor": "Escolha a cor que deseja continuar",
-    "newAuthor": "<@{0}> é o novo dono da partida"
+    "newAuthor": "{0} é o novo dono da partida",
+    "removedByInactivity": "{0} foi removido da partida por inatividade"
   },
   "missingPermission": "Preciso das permissões: ` Inserir Links, Ver canal e Enviar mensagem ` para funcionar corretamente.",
   "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",

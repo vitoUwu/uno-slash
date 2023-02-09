@@ -59,7 +59,7 @@
       "description": "Use it to leave a game",
       "noMatchs": "No matchs found on the channel",
       "notParticipating": "Looks like you're not playing the game.",
-      "userLeft": "Player {0} has left the game"
+      "userLeft": "{0} has left the game"
     },
     "ping": {
       "description": "Check bot latency",
@@ -141,7 +141,8 @@
     },
     "unoReport": "Player {0} forgot to say ` Uno! ` and gained +2 cards",
     "chooseColor": "Choose the color you want to continue",
-    "newAuthor": "<@{0}> is the new match owner"
+    "newAuthor": "{0} is the new match owner",
+    "removedByInactivity": "{0} was removed from match by inactivity"
   },
   "missingPermission": "I need permissions: `Embed links, See Channel and Send Messages` to work properly.",
   "commandSpam": "You're using the commands too quickly! Wait more ` {0} ` seconds",

@@ -47,7 +47,7 @@ export function findGameByChannelId(channelId) {
  * @returns {NodeJS.Timeout}
  */
 export function createTimeout(gameId) {
-  return setTimeout(
+  return setInterval(
     (id) => {
       const game = games.get(id);
       if (!game) {
@@ -68,7 +68,28 @@ export function createTimeout(gameId) {
       });
 
       if (game.actualPlayer().inactiveRounds >= 2) {
+        rest
+          .post(Routes.channelMessages(game.channelId), {
+            body: {
+              embeds: [
+                new EmbedBuilder()
+                  .setDescription(
+                    translate(
+                      player.locale,
+                      "game.removedByInactivity",
+                      `<@${player.id}>`
+                    )
+                  )
+                  .setColor(Colors.Blurple),
+              ],
+            },
+          })
+          .catch((err) => logger.error(err));
         game.removePlayer(player.id);
+
+        if (game.players.size <= 1) {
+          return;
+        }
       }
       game.addIndex();
       rest
