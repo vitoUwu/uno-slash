@@ -52,10 +52,10 @@ export async function handleChatInputCommand(interaction) {
   }
 
   if (!interaction.channel || interaction.channel.partial) {
-    interaction.channel = await interaction.guild.channels
+    await interaction.guild.channels
       .fetch(interaction.channelId)
       .catch(() => null);
-    if (interaction.channel === null) {
+    if (!interaction.channel) {
       return;
     }
   }
