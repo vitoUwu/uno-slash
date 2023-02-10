@@ -14,10 +14,10 @@ export async function handleModalSubmit(interaction) {
   switch (interaction.customId) {
     case "eval": {
       const startTime = Date.now();
-      const code = `(async () => { try { ${interaction.fields.getTextInputValue(
+      const code = `(async () => {try {${interaction.fields.getTextInputValue(
         "code"
-      )} } catch(err) { return err; } })();`;
-      const result = inspect(await executeEval(code), {
+      )}} catch(err) {return err;}})();`;
+      const result = inspect(await executeEval(code, interaction), {
         colors: true,
         numericSeparator: true,
       }).replace(new RegExp(process.env.TOKEN, "g"), "[token]");

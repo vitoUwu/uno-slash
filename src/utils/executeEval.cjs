@@ -1,1 +1,1 @@
-module.exports = async (code) => await eval(code);
+module.exports = async (code, interaction) => await eval(code);
