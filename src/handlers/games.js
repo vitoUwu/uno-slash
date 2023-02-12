@@ -74,6 +74,11 @@ export function createTimeout(gameId) {
             },
           ],
         }).catch((err) => logger.error(err));
+        game.removePlayer(player.id);
+
+        if (game.players.size <= 1) {
+          return;
+        }
       }
       game.addIndex();
       createMessage(game.channelId, game.makePayload()).catch((err) =>
