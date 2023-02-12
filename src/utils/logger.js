@@ -1,4 +1,5 @@
 import { codeBlock, Colors, EmbedBuilder, Routes } from "discord.js";
+import { inspect } from "node:util";
 import pino from "pino";
 import config from "../config.js";
 import { rest } from "./rest.js";
@@ -15,7 +16,7 @@ export const logger = pino({
               embeds: [
                 new EmbedBuilder()
                   .setTitle(`${msg}`.slice(0, 256) || "Error Occurred")
-                  .setDescription(codeBlock(msg?.stack || _args.join("\n")))
+                  .setDescription(codeBlock(inspect(msg) || _args.join("\n")))
                   .setColor(Colors.Red)
                   .setTimestamp()
                   .toJSON(),
