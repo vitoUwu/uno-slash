@@ -36,7 +36,7 @@ export type Player = {
 };
 
 export type Card = {
-  id: typeof cards[number];
+  id: (typeof cards)[number];
   type: "special" | "normal";
   number: string;
   color: "r" | "b" | "g" | "y";
