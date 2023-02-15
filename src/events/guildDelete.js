@@ -11,7 +11,10 @@ export default {
   async execute(guild) {
     games
       .filter((game) => game.guildId === guild.id)
-      ?.forEach((game) => games.delete(game.channelId));
+      ?.forEach((game) => {
+        clearInterval(game.timeout);
+        games.delete(game.channelId);
+      });
 
     await axios
       .post(config.loggerUrl, {
