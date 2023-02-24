@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction, Locale } from "discord.js";
 import { findGameByMemberId } from "../handlers/games.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
-import { getCards } from "../utils/functions.js";
 
 export default {
   name: "draw",
@@ -57,7 +56,7 @@ export default {
       });
     }
 
-    player.cards.push(...getCards(1));
+    player.addCards(1);
     game.messages.push({
       key: "commands.draw.bhoughtCard",
       variables: [interaction.user],

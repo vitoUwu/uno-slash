@@ -49,7 +49,7 @@ export function createTimeout(gameId) {
       }
       const amount = game.stackedCombo || 2;
       const player = game.actualPlayer();
-      player.cards.push(...getCards(amount));
+      player.addCards(amount);
       player.inactiveRounds++;
       game.stackedCombo = 0;
       game.messages.push({
@@ -113,6 +113,7 @@ export function createGame(hostId, guildId, channelId) {
       messages: [],
       timeout: null,
       winners: [],
+      createdAt: new Date(),
       nextPlayer() {
         return this.players.at((this.index + 1) % this.players.size);
       },
@@ -126,6 +127,9 @@ export function createGame(hostId, guildId, channelId) {
           inactiveRounds: 0,
           locale,
           username: member.user.username,
+          addCards(amount) {
+            this.cards.push(...getCards(amount));
+          },
         });
       },
       removePlayer(playerId) {
@@ -170,7 +174,7 @@ export function createGame(hostId, guildId, channelId) {
           return;
         }
 
-        if (this.actualPlayer().id === playerId) {
+        if (this.actualPlayer()?.id === playerId) {
           this.addIndex();
           createMessage(this.channelId, this.makePayload()).catch((err) =>
             logger.error(err)

@@ -2,7 +2,7 @@ import type {
   Collection,
   GuildMember,
   Locale,
-  MessageOptions,
+  MessageOptions
 } from "discord.js";
 import cards from "./utils/cards.js";
 
@@ -18,6 +18,7 @@ export type GameObject = {
   stackedCombo: number;
   messages: { key: string; variables: any[] }[];
   winners: Player[];
+  createdAt: Date,
   timeout: NodeJS.Timeout;
   nextPlayer: () => Player;
   actualPlayer: () => Player;
@@ -33,6 +34,7 @@ export type Player = {
   inactiveRounds: number;
   locale: Locale;
   username: string;
+  addCards: (amount: Number) => void;
 };
 
 export type Card = {
