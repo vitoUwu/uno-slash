@@ -2,6 +2,7 @@ import axios from "axios";
 import { Colors, Guild } from "discord.js";
 import config from "../config.js";
 import { games } from "../handlers/games.js";
+import { logger } from "../utils/logger.js";
 
 export default {
   name: "guildDelete",
@@ -13,7 +14,7 @@ export default {
       .filter((game) => game.guildId === guild.id)
       ?.forEach((game) => {
         clearInterval(game.timeout);
-        games.delete(game.channelId);
+        games.delete(game.id);
       });
 
     await axios
@@ -54,7 +55,7 @@ export default {
         ],
       })
       .catch((err) => {
-        guild.client.logger.error(err);
+        logger.error(err);
       });
   },
 };
