@@ -9,13 +9,12 @@ import {
   ComponentType,
   Locale,
 } from "discord.js";
-import { findGameByChannelId, findGameByMemberId } from "../handlers/games.js";
+import { findGameByChannelId } from "../handlers/games.js";
 import { translate } from "../locales/index.js";
 import embeds from "../utils/embeds.js";
 import {
   compatibleColor,
   compatibleNumber,
-  getCards,
   parseCardId,
 } from "../utils/functions.js";
 
@@ -75,26 +74,6 @@ export default {
       });
     }
 
-    if (game.status !== "started") {
-      return await interaction.reply({
-        embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.play.notStarted")
-          ),
-        ],
-        ephemeral: true,
-      });
-    }
-
-    if (game.actualPlayer().id !== interaction.member.id) {
-      return await interaction.reply({
-        embeds: [
-          embeds.error(translate(interaction.locale, "commands.play.notTurn")),
-        ],
-        ephemeral: true,
-      });
-    }
-
     const player = game.players.get(interaction.member.id);
     if (!player) {
       return await interaction.reply({
@@ -107,11 +86,31 @@ export default {
       });
     }
 
+    if (game.status !== "started") {
+      return await interaction.reply({
+        embeds: [
+          embeds.error(
+            translate(interaction.locale, "commands.play.notStarted")
+          ),
+        ],
+        ephemeral: true,
+      });
+    }
+
+    if (game.actualPlayer()?.id !== interaction.member.id) {
+      return await interaction.reply({
+        embeds: [
+          embeds.error(translate(interaction.locale, "commands.play.notTurn")),
+        ],
+        ephemeral: true,
+      });
+    }
+
     const cardId = interaction.options.getString("card");
     game.timeout.refresh();
 
     if (cardId === "draw") {
-      player.cards.push(...getCards(1));
+      player.addCards(1);
       game.messages.push({
         key: "commands.draw.bhoughtCard",
         variables: [interaction.user.toString()],
@@ -124,7 +123,8 @@ export default {
     const cardIndex = player.cards.findIndex(
       (cardIds) =>
         cardIds === cardId ||
-        parseCardId(cardIds).toString().toLowerCase() === cardId.toLowerCase()
+        parseCardId(cardIds, interaction.locale).toString().toLowerCase() ===
+          cardId.toLowerCase()
     );
     if (cardIndex < 0) {
       return await interaction.reply({
@@ -244,7 +244,7 @@ export default {
         ["r", "b", "g", "y"][Math.floor(Math.random() * 4)];
       game.lastCardId = `${color}any`;
       if (cardNumber === "+4") {
-        game.nextPlayer().cards.push(...getCards(4));
+        game.nextPlayer().addCards(4);
         game.messages.push({
           key: "commands.play.messages.4wild",
           variables: [
@@ -270,8 +270,7 @@ export default {
           variables: [interaction.user.toString(), game.stackedCombo],
         });
       } else if (game.stackedCombo > 0) {
-        game.stackedCombo += 2;
-        game.nextPlayer().cards.push(...getCards(game.stackedCombo));
+        game.nextPlayer().addCards(game.stackedCombo + 2);
         game.messages.push({
           key: "commands.play.messages.endCombo",
           variables: [
@@ -284,7 +283,7 @@ export default {
         game.stackedCombo = 0;
         game.addIndex();
       } else {
-        game.nextPlayer().cards.push(...getCards(2));
+        game.nextPlayer().addCards(2);
         game.messages.push({
           key: "commands.play.messages.+2",
           variables: [
@@ -348,9 +347,9 @@ export default {
       })
       .catch(() => null);
 
-    if (!response) {
+    if (!response || response.customId === "collector;report") {
       await reply.edit({ components: [] });
-      player.cards.push(...getCards(2));
+      player.addCards(2);
       return interaction.channel
         .send({
           embeds: [
@@ -370,23 +369,6 @@ export default {
     if (response.customId === "collector;uno") {
       return reply.edit({ components: [] });
     }
-
-    await reply.edit({ components: [] }).catch(() => null);
-    player.cards.push(...getCards(2));
-    interaction.channel
-      .send({
-        embeds: [
-          {
-            description: translate(
-              interaction.locale,
-              "game.unoReport",
-              interaction.user.toString()
-            ),
-            color: Colors.Blurple,
-          },
-        ],
-      })
-      .catch(() => null);
   },
 
   /**
@@ -394,21 +376,12 @@ export default {
    * @param {AutocompleteInteraction} interaction
    */
   executeAutocomplete: async (interaction) => {
-    const game = findGameByMemberId(interaction.user.id, interaction.guildId);
+    const game = findGameByChannelId(interaction.channelId);
     if (!game) {
       return await interaction.respond([
         {
           name: translate(interaction.locale, "commands.play.noMatchs"),
           value: translate(interaction.locale, "commands.play.noMatchs"),
-        },
-      ]);
-    }
-
-    if (game.status !== "started") {
-      return await interaction.respond([
-        {
-          name: translate(interaction.locale, "commands.play.notStarted"),
-          value: translate(interaction.locale, "commands.play.notStarted"),
         },
       ]);
     }
@@ -426,20 +399,26 @@ export default {
       ]);
     }
 
-    const value = interaction.options.getFocused(true).value.toLowerCase();
+    if (game.status !== "started") {
+      return await interaction.respond([
+        {
+          name: translate(interaction.locale, "commands.play.notStarted"),
+          value: translate(interaction.locale, "commands.play.notStarted"),
+        },
+      ]);
+    }
+
+    const value = interaction.options.getFocused().toLowerCase();
 
     const data = player.cards
       .filter(
-        (cardId) =>
-          cardId.includes(value) ||
-          parseCardId(cardId, interaction.locale)
-            .toString()
-            .toLowerCase()
-            .includes(value)
+        (card) =>
+          card.id.includes(value) ||
+          card.toString().toLowerCase().includes(value)
       )
       .map((card) => ({
-        name: parseCardId(card, interaction.locale).toString(),
-        value: card,
+        name: card.toString(),
+        value: card.id,
       }))
       .slice(0, 24)
       .concat({
