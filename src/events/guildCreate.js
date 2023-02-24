@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Colors, Guild } from "discord.js";
 import config from "../config.js";
+import { logger } from "../utils/logger.js";
 
 export default {
   name: "guildCreate",
@@ -46,7 +47,7 @@ export default {
         ],
       })
       .catch((err) => {
-        guild.client.logger.error(err);
+        logger.error(err);
       });
   },
 };
