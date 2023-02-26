@@ -153,6 +153,7 @@ export async function handleAutocomplete(interaction) {
   const command = commands.get(interaction.commandName);
 
   if (!command || !command["executeAutocomplete"]) {
+    logger.error(`Unknown autocomplete command: ${interaction.commandName}`);
     return;
   }
 
