@@ -412,13 +412,13 @@ export default {
 
     const data = player.cards
       .filter(
-        (card) =>
-          card.id.includes(value) ||
-          card.toString().toLowerCase().includes(value)
+        (cardId) =>
+          cardId.includes(value) ||
+          parseCardId(cardId).toString().toLowerCase().includes(value)
       )
-      .map((card) => ({
-        name: card.toString(),
-        value: card.id,
+      .map((cardId) => ({
+        name: parseCardId(cardId).toString(),
+        value: cardId,
       }))
       .slice(0, 24)
       .concat({
