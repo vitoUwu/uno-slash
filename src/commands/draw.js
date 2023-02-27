@@ -57,6 +57,7 @@ export default {
     }
 
     player.addCards(1);
+    game.timeout.refresh();
     game.messages.push({
       key: "commands.draw.bhoughtCard",
       variables: [interaction.user],
