@@ -216,7 +216,7 @@ export function createGame(hostId, guildId, channelId) {
           embeds: [
             {
               description: `${
-                mappedMessages ? `${mappedMessages}\n` : ""
+                mappedMessages ? `${mappedMessages}\n\n` : ""
               }${translate(
                 this.actualPlayer().locale,
                 "game.embeds.resume.description",
@@ -225,14 +225,17 @@ export function createGame(hostId, guildId, channelId) {
               )}\n\n**${translate(
                 this.actualPlayer().locale,
                 "game.cards.cards"
-              )}**\n\`\`\`\n${this.players
-                .clone()
-                .sort((a, b) => a.cards.length - b.cards.length)
+              )}**\n\`\`\`\n${[
+                ...this.players
+                  .clone()
+                  .sort((a, b) => a.cards.length - b.cards.length)
+                  .values(),
+              ]
                 .map(
-                  (player) =>
-                    `#${
-                      playersArray.findIndex((p) => p.id === player.id) + 1
-                    } | ${player.username}: ${player.cards.length} ${translate(
+                  (player, index) =>
+                    `#${index + 1} | ${player.username}: ${
+                      player.cards.length
+                    } ${translate(
                       this.actualPlayer().locale,
                       "game.cards.cards"
                     )}`
