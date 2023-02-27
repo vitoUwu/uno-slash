@@ -183,13 +183,13 @@ export function createGame(hostId, guildId, channelId) {
 
         this.players.delete(playerId);
 
-        if (this.hostId === playerId) {
+        if (this.hostId === playerId && this.status === "onqueue") {
           this.hostId = this.players.randomKey();
           createMessage(this.channelId, {
             content: translate(
               this.actualPlayer().locale,
               "game.newAuthor",
-              this.hostId
+              `<@${this.hostId}>`
             ),
           }).catch((err) => logger.error(err));
         }
