@@ -7,7 +7,7 @@ import {
   parseCardId,
 } from "../utils/functions.js";
 import { logger } from "../utils/logger.js";
-import { createMessage } from "../utils/rest.js";
+import { createMessage, editMessage } from "../utils/rest.js";
 
 /**
  * @type {Collection<string, import('../types').GameObject}
@@ -95,6 +95,7 @@ export function createTimeout(gameId) {
  * @param {string} hostId
  * @param {string} guildId
  * @param {string} channelId
+ * @param {string} queueMessageId
  * @returns {import('../types').GameObject}
  */
 export function createGame(hostId, guildId, channelId) {
@@ -104,6 +105,7 @@ export function createGame(hostId, guildId, channelId) {
       id,
       channelId,
       guildId,
+      queueMessageId: "",
       players: new Collection(),
       index: 0,
       hostId,
@@ -133,9 +135,36 @@ export function createGame(hostId, guildId, channelId) {
         });
       },
       removePlayer(playerId) {
-        if (this.players.size === 1 && this.status !== "started") {
-          clearTimeout(this.timeout);
-          games.delete(this.id);
+        if (this.status === "onqueue") {
+          if (this.players.size <= 1) {
+            editMessage(this.channelId, this.queueMessageId, {
+              embeds: [
+                {
+                  color: Colors.Red,
+                  description: translate(
+                    this.actualPlayer().locale,
+                    "abandonedMatch"
+                  ),
+                },
+              ],
+              components: [],
+            });
+            clearTimeout(this.timeout);
+            games.delete(this.id);
+            return;
+          }
+          this.players.delete(playerId);
+          this.updateQueueMessage();
+          if (this.hostId === playerId) {
+            this.hostId = this.players.randomKey();
+            createMessage(this.channelId, {
+              content: translate(
+                this.actualPlayer().locale,
+                "game.newAuthor",
+                `<@${this.hostId}>`
+              ),
+            }).catch((err) => logger.error(err));
+          }
           return;
         }
 
@@ -175,24 +204,14 @@ export function createGame(hostId, guildId, channelId) {
         }
 
         if (this.actualPlayer()?.id === playerId) {
-          this.addIndex();
+          this.players.delete(playerId);
           createMessage(this.channelId, this.makePayload()).catch((err) =>
             logger.error(err)
           );
+          return;
         }
 
         this.players.delete(playerId);
-
-        if (this.hostId === playerId && this.status === "onqueue") {
-          this.hostId = this.players.randomKey();
-          createMessage(this.channelId, {
-            content: translate(
-              this.actualPlayer().locale,
-              "game.newAuthor",
-              `<@${this.hostId}>`
-            ),
-          }).catch((err) => logger.error(err));
-        }
       },
       addIndex() {
         this.index = (this.index + 1) % this.players.size;
@@ -202,7 +221,6 @@ export function createGame(hostId, guildId, channelId) {
           this.lastCardId,
           this.actualPlayer().locale
         );
-        const playersArray = [...this.players.values()];
         const mappedMessages = this.messages.length
           ? this.messages
               .map(({ key, variables }) =>
@@ -251,6 +269,26 @@ export function createGame(hostId, guildId, channelId) {
             },
           ],
         };
+      },
+      updateQueueMessage() {
+        const playersUsernames = this.players
+          .map((player) => player.username)
+          .join("\n");
+
+        editMessage(this.channelId, this.queueMessageId, {
+          embeds: [
+            {
+              description: `${translate(
+                this.actualPlayer().locale,
+                "commands.create.matchQueueDescription"
+              )}\n\n${translate(
+                this.actualPlayer().locale,
+                "commands.create.players"
+              )}: \`\`\`${playersUsernames}\`\`\``,
+              color: Colors.Blurple,
+            },
+          ],
+        }).catch((err) => logger.error(err));
       },
       reversePlayers() {
         const actualPlayerKey = this.players.keyAt(this.index);

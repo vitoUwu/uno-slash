@@ -90,11 +90,7 @@ export default {
             interaction.locale,
             "commands.create.players"
           )}:\`\`\`${game.players
-            .map(
-              (player) =>
-                interaction.guild.members.cache.get(player.id)?.user
-                  ?.username || player.id
-            )
+            .map((player) => player.username)
             .join("\n")}\`\`\``,
           color: Colors.Blurple,
         },
@@ -102,6 +98,8 @@ export default {
       components: [row],
       fetchReply: true,
     });
+
+    game.queueMessageId = reply.id;
 
     const collector = reply.createMessageComponentCollector({
       time: 60000 * 5,
@@ -198,28 +196,7 @@ export default {
               ephemeral: true,
             });
 
-            const playersUsernames = game.players
-              .map(
-                (player) =>
-                  interaction.guild.members.cache.get(player.id)?.user
-                    ?.username || player.id
-              )
-              .join("\n");
-
-            await interaction.editReply({
-              embeds: [
-                {
-                  description: `${translate(
-                    interaction.locale,
-                    "commands.create.matchQueueDescription"
-                  )}\n\n${translate(
-                    interaction.locale,
-                    "commands.create.players"
-                  )}: \`\`\`${playersUsernames}\`\`\``,
-                  color: Colors.Blurple,
-                },
-              ],
-            });
+            game.updateQueueMessage();
             break;
           }
           case "cancel": {

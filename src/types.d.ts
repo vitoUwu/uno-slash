@@ -10,6 +10,7 @@ export type GameObject = {
   id: string;
   channelId: string;
   guildId: string;
+  queueMessageId: string;
   players: Collection<string, Player>;
   index: number;
   hostId: string;
@@ -26,6 +27,7 @@ export type GameObject = {
   removePlayer: (playerId: string) => void;
   addIndex: () => void;
   makePayload: () => MessageOptions;
+  updateQueueMessage: () => void;
   reversePlayers: () => void;
 };
 
