@@ -417,10 +417,13 @@ export default {
       .filter(
         (cardId) =>
           cardId.includes(value) ||
-          parseCardId(cardId).toString().toLowerCase().includes(value)
+          parseCardId(cardId, interaction.locale)
+            .toString()
+            .toLowerCase()
+            .includes(value)
       )
       .map((cardId) => ({
-        name: parseCardId(cardId).toString(),
+        name: parseCardId(cardId, interaction.locale).toString(),
         value: cardId,
       }))
       .slice(0, 24)
