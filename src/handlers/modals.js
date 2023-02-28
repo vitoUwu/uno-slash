@@ -20,7 +20,7 @@ export async function handleModalSubmit(interaction) {
       const result = inspect(await executeEval(code, interaction), {
         colors: true,
         numericSeparator: true,
-      }).replace(new RegExp(process.env.TOKEN, "g"), "[token]");
+      }).replace(new RegExp(process.env.DISCORD_TOKEN, "g"), "[token]");
       console.log("file: modals.js:20 ~ result ~ result", result);
       return await interaction.reply({
         embeds: [

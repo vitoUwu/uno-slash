@@ -5,7 +5,7 @@ A simple bot made to bring entertainment to your server
 ## .env
 
 ```batch
-TOKEN=
+DISCORD_TOKEN=
 DBGG_TOKEN=
 DBL_TOKEN=
 TOPGG_TOKEN=

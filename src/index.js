@@ -13,7 +13,7 @@ import { logger } from "./utils/logger.js";
 
   await loadAndListenEvents(client);
   await loadCommands();
-  await client.login(process.env.TOKEN);
+  await client.login(process.env.DISCORD_TOKEN);
   await client.application.fetch();
   logger.info(`Logado como ${client.user.tag}`);
   await deployCommands(client);
