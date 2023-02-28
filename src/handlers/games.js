@@ -252,6 +252,11 @@ export function createGame(hostId, guildId, channelId) {
           ],
         };
       },
+      reversePlayers() {
+        const actualPlayerKey = this.players.keyAt(this.index);
+        this.players.reverse();
+        this.index = [...this.players.keys()].indexOf(actualPlayerKey);
+      },
     })
     .get(id);
 }

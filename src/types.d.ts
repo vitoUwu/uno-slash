@@ -26,6 +26,7 @@ export type GameObject = {
   removePlayer: (playerId: string) => void;
   addIndex: () => void;
   makePayload: () => MessageOptions;
+  reversePlayers: () => void;
 };
 
 export type Player = {

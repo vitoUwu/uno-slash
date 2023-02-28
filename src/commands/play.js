@@ -301,7 +301,10 @@ export default {
         key: "commands.play.messages.reverse",
         variables: [interaction.user.toString()],
       });
-      game.players.reverse();
+      game.reversePlayers();
+      if (game.players.size === 2) {
+        game.addIndex();
+      }
     }
 
     if (cardNumber === "b") {
