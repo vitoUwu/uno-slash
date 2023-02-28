@@ -144,6 +144,11 @@
     "newAuthor": "{0} is the new match owner",
     "removedByInactivity": "{0} was removed from match by inactivity"
   },
+  "player": {
+    "messages": {
+      "noCards": "{0} played his last card `{1}`"
+    }
+  },
   "missingPermission": "I need permissions: `Embed links, See Channel and Send Messages` to work properly.",
   "commandSpam": "You're using the commands too quickly! Wait more ` {0} ` seconds",
   "noDm": "My commands were not made to run in DM",

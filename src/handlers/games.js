@@ -168,46 +168,55 @@ export function createGame(hostId, guildId, channelId) {
           return;
         }
 
-        if (this.players.size === 2 && this.status === "started") {
-          clearTimeout(this.timeout);
-          this.players.delete(playerId);
-          this.winners.push(this.players.first());
-          createMessage(this.channelId, {
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(
-                  `${translate(
-                    this.winners[0].locale,
-                    "game.embeds.end.descriptions.noPlayers",
-                    `<@${this.winners[0].id}>`
-                  )}\n\n\`\`\`${this.winners
-                    .map(
-                      (winner, index) =>
-                        `[${getRankingPositionEmoji(index)}] #${index + 1} | ${
-                          winner.username
-                        }`
-                    )
-                    .join("\n")}\`\`\``
-                )
-                .setColor(Colors.Blurple)
-                .setFooter({
-                  text: translate(
-                    this.winners[0].locale,
-                    "game.embeds.end.footer"
-                  ),
-                })
-                .toJSON(),
-            ],
-          }).catch((err) => logger.error(err));
-          games.delete(this.id);
-          return;
-        }
+        if (this.status === "started") {
+          if (this.players.size === 2) {
+            clearTimeout(this.timeout);
+            this.players.delete(playerId);
+            this.winners.push(this.players.first());
+            this.players.clear();
+            createMessage(this.channelId, {
+              embeds: [
+                new EmbedBuilder()
+                  .setDescription(
+                    `${translate(
+                      this.winners[0].locale,
+                      "game.embeds.end.descriptions.noPlayers",
+                      `<@${this.winners[0].id}>`
+                    )}\n\n\`\`\`${this.winners
+                      .map(
+                        (winner, index) =>
+                          `[${getRankingPositionEmoji(index)}] #${
+                            index + 1
+                          } | ${winner.username}`
+                      )
+                      .join("\n")}\`\`\``
+                  )
+                  .setColor(Colors.Blurple)
+                  .setFooter({
+                    text: translate(
+                      this.winners[0].locale,
+                      "game.embeds.end.footer"
+                    ),
+                  })
+                  .toJSON(),
+              ],
+            }).catch((err) => logger.error(err));
+            games.delete(this.id);
+            return;
+          }
 
-        if (this.actualPlayer()?.id === playerId) {
+          if (
+            this.actualPlayer().id === playerId &&
+            this.actualPlayer().cards.length !== 0
+          ) {
+            this.players.delete(playerId);
+            createMessage(this.channelId, this.makePayload()).catch((err) =>
+              logger.error(err)
+            );
+            return;
+          }
+
           this.players.delete(playerId);
-          createMessage(this.channelId, this.makePayload()).catch((err) =>
-            logger.error(err)
-          );
           return;
         }
 

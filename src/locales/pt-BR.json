@@ -144,6 +144,11 @@
     "newAuthor": "{0} é o novo dono da partida",
     "removedByInactivity": "{0} foi removido da partida por inatividade"
   },
+  "player": {
+    "messages": {
+      "noCards": "{0} jogou a carta `{1}` e ficou sem cartas!"
+    }
+  },
   "missingPermission": "Preciso das permissões: ` Inserir Links, Ver canal e Enviar mensagem ` para funcionar corretamente.",
   "commandSpam": "Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos",
   "noDm": "Meus comandos não foram feitos para serem executados na DM",

@@ -167,12 +167,31 @@ export default {
 
     player.cards.splice(cardIndex, 1);
     if (player.cards.length <= 0) {
-      game.winners.push(player);
-      game.removePlayer(player.id);
-      game.messages.push({
-        key: "commands.play.messages.win",
-        variables: [interaction.user.toString()],
-      });
+      if (game.players.size > 2) {
+        game.winners.push(player);
+        game.removePlayer(player.id);
+        game.messages.push({
+          key: "commands.play.messages.win",
+          variables: [interaction.user.toString()],
+        });
+      } else {
+        await interaction.reply({
+          embeds: [
+            {
+              color: Colors.Blurple,
+              description: translate(
+                interaction.locale,
+                "player.messages.noCards",
+                interaction.user.toString(),
+                parsedCard.toString()
+              ),
+            },
+          ],
+        });
+        game.winners.push(player);
+        game.removePlayer(player.id);
+        return;
+      }
     }
 
     if (player.cards.length === 1) {
