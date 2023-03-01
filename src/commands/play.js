@@ -24,7 +24,7 @@ export default {
   description_localizations: {
     "pt-BR": translate(Locale.PortugueseBR, "commands.play.description"),
   },
-  cooldown: 5,
+  // cooldown: 5,
   options: [
     {
       name: "card",

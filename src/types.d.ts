@@ -1,4 +1,5 @@
 import type {
+  APIApplicationCommand,
   Collection,
   GuildMember,
   Locale,
@@ -41,10 +42,18 @@ export type Player = {
 };
 
 export type Card = {
-  id: (typeof cards)[number];
+  id: typeof cards[number];
   type: "special" | "normal";
   number: string;
   color: "r" | "b" | "g" | "y";
   emoji: "🟥" | "🟦" | "🟩" | "🟨" | "🔲";
   toString: () => string;
+};
+
+export type Command = Omit<
+  APIApplicationCommand,
+  "application_id" | "guild_id" | "id" | "version"
+> & {
+  cooldown: number;
+  devOnly: boolean;
 };

@@ -8,6 +8,7 @@ import {
 import { readdirSync } from "fs";
 import config from "../config.js";
 import { translate } from "../locales/index.js";
+import { commandMapper } from "../utils/commandMapper.js";
 import embeds from "../utils/embeds.js";
 import { logger } from "../utils/logger.js";
 
@@ -28,7 +29,7 @@ export async function loadCommands() {
  * @param {import("discord.js").Client} client
  */
 export async function deployCommands(client) {
-  const commandsArray = [...commands.values()];
+  const commandsArray = [...commands.values()].map(commandMapper);
   await client.application.commands
     .set(commandsArray.filter((command) => !command.devOnly))
     .catch((err) => logger.error(err));
@@ -38,6 +39,7 @@ export async function deployCommands(client) {
       config.servers.test
     )
     .catch((err) => logger.error(err));
+  logger.info("Comandos registrados");
 }
 
 /**
@@ -109,35 +111,37 @@ export async function handleChatInputCommand(interaction) {
     return;
   }
 
-  if (cooldowns.has(`${interaction.commandName}-${interaction.user.id}`)) {
-    return await interaction.reply({
-      embeds: [
-        embeds.error(
-          translate(
-            interaction.locale,
-            "commandSpam",
-            Math.floor(
-              (cooldowns.get(
-                `${interaction.commandName}-${interaction.user.id}`
-              ) -
-                Date.now()) /
-                1000
-            ).toFixed(1)
-          )
-        ),
-      ],
-    });
+  if (command.cooldown) {
+    if (cooldowns.has(`${interaction.commandName}-${interaction.user.id}`)) {
+      return await interaction.reply({
+        embeds: [
+          embeds.error(
+            translate(
+              interaction.locale,
+              "commandSpam",
+              Math.floor(
+                (cooldowns.get(
+                  `${interaction.commandName}-${interaction.user.id}`
+                ) -
+                  Date.now()) /
+                  1000
+              ).toFixed(1)
+            )
+          ),
+        ],
+      });
+    }
+
+    cooldowns.set(
+      `${interaction.commandName}-${interaction.user.id}`,
+      new Date(Date.now() + 5000).getTime()
+    );
+    setTimeout(
+      () =>
+        cooldowns.delete(`${interaction.commandName}-${interaction.user.id}`),
+      5000
+    );
   }
-
-  cooldowns.set(
-    `${interaction.commandName}-${interaction.user.id}`,
-    new Date(Date.now() + 5000).getTime()
-  );
-  setTimeout(
-    () => cooldowns.delete(`${interaction.commandName}-${interaction.user.id}`),
-    5000
-  );
-
   try {
     await command.execute(interaction);
   } catch (err) {
