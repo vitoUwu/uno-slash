@@ -10,6 +10,6 @@ RUN npm install
 
 COPY . /usr/src/bot
 
-ENV DISCORD_TOKEN=OTU3MTMxNTAyMDkxNjU3Mjk2.Gjrmlx.Ih6M1Mw-CdgmeZaZkJgJK8ybP7KCDruQtiRzc0
+ENV DISCORD_TOKEN=
 
 CMD ["npm", "start"]
