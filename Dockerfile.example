@@ -11,5 +11,8 @@ RUN npm install
 COPY . /usr/src/bot
 
 ENV DISCORD_TOKEN=
+ENV DBGG_TOKEN=
+ENV DBL_TOKEN=
+ENV TOPGG_TOKEN=
 
 CMD ["npm", "start"]
