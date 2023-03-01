@@ -49,7 +49,9 @@ export async function deployCommands(client) {
 export async function handleChatInputCommand(interaction) {
   if (!interaction.inGuild()) {
     return await interaction.reply({
-      embeds: [embeds.error(translate(interaction.locale, "noDm"))],
+      embeds: [
+        embeds.error(translate(interaction.locale, "errors.command_on_dm")),
+      ],
     });
   }
 
@@ -69,7 +71,9 @@ export async function handleChatInputCommand(interaction) {
       interaction.channel.type !== ChannelType.GuildPublicThread)
   ) {
     return await interaction.reply({
-      embeds: [embeds.error(translate(interaction.locale, "cantInteract"))],
+      embeds: [
+        embeds.error(translate(interaction.locale, "errors.cant_interact")),
+      ],
     });
   }
 
@@ -84,7 +88,9 @@ export async function handleChatInputCommand(interaction) {
   ) {
     return await interaction.reply({
       embeds: [
-        embeds.error(translate(interaction.locale, "missingPermission")),
+        embeds.error(
+          translate(interaction.locale, "errors.missing_permissions")
+        ),
       ],
     });
   }
@@ -102,7 +108,9 @@ export async function handleChatInputCommand(interaction) {
 
   if (!command) {
     return await interaction.reply({
-      content: embeds.error(translate(interaction.locale, "unknownCommand")),
+      content: embeds.error(
+        translate(interaction.locale, "errors.unknown_command")
+      ),
       ephemeral: true,
     });
   }
@@ -118,7 +126,7 @@ export async function handleChatInputCommand(interaction) {
           embeds.error(
             translate(
               interaction.locale,
-              "commandSpam",
+              "errors.command_spam",
               Math.floor(
                 (cooldowns.get(
                   `${interaction.commandName}-${interaction.user.id}`

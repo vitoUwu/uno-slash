@@ -68,7 +68,7 @@ export default {
     if (!game) {
       return await interaction.reply({
         embeds: [
-          embeds.error(translate(interaction.locale, "commands.play.noMatchs")),
+          embeds.error(translate(interaction.locale, "errors.no_matchs_found")),
         ],
         ephemeral: true,
       });
@@ -79,7 +79,7 @@ export default {
       return await interaction.reply({
         embeds: [
           embeds.error(
-            translate(interaction.locale, "commands.play.notParticipating")
+            translate(interaction.locale, "errors.not_participating")
           ),
         ],
         ephemeral: true,
@@ -90,7 +90,7 @@ export default {
       return await interaction.reply({
         embeds: [
           embeds.error(
-            translate(interaction.locale, "commands.play.notStarted")
+            translate(interaction.locale, "errors.match_not_started_yet")
           ),
         ],
         ephemeral: true,
@@ -100,7 +100,7 @@ export default {
     if (game.actualPlayer()?.id !== interaction.member.id) {
       return await interaction.reply({
         embeds: [
-          embeds.error(translate(interaction.locale, "commands.play.notTurn")),
+          embeds.error(translate(interaction.locale, "errors.not_your_turn")),
         ],
         ephemeral: true,
       });
@@ -112,7 +112,7 @@ export default {
     if (cardId === "draw") {
       player.addCards(1);
       game.messages.push({
-        key: "commands.draw.bhoughtCard",
+        key: "commands.draw.drew_card",
         variables: [interaction.user.toString()],
       });
       game.addIndex();
@@ -129,9 +129,7 @@ export default {
     if (cardIndex < 0) {
       return await interaction.reply({
         embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.play.cardNotFound")
-          ),
+          embeds.error(translate(interaction.locale, "errors.card_not_found")),
         ],
         ephemeral: true,
       });
@@ -143,7 +141,7 @@ export default {
     if (game.stackedCombo && parsedCard.number !== "+2") {
       await interaction.reply({
         embeds: [
-          embeds.error(translate(interaction.locale, "commands.play.only+2")),
+          embeds.error(translate(interaction.locale, "errors.only_+2_card")),
         ],
         ephemeral: true,
       });
@@ -156,9 +154,7 @@ export default {
     ) {
       await interaction.reply({
         embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.play.invalidCard")
-          ),
+          embeds.error(translate(interaction.locale, "errors.invalid_card")),
         ],
         ephemeral: true,
       });
@@ -171,7 +167,7 @@ export default {
         game.winners.push(player);
         game.removePlayer(player.id);
         game.messages.push({
-          key: "commands.play.messages.win",
+          key: "commands.play.messages.played.last_card",
           variables: [interaction.user.toString()],
         });
       } else {
@@ -181,7 +177,7 @@ export default {
               color: Colors.Blurple,
               description: translate(
                 interaction.locale,
-                "player.messages.noCards",
+                "player.messages.played_last_card",
                 interaction.user.toString(),
                 parsedCard.toString()
               ),
@@ -218,7 +214,7 @@ export default {
       const reply = await interaction.reply({
         embeds: [
           {
-            description: translate(interaction.locale, "game.chooseColor"),
+            description: translate(interaction.locale, "game.choose_color"),
             color: Colors.Blurple,
           },
         ],
@@ -265,7 +261,7 @@ export default {
       if (cardNumber === "+4") {
         game.nextPlayer().addCards(4);
         game.messages.push({
-          key: "commands.play.messages.4wild",
+          key: "commands.play.messages.played.4wild",
           variables: [
             interaction.user.toString(),
             `<@${game.nextPlayer().id}>`,
@@ -275,7 +271,7 @@ export default {
         game.addIndex();
       } else {
         game.messages.push({
-          key: "commands.play.messages.wild",
+          key: "commands.play.messages.played.wild",
           variables: [interaction.user.toString()],
         });
       }
@@ -291,7 +287,7 @@ export default {
       } else if (game.stackedCombo > 0) {
         game.nextPlayer().addCards(game.stackedCombo + 2);
         game.messages.push({
-          key: "commands.play.messages.endCombo",
+          key: "commands.play.messages.finished_stacking",
           variables: [
             interaction.user.toString(),
             `<@${game.nextPlayer().id}>`,
@@ -304,7 +300,7 @@ export default {
       } else {
         game.nextPlayer().addCards(2);
         game.messages.push({
-          key: "commands.play.messages.+2",
+          key: "commands.play.messages.played.+2",
           variables: [
             interaction.user.toString(),
             `<@${game.nextPlayer().id}>`,
@@ -317,7 +313,7 @@ export default {
 
     if (cardNumber === "r") {
       game.messages.push({
-        key: "commands.play.messages.reverse",
+        key: "commands.play.messages.played.reverse",
         variables: [interaction.user.toString()],
       });
       game.reversePlayers();
@@ -328,7 +324,7 @@ export default {
 
     if (cardNumber === "b") {
       game.messages.push({
-        key: "commands.play.messages.block",
+        key: "commands.play.messages.played.block",
         variables: [interaction.user.toString(), `<@${game.nextPlayer().id}>`],
       });
       game.addIndex();
@@ -378,7 +374,7 @@ export default {
             {
               description: translate(
                 interaction.locale,
-                "game.unoReport",
+                "game.punished_by_report",
                 interaction.user.toString()
               ),
               color: Colors.Blurple,
@@ -402,8 +398,8 @@ export default {
     if (!game) {
       return await interaction.respond([
         {
-          name: translate(interaction.locale, "commands.play.noMatchs"),
-          value: translate(interaction.locale, "commands.play.noMatchs"),
+          name: translate(interaction.locale, "errors.no_matchs_found"),
+          value: translate(interaction.locale, "errors.no_matchs_found"),
         },
       ]);
     }
@@ -412,11 +408,8 @@ export default {
     if (!player) {
       return await interaction.respond([
         {
-          name: translate(interaction.locale, "commands.play.notParticipating"),
-          value: translate(
-            interaction.locale,
-            "commands.play.notParticipating"
-          ),
+          name: translate(interaction.locale, "errors.not_participating"),
+          value: translate(interaction.locale, "errors.not_participating"),
         },
       ]);
     }
@@ -424,8 +417,8 @@ export default {
     if (game.status !== "started") {
       return await interaction.respond([
         {
-          name: translate(interaction.locale, "commands.play.notStarted"),
-          value: translate(interaction.locale, "commands.play.notStarted"),
+          name: translate(interaction.locale, "errors.match_not_started_yet"),
+          value: translate(interaction.locale, "errors.match_not_started_yet"),
         },
       ]);
     }
@@ -447,14 +440,14 @@ export default {
       }))
       .slice(0, 24)
       .concat({
-        name: translate(interaction.locale, "commands.play.drawCardOption"),
+        name: translate(interaction.locale, "commands.play.draw_card_option"),
         value: "draw",
       });
 
     if (data.length <= 1) {
       data.unshift({
-        name: translate(interaction.locale, "commands.play.cardNotFound"),
-        value: translate(interaction.locale, "commands.play.cardNotFound"),
+        name: translate(interaction.locale, "errors.card_not_found"),
+        value: translate(interaction.locale, "errors.card_not_found"),
       });
     }
 

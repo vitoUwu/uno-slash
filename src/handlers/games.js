@@ -53,7 +53,7 @@ export function createTimeout(gameId) {
       player.inactiveRounds++;
       game.stackedCombo = 0;
       game.messages.push({
-        key: "game.inactivity",
+        key: "game.punished_by_inactivity",
         variables: [
           `<@${game.actualPlayer().id}>`,
           player.cards.length,
@@ -67,7 +67,7 @@ export function createTimeout(gameId) {
             {
               description: translate(
                 player.locale,
-                "game.removedByInactivity",
+                "game.removed_by_inactivity",
                 `<@${player.id}>`
               ),
               color: Colors.Blurple,
@@ -143,7 +143,7 @@ export function createGame(hostId, guildId, channelId) {
                   color: Colors.Red,
                   description: translate(
                     this.actualPlayer().locale,
-                    "abandonedMatch"
+                    "errors.abandoned_match"
                   ),
                 },
               ],
@@ -160,7 +160,7 @@ export function createGame(hostId, guildId, channelId) {
             createMessage(this.channelId, {
               content: translate(
                 this.actualPlayer().locale,
-                "game.newAuthor",
+                "game.new_match_host",
                 `<@${this.hostId}>`
               ),
             }).catch((err) => logger.error(err));
@@ -180,7 +180,7 @@ export function createGame(hostId, guildId, channelId) {
                   .setDescription(
                     `${translate(
                       this.winners[0].locale,
-                      "game.embeds.end.descriptions.noPlayers",
+                      "game.embeds.end.descriptions.no_more_players",
                       `<@${this.winners[0].id}>`
                     )}\n\n\`\`\`${this.winners
                       .map(
@@ -283,13 +283,12 @@ export function createGame(hostId, guildId, channelId) {
         const playersUsernames = this.players
           .map((player) => player.username)
           .join("\n");
-
         editMessage(this.channelId, this.queueMessageId, {
           embeds: [
             {
               description: `${translate(
                 this.actualPlayer().locale,
-                "commands.create.matchQueueDescription"
+                "commands.create.queue_description"
               )}\n\n${translate(
                 this.actualPlayer().locale,
                 "commands.create.players"

@@ -36,9 +36,7 @@ export default {
     ) {
       return await interaction.reply({
         embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.create.invalidChannel")
-          ),
+          embeds.error(translate(interaction.locale, "errors.invalid_channel")),
         ],
         ephemeral: true,
       });
@@ -47,9 +45,7 @@ export default {
     if (findGameByChannelId(interaction.channelId)) {
       return await interaction.reply({
         embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.create.alreadyStartedMatch")
-          ),
+          embeds.error(translate(interaction.locale, "errors.existing_match")),
         ],
         ephemeral: true,
       });
@@ -68,15 +64,15 @@ export default {
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("collector;join")
-        .setLabel(translate(interaction.locale, "commands.create.joinMatch"))
+        .setLabel(translate(interaction.locale, "commands.create.join_match"))
         .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
         .setCustomId("collector;start")
-        .setLabel(translate(interaction.locale, "commands.create.startMatch"))
+        .setLabel(translate(interaction.locale, "commands.create.start_match"))
         .setStyle(ButtonStyle.Success),
       new ButtonBuilder()
         .setCustomId("collector;cancel")
-        .setLabel(translate(interaction.locale, "commands.create.cancelMatch"))
+        .setLabel(translate(interaction.locale, "commands.create.cancel_match"))
         .setStyle(ButtonStyle.Danger)
     );
 
@@ -85,7 +81,7 @@ export default {
         {
           description: `${translate(
             interaction.locale,
-            "commands.create.matchQueueDescription"
+            "commands.create.queue_description"
           )}\n\n${translate(
             interaction.locale,
             "commands.create.players"
@@ -111,7 +107,7 @@ export default {
           await i.message.delete();
           collector.stop();
           return await i.reply({
-            content: translate(i.locale, "abandonedMatch"),
+            content: translate(i.locale, "errors.abandoned_match"),
             ephemeral: true,
           });
         }
@@ -123,7 +119,7 @@ export default {
               return await i.reply({
                 embeds: [
                   embeds.error(
-                    translate(i.locale, "commands.create.youCantStart")
+                    translate(i.locale, "errors.missing_host_permissions")
                   ),
                 ],
                 ephemeral: true,
@@ -134,7 +130,7 @@ export default {
               return await i.reply({
                 embeds: [
                   embeds.error(
-                    translate(i.locale, "commands.create.noPlayers")
+                    translate(i.locale, "errors.insufficient_players")
                   ),
                 ],
                 ephemeral: true,
@@ -146,7 +142,7 @@ export default {
                 {
                   title: translate(
                     interaction.locale,
-                    "commands.create.startedMatch"
+                    "commands.create.messages.started"
                   ),
                   description: `${translate(
                     interaction.locale,
@@ -178,7 +174,7 @@ export default {
               return await i.reply({
                 embeds: [
                   embeds.error(
-                    translate(i.locale, "commands.create.alreadyJoinedMatch")
+                    translate(i.locale, "errors.already_participating")
                   ),
                 ],
                 ephemeral: true,
@@ -190,7 +186,7 @@ export default {
             await i.reply({
               embeds: [
                 embeds.success(
-                  translate(i.locale, "commands.create.joinedMatch")
+                  translate(i.locale, "commands.create.messages.joined")
                 ),
               ],
               ephemeral: true,
@@ -204,7 +200,7 @@ export default {
               return await i.reply({
                 embeds: [
                   embeds.error(
-                    translate(i.locale, "commands.create.youCantCancel")
+                    translate(i.locale, "errors.missing_host_permissions")
                   ),
                 ],
                 ephemeral: true,
@@ -219,7 +215,7 @@ export default {
                 {
                   description: translate(
                     interaction.locale,
-                    "commands.create.cancelledMatch"
+                    "commands.create.messages.cancelled_by_host"
                   ),
                   color: Colors.Red,
                 },
@@ -242,7 +238,7 @@ export default {
               embeds.error(
                 translate(
                   interaction.locale,
-                  "commands.create.cancelledByInactivity"
+                  "commands.create.messages.cancelled_by_inactivity"
                 )
               ),
             ],
