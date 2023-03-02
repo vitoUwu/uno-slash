@@ -38,6 +38,21 @@ export function findGameByChannelId(channelId) {
 /**
  *
  * @param {string} gameId
+ * @returns
+ */
+export function deleteGame(gameId) {
+  const game = games.get(gameId);
+  if (!game) {
+    return;
+  }
+
+  clearTimeout(game.timeout);
+  games.delete(gameId);
+}
+
+/**
+ *
+ * @param {string} gameId
  * @returns {NodeJS.Timeout}
  */
 export function createTimeout(gameId) {
@@ -46,6 +61,9 @@ export function createTimeout(gameId) {
       const game = games.get(id);
       if (!game) {
         return;
+      }
+      if (game.players.size <= 0) {
+        return deleteGame(gameId);
       }
       const amount = game.stackedCombo || 2;
       const player = game.actualPlayer();
@@ -120,6 +138,7 @@ export function createGame(hostId, guildId, channelId) {
         return this.players.at((this.index + 1) % this.players.size);
       },
       actualPlayer() {
+        this.index = this.index % this.players.size;
         return this.players.at(this.index);
       },
       addPlayer(member, locale) {
@@ -206,6 +225,7 @@ export function createGame(hostId, guildId, channelId) {
           }
 
           if (
+            this.players.size > 2 &&
             this.actualPlayer().id === playerId &&
             this.actualPlayer().cards.length !== 0
           ) {
