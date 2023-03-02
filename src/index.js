@@ -26,3 +26,13 @@ import { logger } from "./utils/logger.js";
     await postStatus(client.guilds.cache.size, client.user.id);
   }, 60000 * 10);
 })();
+
+process.on("uncaughtException", (error, origin) => {
+  logger.fatal({ error, origin });
+  process.kill(0);
+});
+
+process.on("unhandledRejection", (error) => {
+  logger.fatal(error);
+  process.kill(0);
+});
