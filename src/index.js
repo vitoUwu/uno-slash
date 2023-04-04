@@ -10,3 +10,12 @@ const manager = new ShardingManager("./src/uno.js", {
 manager.on("shardCreate", (shard) => logger.info(`Launched shard ${shard.id}`));
 
 manager.spawn();
+
+process.on("unhandledRejection", (error) => {
+  logger.error(error);
+});
+
+process.on("uncaughtException", (error) => {
+  logger.error(error);
+  process.exit(1);
+});
