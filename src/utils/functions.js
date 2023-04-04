@@ -45,47 +45,68 @@ export function updateActivity(client) {
   });
 }
 
-export async function postStatus(guildCount, clientId) {
+export async function postStatus(client) {
   const topggToken = process.env.TOPGG_TOKEN;
   const dbggToken = process.env.DBGG_TOKEN;
   const dblToken = process.env.DBL_TOKEN;
 
-  try {
-    if (topggToken) {
-      await axios.post(
-        `https://top.gg/api/bots/${clientId}/stats`,
+  if (!topggToken && !dbggToken && !dblToken) return;
+
+  const guildCount = await getGuildsSize(client);
+
+  const promiseArray = [];
+
+  if (topggToken) {
+    promiseArray.push(
+      axios.post(
+        `https://top.gg/api/bots/${client.user.id}/stats`,
         {
           server_count: guildCount,
         },
         {
           headers: { Authorization: topggToken },
         }
-      );
-    }
-    if (dbggToken) {
-      await axios.post(
-        `https://discord.bots.gg/api/v1/bots/${clientId}/stats`,
+      )
+    );
+  }
+
+  if (dbggToken) {
+    promiseArray.push(
+      axios.post(
+        `https://discord.bots.gg/api/v1/bots/${client.user.id}/stats`,
         {
           guildCount: guildCount,
         },
         {
           headers: { Authorization: dbggToken },
         }
-      );
-    }
-    if (dblToken) {
-      await axios.post(
-        `https://discordbotlist.com/api/v1/bots/${clientId}/stats`,
+      )
+    );
+  }
+
+  if (dblToken) {
+    promiseArray.push(
+      axios.post(
+        `https://discordbotlist.com/api/v1/bots/${client.user.id}/stats`,
         {
           guildCount,
         },
         {
           headers: { Authorization: dblToken },
         }
-      );
-    }
-  } catch (err) {
-    logger.error(err);
+      )
+    );
+  }
+
+  const results = await Promise.allSettled(promiseArray);
+
+  if (results.some((result) => result.status === "rejected")) {
+    logger.error(
+      `Erro ao atualizar status aos serviços: ${results
+        .filter((result) => result.status === "rejected")
+        .map((result) => result.reason)
+        .join(", ")}`
+    );
   }
 }
 
@@ -241,4 +262,14 @@ export function getRankingPositionEmoji(index) {
     default:
       return "🎖️";
   }
+}
+
+/**
+ *
+ * @param {import('discord.js').Client} client
+ * @returns
+ */
+export async function getGuildsSize(client) {
+  const guilds = await client.shard.fetchClientValues("guilds.cache.size");
+  return guilds.reduce((acc, guildCount) => acc + guildCount, 0);
 }
