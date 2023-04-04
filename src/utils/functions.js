@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ActivityType, ApplicationCommandType, Locale } from "discord.js";
+import { ApplicationCommandType, Locale } from "discord.js";
 import { translate } from "../locales/index.js";
 import cards from "./cards.js";
 import { logger } from "./logger.js";
@@ -38,9 +38,10 @@ export function transformCommand(command, type) {
     };
 }
 
-export function updateActivity(client) {
+export async function updateActivity(client) {
+  const guildCount = await getGuildsSize(client);
   client.user.setActivity({
-    name: `on ${client.guilds.cache.size} servers`,
+    name: `on ${guildCount} servers`,
     type: ActivityType.Playing,
   });
 }

@@ -23,9 +23,12 @@ const lines = [
   )
 );
 
+import english from "../locales/english.js";
+import portuguese from "../locales/portuguese.js";
+
 const translations = {
-  portuguese: JSON.parse(readFileSync("./src/locales/pt-BR.json")),
-  english: JSON.parse(readFileSync("./src/locales/en-US.json")),
+  portuguese,
+  english,
 };
 
 const keys = {

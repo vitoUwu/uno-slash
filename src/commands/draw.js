@@ -19,7 +19,7 @@ export default {
     if (!game) {
       return await interaction.reply({
         embeds: [
-          embeds.error(translate(interaction.locale, "commands.draw.noMatchs")),
+          embeds.error(translate(interaction.locale, "errors.no_matchs_found")),
         ],
       });
     }
@@ -28,7 +28,7 @@ export default {
       return await interaction.reply({
         embeds: [
           embeds.error(
-            translate(interaction.locale, "commands.draw.notStarted")
+            translate(interaction.locale, "errors.match_not_started_yet")
           ),
         ],
         ephemeral: true,
@@ -40,7 +40,7 @@ export default {
       return await interaction.reply({
         embeds: [
           embeds.error(
-            translate(interaction.locale, "commands.draw.notParticipating")
+            translate(interaction.locale, "errors.not_participating")
           ),
         ],
         ephemeral: true,
@@ -50,7 +50,7 @@ export default {
     if (game.actualPlayer().id !== interaction.user.id) {
       return await interaction.reply({
         embeds: [
-          embeds.error(translate(interaction.locale, "commands.draw.notTurn")),
+          embeds.error(translate(interaction.locale, "errors.not_your_turn")),
         ],
         ephemeral: true,
       });
@@ -59,7 +59,7 @@ export default {
     player.addCards(1);
     game.timeout.refresh();
     game.messages.push({
-      key: "commands.draw.bhoughtCard",
+      key: "commands.draw.drew_card",
       variables: [interaction.user],
     });
     game.addIndex();

@@ -38,6 +38,21 @@ export function findGameByChannelId(channelId) {
 /**
  *
  * @param {string} gameId
+ * @returns
+ */
+export function deleteGame(gameId) {
+  const game = games.get(gameId);
+  if (!game) {
+    return;
+  }
+
+  clearTimeout(game.timeout);
+  games.delete(gameId);
+}
+
+/**
+ *
+ * @param {string} gameId
  * @returns {NodeJS.Timeout}
  */
 export function createTimeout(gameId) {
@@ -47,13 +62,16 @@ export function createTimeout(gameId) {
       if (!game) {
         return;
       }
+      if (game.players.size <= 0) {
+        return deleteGame(gameId);
+      }
       const amount = game.stackedCombo || 2;
       const player = game.actualPlayer();
       player.addCards(amount);
       player.inactiveRounds++;
       game.stackedCombo = 0;
       game.messages.push({
-        key: "game.inactivity",
+        key: "game.punished_by_inactivity",
         variables: [
           `<@${game.actualPlayer().id}>`,
           player.cards.length,
@@ -67,7 +85,7 @@ export function createTimeout(gameId) {
             {
               description: translate(
                 player.locale,
-                "game.removedByInactivity",
+                "game.removed_by_inactivity",
                 `<@${player.id}>`
               ),
               color: Colors.Blurple,
@@ -120,6 +138,7 @@ export function createGame(hostId, guildId, channelId) {
         return this.players.at((this.index + 1) % this.players.size);
       },
       actualPlayer() {
+        this.index = this.index % this.players.size;
         return this.players.at(this.index);
       },
       addPlayer(member, locale) {
@@ -143,7 +162,7 @@ export function createGame(hostId, guildId, channelId) {
                   color: Colors.Red,
                   description: translate(
                     this.actualPlayer().locale,
-                    "abandonedMatch"
+                    "errors.abandoned_match"
                   ),
                 },
               ],
@@ -160,7 +179,7 @@ export function createGame(hostId, guildId, channelId) {
             createMessage(this.channelId, {
               content: translate(
                 this.actualPlayer().locale,
-                "game.newAuthor",
+                "game.new_match_host",
                 `<@${this.hostId}>`
               ),
             }).catch((err) => logger.error(err));
@@ -180,7 +199,7 @@ export function createGame(hostId, guildId, channelId) {
                   .setDescription(
                     `${translate(
                       this.winners[0].locale,
-                      "game.embeds.end.descriptions.noPlayers",
+                      "game.embeds.end.descriptions.no_more_players",
                       `<@${this.winners[0].id}>`
                     )}\n\n\`\`\`${this.winners
                       .map(
@@ -206,6 +225,7 @@ export function createGame(hostId, guildId, channelId) {
           }
 
           if (
+            this.players.size > 2 &&
             this.actualPlayer().id === playerId &&
             this.actualPlayer().cards.length !== 0
           ) {
@@ -283,13 +303,12 @@ export function createGame(hostId, guildId, channelId) {
         const playersUsernames = this.players
           .map((player) => player.username)
           .join("\n");
-
         editMessage(this.channelId, this.queueMessageId, {
           embeds: [
             {
               description: `${translate(
                 this.actualPlayer().locale,
-                "commands.create.matchQueueDescription"
+                "commands.create.queue_description"
               )}\n\n${translate(
                 this.actualPlayer().locale,
                 "commands.create.players"

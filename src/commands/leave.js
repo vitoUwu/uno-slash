@@ -19,9 +19,7 @@ export default {
     if (!game) {
       return await interaction.reply({
         embeds: [
-          embeds.error(
-            translate(interaction.locale, "commands.leave.noMatchs")
-          ),
+          embeds.error(translate(interaction.locale, "errors.no_matchs_found")),
         ],
       });
     }
@@ -31,7 +29,7 @@ export default {
       return await interaction.reply({
         embeds: [
           embeds.error(
-            translate(interaction.locale, "commands.leave.notParticipating")
+            translate(interaction.locale, "errors.not_participating")
           ),
         ],
         ephemeral: true,
@@ -43,7 +41,7 @@ export default {
         {
           description: translate(
             interaction.locale,
-            "commands.leave.userLeft",
+            "commands.leave.user_left",
             interaction.user
           ),
           color: Colors.Blurple,

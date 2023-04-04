@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Colors, Guild } from "discord.js";
 import config from "../config.js";
-import { games } from "../handlers/games.js";
+import { deleteGame, games } from "../handlers/games.js";
 import { logger } from "../utils/logger.js";
 
 export default {
@@ -12,10 +12,7 @@ export default {
   async execute(guild) {
     games
       .filter((game) => game.guildId === guild.id)
-      ?.forEach((game) => {
-        clearInterval(game.timeout);
-        games.delete(game.id);
-      });
+      .forEach((game) => deleteGame(game.id));
 
     await axios
       .post(config.loggerUrl, {

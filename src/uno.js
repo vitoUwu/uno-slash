@@ -19,11 +19,9 @@ const client = new Client({
   await deployCommands(client);
   logger.info(`Inicialização realizada em ${Date.now() - start}ms`);
 
-  updateActivity(client);
-  await postStatus(client);
+  await Promise.all([updateActivity(client), postStatus(client)]);
 
   setInterval(async () => {
-    updateActivity(client);
-    await postStatus(client);
+    await Promise.all([updateActivity(client), postStatus(client)]);
   }, 60000 * 10);
 })();

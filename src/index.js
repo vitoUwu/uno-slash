@@ -19,3 +19,13 @@ process.on("uncaughtException", (error) => {
   logger.error(error);
   process.exit(1);
 });
+
+process.on("uncaughtException", (error, origin) => {
+  logger.fatal({ error, origin });
+  process.kill(0);
+});
+
+process.on("unhandledRejection", (error) => {
+  logger.fatal(error);
+  process.kill(0);
+});
