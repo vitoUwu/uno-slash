@@ -6,6 +6,7 @@ import {
   Colors,
   Locale,
 } from "discord.js";
+import { maintenance } from "../commands/maintenance.js";
 import {
   createGame,
   createTimeout,
@@ -29,6 +30,17 @@ export default {
    * @param {ChatInputCommandInteraction} interaction
    */
   execute: async (interaction) => {
+    if (maintenance) {
+      return await interaction.reply({
+        embeds: [
+          embeds.error(
+            translate(interaction.locale, "commands.create.maintenance")
+          ),
+        ],
+        ephemeral: true,
+      });
+    }
+
     if (
       !interaction.channel ||
       !interaction.channel.isTextBased() ||
@@ -107,6 +119,15 @@ export default {
     });
 
     collector.on("collect", async (i) => {
+      if (maintenance) {
+        return await i.reply({
+          embeds: [
+            embeds.error(translate(i.locale, "commands.create.maintenance")),
+          ],
+          ephemeral: true,
+        });
+      }
+
       try {
         if (!games.get(game.id)) {
           await i.message.delete();

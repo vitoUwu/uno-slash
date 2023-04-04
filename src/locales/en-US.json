@@ -26,7 +26,8 @@
       "cancelledByInactivity": "The match did not start due to inactivity",
       "cancelMatch": "Cancel",
       "youCantCancel": "Only the player who created the match can cancel it",
-      "cancelledMatch": "The match has been canceled by the creator"
+      "cancelledMatch": "The match has been canceled by the creator",
+      "maintenance": "The bot is in maintenance mode, try again later"
     },
     "draw": {
       "description": "Use to draw cards",

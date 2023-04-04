@@ -26,7 +26,8 @@
       "cancelledByInactivity": "A partida não foi iniciada por inatividade",
       "cancelMatch": "Cancelar Partida",
       "youCantCancel": "Somente quem criou a partida pode cancelá-la",
-      "cancelledMatch": "A partida foi cancelada pelo criador"
+      "cancelledMatch": "A partida foi cancelada pelo criador",
+      "maintenance": "O bot está em manutenção, tente novamente mais tarde"
     },
     "draw": {
       "description": "Use para comprar cartas",
