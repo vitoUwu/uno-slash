@@ -102,7 +102,8 @@ export default {
     game.queueMessageId = reply.id;
 
     const collector = reply.createMessageComponentCollector({
-      time: 60000 * 5,
+      idle: 60000 * 5,
+      time: 60000 * 30,
     });
 
     collector.on("collect", async (i) => {
