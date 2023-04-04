@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApplicationCommandType, Locale } from "discord.js";
+import { ActivityType, ApplicationCommandType, Locale } from "discord.js";
 import { translate } from "../locales/index.js";
 import cards from "./cards.js";
 import { logger } from "./logger.js";
