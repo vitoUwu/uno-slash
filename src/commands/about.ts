@@ -3,8 +3,8 @@ import { Command } from '@sapphire/framework';
 import { ChatInputCommandInteraction, Colors, Locale } from 'discord.js';
 import { createRequire } from 'node:module';
 import { ppUrl, supportUrl, tosUrl } from '../lib/constants.js';
+import { translate } from '../lib/locales/index.js';
 import { fetchGuildsSize } from '../lib/utils.js';
-import { translate } from '../locales/index.js';
 const _require = createRequire(import.meta.url);
 const packageJson = _require('../../package.json');
 

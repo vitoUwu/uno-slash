@@ -1,7 +1,7 @@
 import { RequiresClientPermissions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { ChatInputCommandInteraction, Colors, Locale } from 'discord.js';
-import { translate } from '../locales/index.js';
+import { translate } from '../lib/locales/index.js';
 
 export class UerCommand extends Command {
 	public override registerApplicationCommands(registry: Command.Registry) {

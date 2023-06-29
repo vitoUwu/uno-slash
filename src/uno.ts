@@ -1,11 +1,11 @@
 import { LogLevel, SapphireClient, container } from '@sapphire/framework';
 import { envParseString } from '@skyra/env-utilities';
 import { Collection, GatewayIntentBits, Partials } from 'discord.js';
-import type { Game } from './structures/Game.js';
+import type { Game } from './lib/structures/Game.js';
 
 const client = new SapphireClient({
 	logger: {
-		level: LogLevel.Debug
+		level: envParseString('NODE_ENV') === 'production' ? LogLevel.Error : LogLevel.Debug
 	},
 	intents: [GatewayIntentBits.Guilds],
 	partials: [Partials.Channel, Partials.GuildMember]

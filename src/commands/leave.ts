@@ -1,7 +1,7 @@
 import { ApplyOptions, RequiresClientPermissions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { ChatInputCommandInteraction, Colors, Locale } from 'discord.js';
-import { translate } from '../locales/index.js';
+import { translate } from '../lib/locales/index.js';
 
 @ApplyOptions<Command.Options>({
 	preconditions: ['RequireParticipating', 'RequireStartedGame', 'GuildOnly']

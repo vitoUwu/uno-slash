@@ -11,8 +11,8 @@ import {
 	ComponentType,
 	Locale
 } from 'discord.js';
-import { translate } from '../locales/index.js';
-import { Card } from '../structures/Card.js';
+import { translate } from '../lib/locales/index.js';
+import { Card } from '../lib/structures/Card.js';
 
 @ApplyOptions<Command.Options>({
 	preconditions: ['GuildOnly', 'RequireParticipating', 'RequireStartedGame']

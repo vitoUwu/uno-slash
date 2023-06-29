@@ -1,6 +1,6 @@
 import { Precondition } from '@sapphire/framework';
 import type { CommandInteraction } from 'discord.js';
-import { translate } from '../locales/index.js';
+import { translate } from '../lib/locales/index.js';
 
 export class RequireCreatedGamePrecondition extends Precondition {
 	public override chatInputRun(interaction: CommandInteraction) {

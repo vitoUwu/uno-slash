@@ -1,4 +1,4 @@
-import portuguese from './locales/portuguese.js';
+import portuguese from './locales/portuguese.ts';
 
 type PathsToStringProps<T> = T extends string
 	? []

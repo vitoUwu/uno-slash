@@ -1,9 +1,9 @@
 import { container } from '@sapphire/framework';
-import { Collection, Colors, EmbedBuilder, GuildMember, Locale, Routes, TextChannel } from 'discord.js';
-import cards from '../lib/cards.js';
-import { pickRandom } from '../lib/utils.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection, Colors, EmbedBuilder, GuildMember, Locale, Routes, TextChannel } from 'discord.js';
+import cards from '../cards.js';
 import { translate } from '../locales/index.js';
 import type { DottedLanguageObjectStringPaths } from '../types.js';
+import { pickRandom } from '../utils.js';
 import { Card } from './Card.js';
 import { Player } from './Player.js';
 
@@ -27,7 +27,8 @@ export class Game {
 	public winners: Player[] = [];
 	public status: 'onqueue' | 'started' | 'ended' = 'onqueue';
 	public stackedCombo = 0;
-	public _index = 0;
+
+	private _index = 0;
 
 	constructor({ channelId, guildId, hostId }: CreateGameDTO) {
 		this.id = channelId;
@@ -197,6 +198,12 @@ export class Game {
 						text: translate(locale, 'game.embeds.resume.footer')
 					}
 				}
+			],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>().setComponents([
+					new ButtonBuilder().setCustomId('show_cards').setEmoji('🃏').setLabel('buttons.showCards').setStyle(ButtonStyle.Primary),
+					new ButtonBuilder().setCustomId('draw').setEmoji('🛒').setLabel('buttons.draw').setStyle(ButtonStyle.Secondary)
+				])
 			]
 		};
 	}

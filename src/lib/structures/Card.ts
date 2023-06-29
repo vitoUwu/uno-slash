@@ -1,5 +1,5 @@
 import { Colors, type Locale } from 'discord.js';
-import cards from '../lib/cards.js';
+import cards from '../cards.js';
 import { translate } from '../locales/index.js';
 
 type CardId = (typeof cards)[number];

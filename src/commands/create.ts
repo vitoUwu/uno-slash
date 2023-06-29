@@ -10,8 +10,8 @@ import {
 	EmbedBuilder,
 	Locale
 } from 'discord.js';
-import { translate } from '../locales/index.js';
-import { Game } from '../structures/Game.js';
+import { translate } from '../lib/locales/index.js';
+import { Game } from '../lib/structures/Game.js';
 
 @ApplyOptions<Command.Options>({
 	preconditions: ['GuildOnly']

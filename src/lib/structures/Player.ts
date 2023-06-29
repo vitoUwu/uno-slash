@@ -1,5 +1,5 @@
 import type { Locale } from 'discord.js';
-import { getCards } from '../lib/utils.js';
+import { getCards } from '../utils.js';
 import { Card } from './Card.js';
 
 type CreatePlayerDTO = {
