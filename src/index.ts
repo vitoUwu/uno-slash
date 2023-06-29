@@ -1,4 +1,4 @@
-import { container } from '@sapphire/framework';
+import { container } from '@sapphire/pieces';
 import { envParseString } from '@skyra/env-utilities';
 import { Collection, ShardingManager } from 'discord.js';
 import './lib/setup.js';
@@ -10,8 +10,8 @@ const manager = new ShardingManager('./dist/uno.js', {
 });
 
 manager.on('shardCreate', (shard) => {
-	container.logger.info(`Launched shard ${shard.id}`);
-	shard.on('error', (err) => container.logger.error(err));
+	console.log(`[INFO] Launched shard ${shard.id}`);
+	shard.on('error', (err) => console.error(err));
 });
 
 manager.spawn();
