@@ -12,8 +12,13 @@ export class UserEvent extends Listener {
 	public async run() {
 		this.printBanner();
 		this.printStoreDebugInformation();
+		await this.updateActivity().catch(this.container.logger.error);
+		setTimeout(async () => await this.updateActivity().catch(this.container.logger.error), 10000);
+	}
+
+	private async updateActivity() {
 		const guilds = await fetchGuildsSize();
-		this.container.client.user?.setActivity({ name: `on ${guilds} Servers | Shard ${this.container.client.shard?.ids.join(' ')}` });
+		this.container.client.user?.setActivity({ name: `on ${guilds} Servers | Shard ${this.container.client.shard?.ids.join(' ') ?? 0}` });
 	}
 
 	private printBanner() {
