@@ -1,6 +1,7 @@
-import { LogLevel, SapphireClient } from '@sapphire/framework';
+import { LogLevel, SapphireClient, container } from '@sapphire/framework';
 import { envParseString } from '@skyra/env-utilities';
-import { GatewayIntentBits, Partials } from 'discord.js';
+import { Collection, GatewayIntentBits, Partials } from 'discord.js';
+import type { Game } from './structures/Game.js';
 
 const client = new SapphireClient({
 	logger: {
@@ -20,5 +21,13 @@ const main = async () => {
 		process.exit(1);
 	}
 };
+
+container.games = new Collection();
+
+declare module '@sapphire/pieces' {
+	interface Container {
+		games: Collection<string, Game>;
+	}
+}
 
 main();

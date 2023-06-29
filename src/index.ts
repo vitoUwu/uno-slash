@@ -1,8 +1,6 @@
-import { container } from '@sapphire/pieces';
 import { envParseString } from '@skyra/env-utilities';
-import { Collection, ShardingManager } from 'discord.js';
+import { ShardingManager } from 'discord.js';
 import './lib/setup.js';
-import type { Game } from './structures/Game.js';
 
 const manager = new ShardingManager('./dist/uno.js', {
 	token: envParseString('DISCORD_TOKEN'),
@@ -15,14 +13,6 @@ manager.on('shardCreate', (shard) => {
 });
 
 manager.spawn();
-
-container.games = new Collection();
-
-declare module '@sapphire/pieces' {
-	interface Container {
-		games: Collection<string, Game>;
-	}
-}
 
 process.on('uncaughtException', (error, origin) => {
 	console.error({ error, origin });
