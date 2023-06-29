@@ -34,8 +34,9 @@ export class UserCommand extends Command {
 			});
 		}
 
-		player.addCards(1);
 		game.timeout?.refresh();
+		player.addCards(1);
+		player.resetInactivity();
 		game.messages.push({
 			key: 'commands.draw.drew_card',
 			variables: [interaction.user]

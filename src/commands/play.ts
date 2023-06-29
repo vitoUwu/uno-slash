@@ -60,6 +60,7 @@ export class UserCommand extends Command {
 		}
 
 		game.timeout!.refresh();
+		player.resetInactivity();
 
 		const cardOption = interaction.options.getString('card', true);
 

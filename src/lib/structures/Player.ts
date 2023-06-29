@@ -23,6 +23,10 @@ export class Player {
 		this.addCards(9);
 	}
 
+	public resetInactivity() {
+		this.inactiveRounds = 0;
+	}
+
 	public addCards(amount: number) {
 		this.cards.push(...getCards(amount).map((id) => new Card(id)));
 	}
