@@ -8,7 +8,7 @@ export class Card {
 	public id: CardId;
 	public type: 'special' | 'normal';
 	public number: string;
-	public color: 'r' | 'b' | 'g' | 'y';
+	public color: 'r' | 'b' | 'g' | 'y' | 'w';
 	public emoji: '🟥' | '🟦' | '🟩' | '🟨' | '🔲' | '❓';
 
 	constructor(id: CardId) {
@@ -49,7 +49,7 @@ export class Card {
 			: this.number;
 	}
 
-	private colorToString(locale: Locale) {
+	private name(locale: Locale) {
 		return translate(
 			locale,
 			this.color === 'b'
@@ -60,6 +60,8 @@ export class Card {
 				? 'game.cards.red'
 				: this.color === 'y'
 				? 'game.cards.yellow'
+				: this.color === 'w'
+				? 'game.cards.wild'
 				: 'game.cards.any'
 		);
 	}
@@ -77,10 +79,10 @@ export class Card {
 	}
 
 	public toString(locale: Locale) {
-		return `${this.emoji} ${this.colorToString(locale)} ${this.numberTostring(locale)}`;
+		return `${this.emoji} ${this.name(locale)} ${this.numberTostring(locale)}`;
 	}
 
 	public isCompatibleTo(card: Card) {
-		return card.type === 'special' || this.number === card.number || this.color === card.color;
+		return this.type === 'special' || card.type === 'special' || this.number === card.number || this.color === card.color;
 	}
 }
