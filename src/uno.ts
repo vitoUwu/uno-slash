@@ -5,7 +5,7 @@ import type { Game } from './lib/structures/Game.js';
 
 const client = new SapphireClient({
 	logger: {
-		level: envParseString('NODE_ENV') === 'production' ? LogLevel.Error : LogLevel.Debug
+		level: LogLevel.Info
 	},
 	intents: [GatewayIntentBits.Guilds],
 	partials: [Partials.Channel, Partials.GuildMember]
