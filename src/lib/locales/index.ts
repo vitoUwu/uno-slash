@@ -9,7 +9,7 @@ const locales = {
 	[Locale.EnglishUS]: english
 };
 
-export function translate(locale: Locale = Locale.EnglishUS, path: DottedLanguageObjectStringPaths, ...variables: string[]) {
+export function translate(locale: Locale = Locale.EnglishUS, path: DottedLanguageObjectStringPaths, ...variables: any[]) {
 	let object: Object = locales[locale as keyof typeof locales] ?? locales[Locale.EnglishUS];
 	let result = path;
 	for (const _path of path.split('.')) {
