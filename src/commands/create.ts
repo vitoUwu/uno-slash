@@ -141,10 +141,11 @@ export class UserCommand extends Command {
 						}
 
 						interaction.deleteReply().catch(() => null);
+						i.deferUpdate();
 						collector.stop();
 						game.start();
 
-						await i.reply(game.makePayload());
+						await game.updateMessage();
 						break;
 					}
 					case 'join': {

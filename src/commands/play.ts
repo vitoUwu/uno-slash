@@ -13,6 +13,7 @@ import {
 } from 'discord.js';
 import { translate } from '../lib/locales/index.js';
 import { Card } from '../lib/structures/Card.js';
+import { defaultButtons } from '../lib/utils.js';
 
 @ApplyOptions<Command.Options>({
 	preconditions: ['GuildOnly', 'RequireParticipating', 'RequireStartedGame']
@@ -71,7 +72,7 @@ export class UserCommand extends Command {
 				variables: [interaction.user.toString()]
 			});
 			game.next();
-			await interaction.reply(game.makePayload());
+			await game.updateMessage();
 			return;
 		}
 
@@ -252,30 +253,12 @@ export class UserCommand extends Command {
 		}
 
 		game.next();
-		const payload = game.makePayload();
 
-		if (player.cards.length !== 1 || interaction.options.getBoolean('uno')) {
-			return interaction[interaction.replied ? 'followUp' : 'reply'](payload);
+		const uno = player.cards.length === 1 || !interaction.options.getBoolean('uno', true);
+		const reply = await game.updateMessage(uno);
+		if (!reply || !uno) {
+			return;
 		}
-
-		const reply = await interaction[interaction.replied ? 'followUp' : 'reply']({
-			...payload,
-			components: [
-				new ActionRowBuilder<ButtonBuilder>().setComponents(
-					new ButtonBuilder()
-						.setCustomId('collector;uno')
-						.setEmoji({ id: '1002561065399373944' })
-						.setLabel('Uno!')
-						.setStyle(ButtonStyle.Primary),
-					new ButtonBuilder()
-						.setCustomId('collector;report')
-						.setEmoji('🚨')
-						.setLabel(translate(game.nextPlayer.locale, 'game.report'))
-						.setStyle(ButtonStyle.Danger)
-				)
-			],
-			fetchReply: true
-		});
 
 		const response = await reply
 			.awaitMessageComponent({
@@ -285,7 +268,8 @@ export class UserCommand extends Command {
 			.catch(() => null);
 
 		if (!response || response.customId === 'collector;report') {
-			await reply.edit({ components: [] });
+			response?.deferUpdate().catch(() => null);
+			await reply.edit({ components: [new ActionRowBuilder<ButtonBuilder>().setComponents(defaultButtons(interaction.locale))] });
 			player.addCards(2);
 			return interaction
 				.channel!.send({
@@ -300,7 +284,8 @@ export class UserCommand extends Command {
 		}
 
 		if (response.customId === 'collector;uno') {
-			return reply.edit({ components: [] });
+			response.deferUpdate().catch(() => null);
+			return reply.edit({ components: [new ActionRowBuilder<ButtonBuilder>().setComponents(defaultButtons(interaction.locale))] });
 		}
 
 		return;
@@ -339,7 +324,10 @@ export class UserCommand extends Command {
 		const value = interaction.options.getFocused().toLowerCase();
 
 		const data = player.cards
-			.filter((card) => card.id.includes(value) || card.toString(interaction.locale).toLowerCase().includes(value))
+			.filter(
+				(card) =>
+					(card.id.includes(value) || card.toString(interaction.locale).toLowerCase().includes(value)) && card.isCompatibleTo(game.lastCard)
+			)
 			.map((card) => ({
 				name: card.toString(interaction.locale),
 				value: card.id

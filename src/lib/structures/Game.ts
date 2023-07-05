@@ -1,9 +1,9 @@
 import { container } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Collection, Colors, EmbedBuilder, GuildMember, Locale, Routes, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, Collection, Colors, EmbedBuilder, GuildMember, Locale, Routes, TextChannel } from 'discord.js';
 import cards from '../cards.js';
 import { translate } from '../locales/index.js';
 import type { DottedLanguageObjectStringPaths } from '../types.js';
-import { pickRandom } from '../utils.js';
+import { defaultButtons, pickRandom, unoButtons } from '../utils.js';
 import { Card } from './Card.js';
 import { Player } from './Player.js';
 
@@ -40,11 +40,9 @@ export class Game {
 
 	public next() {
 		this.index += 1;
-		container.logger.debug('next()', this.index);
 	}
 
 	set index(number: number) {
-		container.logger.debug('set index()', this._index, ' to ', number < 0 ? 0 : number % this.players.size);
 		this._index = number < 0 ? 0 : number % this.players.size;
 	}
 
@@ -102,14 +100,10 @@ export class Game {
 				}
 			}
 			this.next();
-			if (!this.channel) {
-				clearTimeout(this.timeout);
-				container.games.delete(this.id);
-				return;
-			}
-			this.channel.send(this.makePayload()).catch(console.error);
+			this.updateMessage(false).catch(console.error);
 		}, 60000);
 	}
+
 	public addPlayer(member: GuildMember, locale: Locale) {
 		this.players.set(member.id, new Player({ memberId: member.id, username: member.user.username, locale }));
 	}
@@ -158,7 +152,7 @@ export class Game {
 
 		if (this.players.size > 2 && this.actualPlayer.id === id) {
 			this.players.delete(id);
-			await this.channel.send(this.makePayload()).catch(console.error);
+			await this.updateMessage(false).catch(console.error);
 			return;
 		}
 
@@ -172,10 +166,25 @@ export class Game {
 		this.index = [...this.players.keys()].indexOf(actualPlayerId);
 	}
 
-	public makePayload() {
+	public async updateMessage(uno: boolean = false) {
+		const channel = this.channel;
+		if (!channel) {
+			clearTimeout(this.timeout);
+			container.games.delete(this.id);
+			return;
+		}
+
+		return await channel.send(this.makePayload(uno));
+	}
+
+	private makePayload(uno: boolean) {
 		const locale = this.actualPlayer.locale;
 		const messages = this.messages.length ? this.messages.map(({ key, variables }) => translate(locale, key, ...variables)).join('\n') : null;
 		this.messages = [];
+		const components = [new ActionRowBuilder<ButtonBuilder>().setComponents(defaultButtons(this.actualPlayer.locale))];
+		if (uno) {
+			components.push(new ActionRowBuilder<ButtonBuilder>().setComponents(unoButtons(this.actualPlayer.locale)));
+		}
 		return {
 			content: `<@${this.actualPlayer.id}>`,
 			embeds: [
@@ -199,12 +208,7 @@ export class Game {
 					}
 				}
 			],
-			components: [
-				new ActionRowBuilder<ButtonBuilder>().setComponents([
-					new ButtonBuilder().setCustomId('show_cards').setEmoji('🃏').setLabel('buttons.showCards').setStyle(ButtonStyle.Primary),
-					new ButtonBuilder().setCustomId('draw').setEmoji('🛒').setLabel('buttons.draw').setStyle(ButtonStyle.Secondary)
-				])
-			]
+			components
 		};
 	}
 }

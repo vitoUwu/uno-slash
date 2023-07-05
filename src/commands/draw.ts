@@ -1,6 +1,6 @@
 import { ApplyOptions, RequiresClientPermissions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import { ChatInputCommandInteraction, Colors, Locale } from 'discord.js';
+import { ChatInputCommandInteraction, Colors, EmbedBuilder, Locale } from 'discord.js';
 import { translate } from '../lib/locales/index.js';
 
 @ApplyOptions<Command.Options>({
@@ -42,6 +42,12 @@ export class UserCommand extends Command {
 			variables: [interaction.user]
 		});
 		game.next();
-		return await interaction.reply(game.makePayload());
+		interaction
+			.reply({
+				embeds: [new EmbedBuilder().setColor(Colors.Blurple).setDescription(translate(interaction.locale, 'commands.draw.drew_card'))],
+				components: []
+			})
+			.catch(() => null);
+		return await game.updateMessage();
 	}
 }
