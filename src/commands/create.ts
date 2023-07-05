@@ -164,15 +164,7 @@ export class UserCommand extends Command {
 
 						game.addPlayer(i.member, i.locale);
 
-						await i.reply({
-							embeds: [
-								{
-									color: Colors.Red,
-									description: translate(i.locale, 'commands.create.messages.joined')
-								}
-							],
-							ephemeral: true
-						});
+						await i.deferUpdate();
 
 						reply.edit({
 							embeds: [
