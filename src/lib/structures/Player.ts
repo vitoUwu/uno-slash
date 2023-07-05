@@ -1,8 +1,9 @@
+import { container } from '@sapphire/framework';
 import type { Locale } from 'discord.js';
-import { getCards } from '../utils.js';
 import { Card } from './Card.js';
 
 type CreatePlayerDTO = {
+	channelId: string;
 	memberId: string;
 	username: string;
 	locale: Locale;
@@ -12,15 +13,25 @@ export class Player {
 	public id: string;
 	public username: string;
 	public locale: Locale;
+	public channelId: string;
 
 	public inactiveRounds = 0;
 	public cards: Card[] = [];
 
-	constructor({ memberId, username, locale }: CreatePlayerDTO) {
+	constructor({ memberId, username, locale, channelId }: CreatePlayerDTO) {
 		this.id = memberId;
 		this.username = username;
 		this.locale = locale;
+		this.channelId = channelId;
 		this.addCards(9);
+	}
+
+	get isInactive() {
+		return this.inactiveRounds >= 2;
+	}
+
+	get game() {
+		return container.games.get(this.channelId);
 	}
 
 	public resetInactivity() {
@@ -28,7 +39,12 @@ export class Player {
 	}
 
 	public addCards(amount: number) {
-		this.cards.push(...getCards(amount).map((id) => new Card(id)));
+		if (!this.game) {
+			return;
+		}
+
+		this.game.checkDeck(amount);
+		this.cards.push(...this.game.deck.splice(0, amount));
 	}
 
 	public removeCard(id: string) {
@@ -36,10 +52,6 @@ export class Player {
 			this.cards.findIndex((card) => card.id === id),
 			1
 		);
-	}
-
-	get isInactive() {
-		return this.inactiveRounds >= 2;
 	}
 
 	public findCardById(id: string) {

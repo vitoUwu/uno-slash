@@ -63,9 +63,10 @@ export class UserCommand extends Command {
 		await interaction.deferReply();
 
 		const game = new Game({ channelId: interaction.channelId, guildId: interaction.guildId, hostId: interaction.user.id });
+		this.container.games.set(interaction.channelId, game);
+
 		game.addPlayer(interaction.member, interaction.locale || interaction.guildLocale || Locale.EnglishUS);
 
-		this.container.games.set(interaction.channelId, game);
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId('collector;join')

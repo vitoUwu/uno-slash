@@ -3,7 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, Collection, Colors, EmbedBuilder, Guil
 import cards from '../cards.js';
 import { translate } from '../locales/index.js';
 import type { DottedLanguageObjectStringPaths } from '../types.js';
-import { defaultButtons, pickRandom, unoButtons } from '../utils.js';
+import { defaultButtons, pickRandom, shuffleArray, unoButtons } from '../utils.js';
 import { Card } from './Card.js';
 import { Player } from './Player.js';
 
@@ -20,6 +20,8 @@ export class Game {
 	public hostId: string;
 	public timeout: NodeJS.Timeout | undefined;
 
+	public discard: Card[] = [];
+	public deck: Card[] = [];
 	public messages: { key: DottedLanguageObjectStringPaths; variables: any[] }[] = [];
 	public lastCard: Card;
 	public players: Collection<string, Player> = new Collection();
@@ -62,10 +64,29 @@ export class Game {
 		return this.players.at((this.index + 1) % this.players.size)!;
 	}
 
+	public checkDeck(min: number = cards.length): void {
+		if (this.deck.length < min) {
+			if (this.discard.length) {
+				this.deck.push(...this.discard);
+				this.discard = [];
+				return this.checkDeck(min);
+			}
+
+			this.deck.push(...cards.map((id) => new Card(id)));
+			shuffleArray(this.deck);
+		}
+
+		return;
+	}
+
 	public start() {
 		this.status = 'started';
 		this.index = Math.floor(Math.random() * this.players.size);
 		this.timeout = this.createTimeout();
+		for (let i = 0; i < Math.ceil(this.players.size / 2); i++) {
+			this.deck.push(...cards.map((id) => new Card(id)));
+		}
+		shuffleArray(this.deck);
 	}
 
 	private createTimeout() {
@@ -105,7 +126,7 @@ export class Game {
 	}
 
 	public addPlayer(member: GuildMember, locale: Locale) {
-		this.players.set(member.id, new Player({ memberId: member.id, username: member.user.username, locale }));
+		this.players.set(member.id, new Player({ memberId: member.id, username: member.user.username, locale, channelId: this.channelId }));
 	}
 
 	public async removePlayer(id: string) {
@@ -174,6 +195,7 @@ export class Game {
 			return;
 		}
 
+		this.checkDeck();
 		return await channel.send(this.makePayload(uno));
 	}
 
