@@ -141,11 +141,16 @@ export class UserCommand extends Command {
 							return;
 						}
 
-						interaction.deleteReply().catch(() => null);
-						i.deferUpdate();
 						collector.stop();
 						game.start();
 
+						await i.update({
+							embeds: [
+								new EmbedBuilder()
+									.setColor(Colors.Green)
+									.setDescription(translate(game.host?.locale ?? i.locale, 'commands.create.messages.started'))
+							]
+						});
 						await game.updateMessage();
 						break;
 					}

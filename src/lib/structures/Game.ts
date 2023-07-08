@@ -44,6 +44,10 @@ export class Game {
 		this.index += 1;
 	}
 
+	get host() {
+		return this.players.get(this.hostId);
+	}
+
 	set index(number: number) {
 		this._index = number < 0 ? 0 : number % this.players.size;
 	}
