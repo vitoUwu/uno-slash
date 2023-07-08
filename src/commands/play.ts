@@ -143,8 +143,6 @@ export class UserCommand extends Command {
 			}
 		}
 
-		player.inactiveRounds = 0;
-
 		game.lastCard = card;
 
 		if (card.type === 'special') {
@@ -254,9 +252,9 @@ export class UserCommand extends Command {
 
 		game.next();
 
-		const uno = player.cards.length === 1 || !interaction.options.getBoolean('uno', true);
-		const reply = await game.updateMessage(uno);
-		if (!reply || !uno) {
+		const forgotToSayUno = player.cards.length === 1 && !interaction.options.getBoolean('uno', true);
+		const reply = await game.updateMessage(forgotToSayUno);
+		if (!reply || !forgotToSayUno) {
 			return;
 		}
 
