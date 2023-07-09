@@ -252,7 +252,7 @@ export class UserCommand extends Command {
 
 		game.next();
 
-		const forgotToSayUno = player.cards.length === 1 && !interaction.options.getBoolean('uno', true);
+		const forgotToSayUno = player.cards.length === 1 && !interaction.options.getBoolean('uno');
 		const reply = await game.updateMessage(forgotToSayUno);
 		if (!reply || !forgotToSayUno) {
 			return;
