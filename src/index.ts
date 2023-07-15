@@ -4,11 +4,19 @@ import './lib/setup.js';
 
 const manager = new ShardingManager('./dist/uno.js', {
 	token: envParseString('DISCORD_TOKEN'),
-	totalShards: 'auto'
+	totalShards: 2
 });
 
+let spawnedShards = 0;
+
 manager.on('shardCreate', (shard) => {
-	console.log(`[INFO] Launched shard ${shard.id}`);
+	spawnedShards++;
+	console.log(`[INFO] Launched shard ${spawnedShards}/${manager.totalShards}`);
+
+	if (typeof manager.totalShards === 'number' && spawnedShards >= manager.totalShards) {
+		shard.once('ready', () => manager.shards.forEach((shard) => shard.eval((client) => client.emit('allShardsReady'))));
+	}
+
 	shard.on('error', (err) => console.error(err));
 });
 
