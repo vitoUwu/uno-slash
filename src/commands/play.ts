@@ -1,4 +1,4 @@
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RequiresClientPermissions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import {
 	ActionRowBuilder,
@@ -9,6 +9,7 @@ import {
 	ChatInputCommandInteraction,
 	Colors,
 	ComponentType,
+	EmbedBuilder,
 	Locale
 } from 'discord.js';
 import { translate } from '../lib/locales/index.js';
@@ -255,6 +256,11 @@ export class UserCommand extends Command {
 
 		const forgotToSayUno = player.cards.length === 1 && !interaction.options.getBoolean('uno');
 		const reply = await game.updateMessage(forgotToSayUno);
+		interaction[interaction.replied ? 'editReply' : 'reply']({
+			embeds: [new EmbedBuilder().setColor(card.toDecimalColor()).setDescription(card.toString(interaction.locale))],
+			components: [],
+			ephemeral: true
+		}).catch(() => null);
 		if (!reply || !forgotToSayUno) {
 			return;
 		}
