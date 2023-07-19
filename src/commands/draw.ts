@@ -17,7 +17,7 @@ export class UserCommand extends Command {
 		});
 	}
 
-	@RequiresClientPermissions(['EmbedLinks', 'SendMessages', 'UseExternalEmojis'])
+	@RequiresClientPermissions(['EmbedLinks', 'SendMessages', 'ViewChannel'])
 	public override async chatInputRun(interaction: ChatInputCommandInteraction<'cached'>) {
 		const game = this.container.games.get(interaction.channelId)!;
 		const player = game.players.get(interaction.user.id)!;

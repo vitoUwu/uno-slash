@@ -27,7 +27,7 @@ export class UserCommand extends Command {
 		});
 	}
 
-	@RequiresClientPermissions(['EmbedLinks', 'SendMessages', 'UseExternalEmojis'])
+	@RequiresClientPermissions(['EmbedLinks', 'SendMessages', 'ViewChannel'])
 	public override async chatInputRun(interaction: ChatInputCommandInteraction<'cached'>) {
 		if (!interaction.channel || !interaction.channel.isTextBased() || !interaction.inGuild()) {
 			return await interaction.reply({

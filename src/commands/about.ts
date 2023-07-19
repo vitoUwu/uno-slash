@@ -19,7 +19,7 @@ export class UserCommand extends Command {
 		});
 	}
 
-	@RequiresClientPermissions(['EmbedLinks', 'SendMessages', 'UseExternalEmojis'])
+	@RequiresClientPermissions(['EmbedLinks', 'SendMessages'])
 	public override async chatInputRun(interaction: ChatInputCommandInteraction) {
 		const guilds = await fetchGuildsSize();
 
