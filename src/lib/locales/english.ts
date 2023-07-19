@@ -144,7 +144,7 @@ export default {
 		}
 	},
 	errors: {
-		missing_permissions: 'I need these permissions: `Embed Links, See Channel and Send Message` to work correctly',
+		missing_permissions: 'I need these permissions ` {0} ` to work correctly',
 		command_spam: 'You are using the commands very fast! Wait more `{0}` seconds',
 		command_on_dm: 'My commands were not made to be executed at DM',
 		unknown_command: 'An error occurred when trying to execute the command',
@@ -161,7 +161,8 @@ export default {
 		not_your_turn: "It's not yet your turn to play",
 		card_not_found: "I didn't find this card in your deck, are you sure you spelled correctly?",
 		invalid_card: 'This card cannot be played',
-		'only_+2_card': 'Only +2 cards are valid for this play'
+		'only_+2_card': 'Only +2 cards are valid for this play',
+		generic: 'An error has occured while executing your command: `{0}`'
 	},
 	buttons: {
 		view_cards: 'View Cards',

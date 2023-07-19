@@ -146,7 +146,7 @@ export default {
 		}
 	},
 	errors: {
-		missing_permissions: 'Preciso das permissões: ` Inserir Links, Ver canal e Enviar mensagem ` para funcionar corretamente',
+		missing_permissions: 'Preciso das permissões ` {0} ` para funcionar corretamente',
 		command_spam: 'Você está usando os comandos muito de pressa! Espere mais ` {0} ` segundos',
 		command_on_dm: 'Meus comandos não foram feitos para serem executados na DM',
 		unknown_command: 'Ocorreu um erro ao tentar executar o comando',
@@ -163,7 +163,8 @@ export default {
 		not_your_turn: 'Ainda não é a sua vez de jogar',
 		card_not_found: 'Não encontrei essa carda no meio do seu Deck, tem certeza de que digitou corretamente?',
 		invalid_card: 'Essa carta não pode ser jogada',
-		'only_+2_card': 'Apenas cartas +2 são válidas para essa jogada'
+		'only_+2_card': 'Apenas cartas +2 são válidas para essa jogada',
+		generic: 'Ocorreu um erro ao executar o comando: `{0}`'
 	},
 	buttons: {
 		view_cards: 'Ver Cartas',
