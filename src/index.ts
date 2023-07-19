@@ -4,7 +4,7 @@ import './lib/setup.js';
 
 const manager = new ShardingManager('./dist/uno.js', {
 	token: envParseString('DISCORD_TOKEN'),
-	totalShards: 2
+	totalShards: 'auto'
 });
 
 let spawnedShards = 0;
