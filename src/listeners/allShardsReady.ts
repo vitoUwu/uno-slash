@@ -6,7 +6,7 @@ import { fetchGuildsSize } from '../lib/utils.js';
 export class UserEvent extends Listener {
 	public async run() {
 		await this.updateActivity().catch(this.container.logger.error);
-		setTimeout(async () => await this.updateActivity().catch(this.container.logger.error), 10000);
+		setInterval(async () => await this.updateActivity().catch(this.container.logger.error), 10000);
 	}
 
 	private async updateActivity() {
