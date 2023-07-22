@@ -30,18 +30,18 @@ export class Logger extends BuiltinLogger {
 
 		const method = this.methods.get(level) ?? 'log';
 		const timestamp = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-		const content = this.preprocess(values);
+		const content = this.preprocess(values, true);
 
 		this.console[method](`${chalk.bgRgb(44, 62, 80).white.bold(` ${timestamp} | ${this.prefix} | `)}${this.levelPrefix(level)} ${content}`);
 
 		if (level >= LogLevel.Error) {
 			this.webhook
 				.send({
-					content: `Error | ${timestamp} | Shard: ${container.client.shard?.ids.join(', ') ?? 'Unknown'}`,
+					content: `<@504717946124369937> Error | ${timestamp} | Shard: ${container.client.shard?.ids.join(', ') ?? 'Unknown'}`,
 					files: [
 						{
 							name: 'error.log',
-							attachment: Buffer.from(content)
+							attachment: Buffer.from(this.preprocess(values))
 						}
 					]
 				})
@@ -57,8 +57,8 @@ export class Logger extends BuiltinLogger {
 		return Reflect.get(BuiltinLogger, 'levels') as Map<LogLevel, LogMethods>;
 	}
 
-	protected preprocess(values: readonly unknown[]) {
-		const inspectOptions: InspectOptions = { colors: true, depth: this.depth };
+	protected preprocess(values: readonly unknown[], colors = false) {
+		const inspectOptions: InspectOptions = { colors, depth: this.depth };
 		return values.map((value) => (typeof value === 'string' ? value : inspect(value, inspectOptions))).join(this.join);
 	}
 
