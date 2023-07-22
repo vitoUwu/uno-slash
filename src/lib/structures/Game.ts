@@ -1,9 +1,9 @@
 import { container } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, Collection, Colors, EmbedBuilder, GuildMember, Locale, Routes, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, Collection, Colors, EmbedBuilder, GuildMember, Locale, TextChannel } from 'discord.js';
 import cards from '../cards.js';
 import { translate } from '../locales/index.js';
-import type { DottedLanguageObjectStringPaths } from '../types.js';
-import { defaultButtons, pickRandom, shuffleArray, unoButtons } from '../utils.js';
+import type { TranslationPaths } from '../types.js';
+import { defaultButtons, hasEveryPermission, pickRandom, shuffleArray, unoButtons } from '../utils.js';
 import { Card } from './Card.js';
 import { Player } from './Player.js';
 
@@ -22,7 +22,7 @@ export class Game {
 
 	public discard: Card[] = [];
 	public deck: Card[] = [];
-	public messages: { key: DottedLanguageObjectStringPaths; variables: any[] }[] = [];
+	public messages: { key: TranslationPaths; variables: any[] }[] = [];
 	public lastCard: Card;
 	public players: Collection<string, Player> = new Collection();
 	public createdAt = new Date();
@@ -41,6 +41,11 @@ export class Game {
 	}
 
 	public next() {
+		if (!this.guild || !this.channel || !hasEveryPermission(this.channel, 'ViewChannel', 'SendMessages')) {
+			clearTimeout(this.timeout);
+			container.games.delete(this.id);
+			return;
+		}
 		this.index += 1;
 	}
 
@@ -58,6 +63,10 @@ export class Game {
 
 	get channel() {
 		return container.client.channels.cache.get(this.channelId) as TextChannel | undefined;
+	}
+
+	get guild() {
+		return container.client.guilds.cache.get(this.guildId);
 	}
 
 	get actualPlayer() {
@@ -105,38 +114,37 @@ export class Game {
 			});
 
 			if (this.actualPlayer.isInactive) {
-				container.client.rest
-					.post(Routes.channelMessages(this.channelId), {
-						body: {
+				this.removePlayer(this.actualPlayer.id);
+				if (this.channel) {
+					this.channel
+						.send({
 							embeds: [
 								{
 									description: translate(this.actualPlayer.locale, 'game.removed_by_inactivity', `<@${this.actualPlayer.id}>`),
 									color: Colors.Blurple
 								}
 							]
-						}
-					})
-					.catch(console.error);
-
-				this.removePlayer(this.actualPlayer.id);
+						})
+						.catch((err) => container.logger.error(err));
+				}
 
 				if (this.players.size <= 1) {
 					return;
 				}
 			}
 			this.next();
-			this.updateMessage(false).catch(console.error);
+			this.updateMessage(false).catch((err) => container.logger.error(err));
 		}, 60000);
 	}
 
-	public addPlayer(member: GuildMember, locale: Locale) {
-		this.players.set(member.id, new Player({ memberId: member.id, username: member.user.username, locale, channelId: this.channelId }));
+	public addPlayer({ id, user }: GuildMember, locale: Locale) {
+		this.players.set(id, new Player({ memberId: id, username: user.username, locale, channelId: this.channelId }));
 	}
 
 	public async removePlayer(id: string) {
 		if (!this.channel) {
-			container.games.delete(this.id);
 			clearTimeout(this.timeout);
+			container.games.delete(this.id);
 			return;
 		}
 
@@ -170,14 +178,14 @@ export class Game {
 							.toJSON()
 					]
 				})
-				.catch(console.error);
+				.catch((err) => container.logger.error(err));
 			container.games.delete(this.id);
 			return;
 		}
 
 		if (this.players.size > 2 && this.actualPlayer.id === id) {
 			this.players.delete(id);
-			await this.updateMessage(false).catch(console.error);
+			await this.updateMessage(false).catch((err) => container.logger.error(err));
 			return;
 		}
 
