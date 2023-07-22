@@ -4,7 +4,9 @@ import { translate } from '../../../lib/locales/index.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.InteractionHandlerError })
 export class UserEvent extends Listener<typeof Events.InteractionHandlerError> {
-	public override async run({ cause }: UserError, { interaction }: IInteractionHandlerPayload) {
+	public override async run({ cause }: UserError, { interaction, handler }: IInteractionHandlerPayload) {
+		this.container.logger.error(interaction, handler.name, cause);
+
 		if (interaction.isAutocomplete()) {
 			return;
 		}
