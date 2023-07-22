@@ -1,5 +1,15 @@
 import { container } from '@sapphire/framework';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Locale, StringSelectMenuBuilder } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Colors,
+	EmbedBuilder,
+	Locale,
+	StringSelectMenuBuilder,
+	type GuildBasedChannel,
+	type PermissionsString
+} from 'discord.js';
 import cards from './cards.js';
 import { translate } from './locales/index.js';
 import type { Card } from './structures/Card.js';
@@ -81,4 +91,9 @@ export function shuffleArray(arr: any[]) {
 		arr[i] = arr[j];
 		arr[j] = temp;
 	}
+}
+
+export function hasEveryPermission(channel: GuildBasedChannel, ...permissionsToCompare: PermissionsString[]) {
+	const permissions = channel.permissionsFor(container.client.guilds.cache.get(channel.guildId)!.members.me!);
+	return permissionsToCompare.every((permission) => permissions.has(permission));
 }
