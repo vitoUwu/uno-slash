@@ -4,7 +4,7 @@ import { ChatInputCommandInteraction, Colors, Locale } from 'discord.js';
 import { createRequire } from 'node:module';
 import { ppUrl, supportUrl, tosUrl } from '../lib/constants.js';
 import { translate } from '../lib/locales/index.js';
-import { fetchGuildsSize } from '../lib/utils.js';
+import { fetchGamesSize, fetchGuildsSize } from '../lib/utils.js';
 const _require = createRequire(import.meta.url);
 const packageJson = _require('../../package.json');
 
@@ -22,6 +22,7 @@ export class UserCommand extends Command {
 	@RequiresClientPermissions(['EmbedLinks', 'SendMessages'])
 	public override async chatInputRun(interaction: ChatInputCommandInteraction) {
 		const guilds = await fetchGuildsSize();
+		const games = await fetchGamesSize();
 
 		return await interaction.reply({
 			embeds: [
@@ -40,7 +41,7 @@ export class UserCommand extends Command {
 						},
 						{
 							name: translate(interaction.locale, 'commands.about.matchs'),
-							value: `${this.container.games.size}`,
+							value: `${games}`,
 							inline: true
 						},
 						{

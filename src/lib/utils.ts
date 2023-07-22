@@ -30,6 +30,14 @@ export async function fetchGuildsSize() {
 	return guilds?.reduce((acc, guildCount) => acc + guildCount, 0) ?? 0;
 }
 
+export async function fetchGamesSize() {
+	const games = await container.client.shard?.broadcastEval((client) => {
+		return client.stores.first()!.first()!.container.games.size;
+	});
+
+	return games?.reduce((acc, gamesCount) => acc + gamesCount, 0) ?? 0;
+}
+
 export function getCards(amount: number) {
 	const c = [];
 	for (let i = 0; i < amount; i++) {
