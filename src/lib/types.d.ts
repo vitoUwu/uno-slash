@@ -16,4 +16,4 @@ type Join<T extends string[], D extends string> = T extends []
 		: never
 	: string;
 
-type DottedLanguageObjectStringPaths = Join<PathsToStringProps<typeof portuguese>, '.'>;
+type TranslationPaths = Join<PathsToStringProps<typeof portuguese>, '.'>;
