@@ -4,12 +4,13 @@ import { translate } from '../../../lib/locales/index.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.InteractionHandlerError })
 export class UserEvent extends Listener<typeof Events.InteractionHandlerError> {
-	public override async run({ identifier }: UserError, { interaction }: IInteractionHandlerPayload) {
+	public override async run({ cause }: UserError, { interaction }: IInteractionHandlerPayload) {
 		if (interaction.isAutocomplete()) {
 			return;
 		}
 
-		const options = { content: translate(interaction.locale, 'errors.generic', identifier), ephemeral: true };
+		// this.container.logger.error(context);
+		const options = { content: translate(interaction.locale, 'errors.generic', cause ?? 'unknown error'), ephemeral: true };
 
 		if (interaction.deferred || interaction.replied) {
 			return interaction.editReply(options);

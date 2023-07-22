@@ -5,7 +5,7 @@ import { translate } from '../../../lib/locales/index.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.ChatInputCommandError })
 export class UserEvent extends Listener<typeof Events.ChatInputCommandError> {
-	public override async run({ context, identifier }: UserError, { interaction }: ChatInputCommandErrorPayload) {
+	public override async run({ context, identifier, cause }: UserError, { interaction }: ChatInputCommandErrorPayload) {
 		function respond(options: (string | MessagePayload | InteractionReplyOptions) & (string | MessagePayload | InteractionEditReplyOptions)) {
 			if (interaction.deferred || interaction.replied) {
 				return interaction.editReply(options);
@@ -19,7 +19,7 @@ export class UserEvent extends Listener<typeof Events.ChatInputCommandError> {
 				const missingPermissions = Reflect.get(Object(context), 'missing') as string[];
 				return respond({ content: translate(interaction.locale, 'errors.missing_permissions', missingPermissions.join(', ')) });
 			default:
-				return respond({ content: translate(interaction.locale, 'errors.generic', identifier), ephemeral: true });
+				return respond({ content: translate(interaction.locale, 'errors.generic', cause ?? 'unknown error'), ephemeral: true });
 		}
 	}
 }
