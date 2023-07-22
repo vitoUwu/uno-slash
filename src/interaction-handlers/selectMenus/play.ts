@@ -19,7 +19,7 @@ import { defaultButtons } from '../../lib/utils.js';
 })
 export class ShowCardsButton extends InteractionHandler {
 	public override parse(interaction: StringSelectMenuInteraction): Awaitable<Option<{ cardId: string }>> {
-		if (interaction.customId !== 'play') {
+		if (interaction.customId !== 'play' || !this.container.games.get(interaction.channelId)?.nextPlayer) {
 			return this.none();
 		}
 
@@ -46,7 +46,7 @@ export class ShowCardsButton extends InteractionHandler {
 			});
 		}
 
-		if (game.actualPlayer.id !== player.id) {
+		if (game.actualPlayer?.id !== player.id) {
 			return await interaction.reply({
 				embeds: [
 					{
@@ -56,6 +56,10 @@ export class ShowCardsButton extends InteractionHandler {
 				],
 				ephemeral: true
 			});
+		}
+
+		if (!game.nextPlayer) {
+			return;
 		}
 
 		if (parsedData.cardId === 'draw') {

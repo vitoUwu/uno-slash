@@ -41,12 +41,20 @@ export class Game {
 	}
 
 	public next() {
-		if (!this.guild || !this.channel || !hasEveryPermission(this.channel, 'ViewChannel', 'SendMessages')) {
-			clearTimeout(this.timeout);
-			container.games.delete(this.id);
+		if (!this.guild || !this.channel || !hasEveryPermission(this.channel, 'ViewChannel', 'SendMessages') || !this.actualPlayer) {
+			this.clearAndDelete();
 			return;
 		}
 		this.index += 1;
+	}
+
+	private clearAndDelete() {
+		clearTimeout(this.timeout);
+		container.games.delete(this.id);
+	}
+
+	get locale() {
+		return this.actualPlayer?.locale ?? Locale.EnglishUS;
 	}
 
 	get host() {
@@ -70,11 +78,15 @@ export class Game {
 	}
 
 	get actualPlayer() {
-		return this.players.at(this.index)!;
+		const player = this.players.at(this.index);
+		if (!player) {
+			return this.clearAndDelete();
+		}
+		return player;
 	}
 
 	get nextPlayer() {
-		return this.players.at((this.index + 1) % this.players.size)!;
+		return this.players.at((this.index + 1) % this.players.size);
 	}
 
 	public checkDeck(min: number = cards.length): void {
@@ -104,6 +116,9 @@ export class Game {
 
 	private createTimeout() {
 		return setInterval(() => {
+			if (!this.actualPlayer) {
+				return this.clearAndDelete();
+			}
 			const amount = this.stackedCombo || 2;
 			this.actualPlayer.addCards(amount);
 			this.actualPlayer.inactiveRounds++;
@@ -120,7 +135,7 @@ export class Game {
 						.send({
 							embeds: [
 								{
-									description: translate(this.actualPlayer.locale, 'game.removed_by_inactivity', `<@${this.actualPlayer.id}>`),
+									description: translate(this.locale, 'game.removed_by_inactivity', `<@${this.actualPlayer.id}>`),
 									color: Colors.Blurple
 								}
 							]
@@ -142,14 +157,13 @@ export class Game {
 	}
 
 	public async removePlayer(id: string) {
-		if (!this.channel) {
-			clearTimeout(this.timeout);
-			container.games.delete(this.id);
+		if (!this.channel || !this.actualPlayer) {
+			this.clearAndDelete();
 			return;
 		}
 
 		if (this.players.size === 2) {
-			clearTimeout(this.timeout);
+			this.clearAndDelete();
 			this.players.delete(id);
 			this.winners.push(this.players.first()!);
 			this.players.clear();
@@ -179,7 +193,6 @@ export class Game {
 					]
 				})
 				.catch((err) => container.logger.error(err));
-			container.games.delete(this.id);
 			return;
 		}
 
@@ -202,8 +215,7 @@ export class Game {
 	public async updateMessage(uno: boolean = false) {
 		const channel = this.channel;
 		if (!channel) {
-			clearTimeout(this.timeout);
-			container.games.delete(this.id);
+			this.clearAndDelete();
 			return;
 		}
 
@@ -212,12 +224,19 @@ export class Game {
 	}
 
 	private makePayload(uno: boolean) {
-		const locale = this.actualPlayer.locale;
+		if (!this.actualPlayer) {
+			this.clearAndDelete();
+			container.logger.error(this);
+			return {
+				content: 'Unknown error'
+			};
+		}
+		const locale = this.locale;
 		const messages = this.messages.length ? this.messages.map(({ key, variables }) => translate(locale, key, ...variables)).join('\n') : null;
 		this.messages = [];
-		const components = [new ActionRowBuilder<ButtonBuilder>().setComponents(defaultButtons(this.actualPlayer.locale))];
+		const components = [new ActionRowBuilder<ButtonBuilder>().setComponents(defaultButtons(this.locale))];
 		if (uno) {
-			components.push(new ActionRowBuilder<ButtonBuilder>().setComponents(unoButtons(this.actualPlayer.locale)));
+			components.push(new ActionRowBuilder<ButtonBuilder>().setComponents(unoButtons(this.locale)));
 		}
 		return {
 			content: `<@${this.actualPlayer.id}>`,

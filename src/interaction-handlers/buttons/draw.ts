@@ -33,7 +33,7 @@ export class DrawButton extends InteractionHandler {
 			});
 		}
 
-		if (game.actualPlayer.id !== player.id) {
+		if (game.actualPlayer?.id !== player.id) {
 			return await interaction.reply({
 				embeds: [
 					{

@@ -22,7 +22,7 @@ export class UserCommand extends Command {
 		const game = this.container.games.get(interaction.channelId)!;
 		const player = game.players.get(interaction.user.id)!;
 
-		if (game.actualPlayer.id !== interaction.user.id) {
+		if (game.actualPlayer?.id !== interaction.user.id) {
 			return await interaction.reply({
 				embeds: [
 					{

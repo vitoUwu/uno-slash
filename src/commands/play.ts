@@ -55,11 +55,15 @@ export class UserCommand extends Command {
 		const game = this.container.games.get(interaction.channelId)!;
 		const player = game.players.get(interaction.user.id)!;
 
-		if (game.actualPlayer.id !== interaction.member.id) {
+		if (game.actualPlayer?.id !== interaction.member.id) {
 			return await interaction.reply({
 				embeds: [{ color: Colors.Red, description: translate(interaction.locale, 'errors.not_your_turn') }],
 				ephemeral: true
 			});
+		}
+
+		if (!game.nextPlayer) {
+			return;
 		}
 
 		game.timeout!.refresh();
