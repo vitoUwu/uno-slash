@@ -1,11 +1,12 @@
 import { LogLevel, SapphireClient, container } from '@sapphire/framework';
 import { envParseString } from '@skyra/env-utilities';
 import { Collection, GatewayIntentBits, Partials } from 'discord.js';
+import { Logger } from './lib/logger/index.js';
 import type { Game } from './lib/structures/Game.js';
 
 const client = new SapphireClient({
 	logger: {
-		level: LogLevel.Info
+		instance: new Logger({ level: LogLevel.Info })
 	},
 	intents: [GatewayIntentBits.Guilds],
 	partials: [Partials.Channel, Partials.GuildMember]
