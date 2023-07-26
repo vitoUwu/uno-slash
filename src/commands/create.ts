@@ -149,7 +149,8 @@ export class UserCommand extends Command {
 								new EmbedBuilder()
 									.setColor(Colors.Green)
 									.setDescription(translate(game.host?.locale ?? i.locale, 'commands.create.messages.started'))
-							]
+							],
+							components: []
 						});
 						await game.updateMessage();
 						break;
