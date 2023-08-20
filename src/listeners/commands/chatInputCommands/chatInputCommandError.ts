@@ -5,8 +5,17 @@ import { translate } from '../../../lib/locales/index.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.ChatInputCommandError })
 export class UserEvent extends Listener<typeof Events.ChatInputCommandError> {
-	public override async run({ context, identifier, cause }: UserError, { interaction, command, duration }: ChatInputCommandErrorPayload) {
-		this.container.logger.error(interaction, command, duration, cause);
+	public override async run({ context, identifier, cause }: UserError, { interaction }: ChatInputCommandErrorPayload) {
+		if (identifier !== 'requiresClientPermissionsMissingPermissions') {
+			this.container.logger.error(
+				`${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} | ${this.location.relative}\n`,
+				`Duration: ${((Date.now() - interaction.createdTimestamp) / 1000).toFixed(2)}s\n`,
+				'Interaction: ',
+				interaction,
+				'\nCause:',
+				cause
+			);
+		}
 
 		function respond(options: (string | MessagePayload | InteractionReplyOptions) & (string | MessagePayload | InteractionEditReplyOptions)) {
 			if (interaction.deferred || interaction.replied) {
