@@ -11,7 +11,7 @@ const packageJson = _require('../../package.json');
 export class UserCommand extends Command {
 	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand({
-			name: 'about',
+			name: 'info',
 			description: translate(Locale.EnglishUS, 'commands.about.description'),
 			description_localizations: {
 				'pt-BR': translate(Locale.PortugueseBR, 'commands.about.description')
@@ -46,7 +46,7 @@ export class UserCommand extends Command {
 						},
 						{
 							name: translate(interaction.locale, 'commands.about.creator'),
-							value: `<@504717946124369937> \`vitoo#7341 (504717946124369937)\``,
+							value: `<@504717946124369937> \`o.vitoo (504717946124369937)\``,
 							inline: true
 						},
 						{
