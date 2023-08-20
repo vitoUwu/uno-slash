@@ -13,7 +13,7 @@ export interface LoggerOptions {
 export class Logger extends BuiltinLogger {
 	public readonly console: Console = new Console(process.stdout, process.stderr);
 	public readonly join: string = ' ';
-	public readonly depth: number = 1;
+	public readonly depth: number = Infinity;
 	public readonly prefix: string;
 	private webhook = new WebhookClient({
 		url: envParseString('WEBHOOK_URL')
@@ -58,7 +58,7 @@ export class Logger extends BuiltinLogger {
 	}
 
 	protected preprocess(values: readonly unknown[], colors = false) {
-		const inspectOptions: InspectOptions = { colors, depth: this.depth };
+		const inspectOptions: InspectOptions = { colors, depth: this.depth, maxArrayLength: 20 };
 		return values.map((value) => (typeof value === 'string' ? value : inspect(value, inspectOptions))).join(this.join);
 	}
 
