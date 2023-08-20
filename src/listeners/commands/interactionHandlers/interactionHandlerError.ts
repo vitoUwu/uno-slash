@@ -5,12 +5,14 @@ import { translate } from '../../../lib/locales/index.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.InteractionHandlerError })
 export class UserEvent extends Listener<typeof Events.InteractionHandlerError> {
-	public override async run({ cause, identifier, context }: UserError, { interaction }: IInteractionHandlerPayload) {
+	public override async run({ cause, identifier, context, ...error }: UserError, { interaction }: IInteractionHandlerPayload) {
 		if (identifier !== 'requiresClientPermissionsMissingPermissions') {
 			this.container.logger.error(
 				`${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} | ${this.location.relative}\n`,
 				`Duration: ${((Date.now() - interaction.createdTimestamp) / 1000).toFixed(2)}s\n`,
-				'Interaction: ',
+				'Error: ',
+				error,
+				'\nInteraction: ',
 				interaction,
 				'\nCause:',
 				cause
