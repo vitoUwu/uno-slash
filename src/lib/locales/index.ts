@@ -1,6 +1,5 @@
 import { Locale } from 'discord.js';
 
-import type { DottedLanguageObjectStringPaths } from '../types.js';
 import english from './english.js';
 import portuguese from './portuguese.js';
 
@@ -9,7 +8,7 @@ const locales = {
 	[Locale.EnglishUS]: english
 };
 
-export function translate(locale: Locale = Locale.EnglishUS, path: DottedLanguageObjectStringPaths, ...variables: any[]) {
+export function translate(locale: Locale = Locale.EnglishUS, path: TranslationPaths, ...variables: any[]) {
 	let object: Object = locales[locale as keyof typeof locales] ?? locales[Locale.EnglishUS];
 	let result = path;
 	for (const _path of path.split('.')) {

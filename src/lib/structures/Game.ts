@@ -2,7 +2,6 @@ import { container } from '@sapphire/framework';
 import { ActionRowBuilder, ButtonBuilder, Collection, Colors, EmbedBuilder, GuildMember, Locale, TextChannel } from 'discord.js';
 import cards from '../cards.js';
 import { translate } from '../locales/index.js';
-import type { TranslationPaths } from '../types.js';
 import { defaultButtons, hasEveryPermission, pickRandom, shuffleArray, unoButtons } from '../utils.js';
 import { Card } from './Card.js';
 import { Player } from './Player.js';

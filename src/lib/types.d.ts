@@ -1,5 +1,9 @@
 import portuguese from './locales/portuguese.ts';
 
+declare global {
+	type TranslationPaths = Join<PathsToStringProps<typeof portuguese>, '.'>;
+}
+
 type PathsToStringProps<T> = T extends string
 	? []
 	: {
@@ -15,5 +19,3 @@ type Join<T extends string[], D extends string> = T extends []
 		? `${F}${D}${Join<Extract<R, string[]>, D>}`
 		: never
 	: string;
-
-type TranslationPaths = Join<PathsToStringProps<typeof portuguese>, '.'>;
