@@ -56,10 +56,10 @@ export const unoButtons = (locale: Locale) => [
 	new ButtonBuilder().setCustomId('collector;report').setEmoji('🚨').setLabel(translate(locale, 'game.report')).setStyle(ButtonStyle.Danger)
 ];
 
-export const playerCardsPayload = (locale: Locale, cards: Card[], lastCard: Card) => {
-	const compatibleCards = cards
-		.filter((card) => card.isCompatibleTo(lastCard))
-		.map((card, index) => ({ label: card.toString(locale), value: `${index}:${card.id}` }));
+export const playerCardsPayload = (filterDrawTwo: boolean, locale: Locale, cards: Card[], lastCard: Card) => {
+	const compatibleCards = filterDrawTwo ? cards.filter((card) => card.drawTwo) : cards.filter((card) => card.isCompatibleTo(lastCard));
+
+	const mappedCards = compatibleCards.map((card, index) => ({ label: card.toString(locale), value: `${index}:${card.id}` }));
 
 	return {
 		ephemeral: true,
@@ -76,8 +76,8 @@ export const playerCardsPayload = (locale: Locale, cards: Card[], lastCard: Card
 					.setMaxValues(1)
 					.setMinValues(1)
 					.setOptions(
-						compatibleCards.length
-							? compatibleCards
+						mappedCards.length
+							? mappedCards
 							: [
 									{
 										label: translate(locale, 'select_menus.draw.label'),

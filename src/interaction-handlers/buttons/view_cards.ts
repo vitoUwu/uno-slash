@@ -34,7 +34,7 @@ export class ShowCardsButton extends InteractionHandler {
 			});
 		}
 
-		await interaction.reply(playerCardsPayload(interaction.locale, player.cards, game.lastCard));
+		await interaction.reply(playerCardsPayload(game.stackedCombo > 0 && game.lastCard.drawTwo, interaction.locale, player.cards, game.lastCard));
 		return;
 	}
 }

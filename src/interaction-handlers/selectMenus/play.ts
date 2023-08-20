@@ -158,7 +158,7 @@ export class ShowCardsButton extends InteractionHandler {
 		player.resetInactivity();
 		game.lastCard = card;
 
-		if (card.type === 'special') {
+		if (card.wild) {
 			const reply = await interaction.update({
 				embeds: [
 					{
@@ -219,8 +219,8 @@ export class ShowCardsButton extends InteractionHandler {
 			}
 		}
 
-		if (card.number === '+2') {
-			if (game.nextPlayer.cards.some((card) => card.number === '+2')) {
+		if (card.drawTwo) {
+			if (game.nextPlayer.cards.some((card) => card.drawTwo)) {
 				game.stackedCombo += 2;
 				game.messages.push({
 					key: 'commands.play.messages.stacked+2',

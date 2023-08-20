@@ -151,7 +151,7 @@ export class UserCommand extends Command {
 
 		game.lastCard = card;
 
-		if (card.type === 'special') {
+		if (card.wild) {
 			const reply = await interaction.reply({
 				embeds: [
 					{
@@ -212,8 +212,8 @@ export class UserCommand extends Command {
 			}
 		}
 
-		if (card.number === '+2') {
-			if (game.nextPlayer.cards.some((card) => card.number === '+2')) {
+		if (card.drawTwo) {
+			if (game.nextPlayer.cards.some((card) => card.drawTwo)) {
 				game.stackedCombo += 2;
 				game.messages.push({
 					key: 'commands.play.messages.stacked+2',
@@ -321,7 +321,7 @@ export class UserCommand extends Command {
 			]);
 		}
 
-		if (game.status !== 'started') {
+		if (!game.started) {
 			return await interaction.respond([
 				{
 					name: translate(interaction.locale, 'errors.match_not_started_yet'),
@@ -333,9 +333,11 @@ export class UserCommand extends Command {
 		const value = interaction.options.getFocused().toLowerCase();
 
 		const data = player.cards
-			.filter(
-				(card) =>
-					(card.id.includes(value) || card.toString(interaction.locale).toLowerCase().includes(value)) && card.isCompatibleTo(game.lastCard)
+			.filter((card) =>
+				game.stackedCombo > 0
+					? card.drawTwo
+					: (card.id.includes(value) || card.toString(interaction.locale).toLowerCase().includes(value)) &&
+					  card.isCompatibleTo(game.lastCard)
 			)
 			.map((card) => ({
 				name: card.toString(interaction.locale),

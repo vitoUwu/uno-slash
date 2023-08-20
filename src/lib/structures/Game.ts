@@ -26,7 +26,7 @@ export class Game {
 	public players: Collection<string, Player> = new Collection();
 	public createdAt = new Date();
 	public winners: Player[] = [];
-	public status: 'onqueue' | 'started' | 'ended' = 'onqueue';
+	public started: boolean = false;
 	public stackedCombo = 0;
 
 	private _index = 0;
@@ -104,7 +104,7 @@ export class Game {
 	}
 
 	public start() {
-		this.status = 'started';
+		this.started = true;
 		this.index = Math.floor(Math.random() * this.players.size);
 		this.timeout = this.createTimeout();
 		for (let i = 0; i < Math.ceil(this.players.size / 2); i++) {

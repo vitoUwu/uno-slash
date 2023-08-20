@@ -44,7 +44,7 @@ export class UserCommand extends Command {
 		const alreadyCreatedGame = this.container.games.get(interaction.channelId);
 
 		if (alreadyCreatedGame) {
-			if (Date.now() - alreadyCreatedGame.createdAt.getTime() <= 60000 * 5 || alreadyCreatedGame.status !== 'onqueue') {
+			if (Date.now() - alreadyCreatedGame.createdAt.getTime() <= 60000 * 5 || alreadyCreatedGame.started) {
 				return await interaction.reply({
 					embeds: [
 						{

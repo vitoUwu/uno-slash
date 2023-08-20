@@ -6,7 +6,8 @@ type CardId = (typeof cards)[number];
 
 export class Card {
 	public id: CardId;
-	public type: 'special' | 'normal';
+	public wild: boolean;
+	public drawTwo: boolean;
 	public number: string;
 	public color: 'r' | 'b' | 'g' | 'y' | 'w';
 	public emoji: '🟥' | '🟦' | '🟩' | '🟨' | '🔲' | '❓';
@@ -17,14 +18,15 @@ export class Card {
 		}
 
 		this.id = id;
-		this.type = id.slice(0, 1) === 'w' ? 'special' : 'normal';
+		this.wild = id.slice(0, 1) === 'w';
+		this.drawTwo = id.slice(1) === '+2';
 		this.number = id.slice(1);
 		this.color = id.slice(0, 1) as typeof this.color;
 		this.emoji = this.parseEmoji();
 	}
 
 	private parseEmoji() {
-		return this.type === 'special'
+		return this.wild
 			? '🔲'
 			: this.color === 'b'
 			? '🟦'
@@ -83,6 +85,6 @@ export class Card {
 	}
 
 	public isCompatibleTo(card: Card) {
-		return this.type === 'special' || card.type === 'special' || this.number === card.number || this.color === card.color;
+		return this.wild || card.wild || this.number === card.number || this.color === card.color;
 	}
 }
