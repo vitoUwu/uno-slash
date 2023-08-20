@@ -162,7 +162,8 @@ export default {
 		card_not_found: "I didn't find this card in your deck, are you sure you spelled correctly?",
 		invalid_card: 'This card cannot be played',
 		'only_+2_card': 'Only +2 cards are valid for this play',
-		generic: 'An error has occured while executing your command: `{0}`'
+		generic: 'An error has occured while executing your command: `{0}`',
+		owner_only: 'This command is not available'
 	},
 	buttons: {
 		view_cards: 'View Cards',

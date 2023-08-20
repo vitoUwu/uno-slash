@@ -164,7 +164,8 @@ export default {
 		card_not_found: 'Não encontrei essa carda no meio do seu Deck, tem certeza de que digitou corretamente?',
 		invalid_card: 'Essa carta não pode ser jogada',
 		'only_+2_card': 'Apenas cartas +2 são válidas para essa jogada',
-		generic: 'Ocorreu um erro ao executar o comando: `{0}`'
+		generic: 'Ocorreu um erro ao executar o comando: `{0}`',
+		owner_only: 'Esse comando não está disponível'
 	},
 	buttons: {
 		view_cards: 'Ver Cartas',

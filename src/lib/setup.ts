@@ -16,6 +16,7 @@ declare module '@sapphire/framework' {
 		RequireCreatedGame: never;
 		RequireStartedGame: never;
 		RequireParticipating: never;
+		OwnerOnly: never;
 	}
 }
 
