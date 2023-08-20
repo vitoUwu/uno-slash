@@ -226,10 +226,11 @@ export class Game {
 	private makePayload(uno: boolean) {
 		if (!this.actualPlayer) {
 			this.clearAndDelete();
-			container.logger.error(this);
-			return {
-				content: 'Unknown error'
-			};
+			throw new Error('No actualPlayer');
+			// container.logger.error(this);
+			// return {
+			// 	content: 'Unknown error'
+			// };
 		}
 		const locale = this.locale;
 		const messages = this.messages.length ? this.messages.map(({ key, variables }) => translate(locale, key, ...variables)).join('\n') : null;
