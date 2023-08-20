@@ -88,7 +88,7 @@ export class Game {
 		return this.players.at((this.index + 1) % this.players.size);
 	}
 
-	public checkDeck(min: number = cards.length): void {
+	public checkDeck(min: number = cards.length / 2): void {
 		if (this.deck.length < min) {
 			if (this.discard.length) {
 				this.deck.push(...this.discard);
@@ -129,7 +129,6 @@ export class Game {
 				});
 
 				if (this.actualPlayer.isInactive) {
-					this.removePlayer(this.actualPlayer.id);
 					if (this.channel) {
 						this.channel
 							.send({
@@ -142,6 +141,7 @@ export class Game {
 							})
 							.catch((err) => container.logger.error(err));
 					}
+					this.removePlayer(this.actualPlayer.id);
 
 					if (this.players.size <= 1) {
 						return;
