@@ -116,39 +116,43 @@ export class Game {
 
 	private createTimeout() {
 		return setInterval(() => {
-			if (!this.actualPlayer) {
-				return this.clearAndDelete();
-			}
-			const amount = this.stackedCombo || 2;
-			this.actualPlayer.addCards(amount);
-			this.actualPlayer.inactiveRounds++;
-			this.stackedCombo = 0;
-			this.messages.push({
-				key: 'game.punished_by_inactivity',
-				variables: [`<@${this.actualPlayer.id}>`, this.actualPlayer.cards.length, amount]
-			});
-
-			if (this.actualPlayer.isInactive) {
-				this.removePlayer(this.actualPlayer.id);
-				if (this.channel) {
-					this.channel
-						.send({
-							embeds: [
-								{
-									description: translate(this.locale, 'game.removed_by_inactivity', `<@${this.actualPlayer.id}>`),
-									color: Colors.Blurple
-								}
-							]
-						})
-						.catch((err) => container.logger.error(err));
+			try {
+				if (!this.actualPlayer) {
+					return this.clearAndDelete();
 				}
+				const amount = this.stackedCombo || 2;
+				this.actualPlayer.addCards(amount);
+				this.actualPlayer.inactiveRounds++;
+				this.stackedCombo = 0;
+				this.messages.push({
+					key: 'game.punished_by_inactivity',
+					variables: [`<@${this.actualPlayer.id}>`, this.actualPlayer.cards.length, amount]
+				});
 
-				if (this.players.size <= 1) {
-					return;
+				if (this.actualPlayer.isInactive) {
+					this.removePlayer(this.actualPlayer.id);
+					if (this.channel) {
+						this.channel
+							.send({
+								embeds: [
+									{
+										description: translate(this.locale, 'game.removed_by_inactivity', `<@${this.actualPlayer.id}>`),
+										color: Colors.Blurple
+									}
+								]
+							})
+							.catch((err) => container.logger.error(err));
+					}
+
+					if (this.players.size <= 1) {
+						return;
+					}
 				}
+				this.next();
+				this.updateMessage(false).catch((err) => container.logger.error(err));
+			} catch (err) {
+				container.logger.error('Error: ', err, '\nGame: ', this);
 			}
-			this.next();
-			this.updateMessage(false).catch((err) => container.logger.error(err));
 		}, 60000);
 	}
 
