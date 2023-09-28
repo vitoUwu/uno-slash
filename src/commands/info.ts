@@ -50,6 +50,11 @@ export class UserCommand extends Command {
 							inline: true
 						},
 						{
+							name: 'Contributors',
+							value: `RU Translator - <@1058732619648487524> \`drakesweb (1058732619648487524)\``,
+							inline: true
+						},
+						{
 							name: translate(interaction.locale, 'commands.about.links'),
 							value: `[Uno Slash - Support](${supportUrl})\n[${translate(
 								interaction.locale,

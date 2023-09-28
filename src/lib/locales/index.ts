@@ -2,10 +2,12 @@ import { Locale } from 'discord.js';
 
 import english from './english.js';
 import portuguese from './portuguese.js';
+import russian from './russian.js';
 
 const locales = {
 	[Locale.PortugueseBR]: portuguese,
-	[Locale.EnglishUS]: english
+	[Locale.EnglishUS]: english,
+	[Locale.Russian]: russian,
 };
 
 export function translate(locale: Locale = Locale.EnglishUS, path: TranslationPaths, ...variables: any[]) {
